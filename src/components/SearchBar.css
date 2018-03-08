@@ -1,0 +1,13 @@
+.border-radius0  > div > input{
+  border-radius: 0 !important;
+  width: 500px !important;
+}
+
+.align-center {
+  text-align: center;
+  text-align: -webkit-center;
+}
+
+.results {
+  position: relative !important;
+}

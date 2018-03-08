@@ -1,0 +1,124 @@
+.App-logo {
+  height: 60px;
+  margin: 2px 0 2px 0;
+}
+
+.App-logo-container {
+  box-sizing: unset;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    min-height: 65px;
+    max-height: 65px;
+  }
+  .navbar-brand {
+    padding: 0 15px;
+    height: 50px;
+    line-height: 50px;
+  }
+  .navbar-nav>li>a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    line-height: 22px;
+  }
+}
+
+/* generated from https://work.smarchal.com/twbscolor/3.3.7/css/009688b2dfdbe0f2f1004d400 */
+
+.navbar-default {
+  background-color: #009688;
+  border-color: #b2dfdb;
+  background-image: none;
+  border: 0px;
+  border-radius: 0;
+}
+
+.navbar-default .navbar-brand {
+  color: #e0f2f1;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #004d40;
+}
+
+.navbar-default .navbar-text {
+  color: #e0f2f1;
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #e0f2f1;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+  color: #004d40;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+  color: #004d40;
+  background-color: #b2dfdb;
+}
+
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:hover,
+.navbar-default .navbar-nav>.open>a:focus {
+  color: #004d40;
+  background-color: #b2dfdb;
+}
+
+.navbar-default .navbar-toggle {
+  border-color: #b2dfdb;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: #b2dfdb;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #e0f2f1;
+}
+
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+  border-color: #e0f2f1;
+}
+
+.navbar-default .navbar-link {
+  color: #e0f2f1;
+}
+
+.navbar-default .navbar-link:hover {
+  color: #004d40;
+}
+
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #e0f2f1;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus {
+    color: #004d40;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu>.active>a,
+  .navbar-default .navbar-nav .open .dropdown-menu>.active>a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu>.active>a:focus {
+    color: #004d40;
+    background-color: #b2dfdb;
+  }
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.open>a {
+  background-image: none;
+  border-bottom: 3px solid #00BFA5;
+}
+
+.navbar-brand,
+.navbar-nav>li>a {
+  text-shadow: none;
+}

@@ -1,0 +1,16 @@
+
+.about {
+  width: 70%;
+  padding: 30px 15px 10px 15px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.about-contianer {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+}
