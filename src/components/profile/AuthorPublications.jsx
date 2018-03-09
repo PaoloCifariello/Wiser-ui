@@ -3,6 +3,8 @@ import {Card, Icon, List} from 'semantic-ui-react'
 
 import api from '../../api/api'
 
+import './AuthorPublications.css'
+
 class AuthorPublications extends Component {
     constructor(props) {
         super(props);
@@ -21,14 +23,14 @@ class AuthorPublications extends Component {
     }
 
     renderPublication = (publication) => {
+        const publicationText = <div dangerouslySetInnerHTML={{__html: publication.text}} />
         return (
             <Card fluid>
                 <Card.Content header={publication.doi || publication.id}/>
-                <Card.Content description={publication.text}/>
+                <Card.Content description={publicationText} />
                 <Card.Content extra>
                     <div>
-                        <Icon name='unordered list'/> 
-                        {` ${publication.entities.length} Topics`}
+                        <Icon className="padding0" name='unordered list'/> {` ${publication.entities.length} Topics`}
                     </div>
                 </Card.Content>
             </Card>

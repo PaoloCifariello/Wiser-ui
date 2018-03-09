@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   Button,
   Divider,
+  Grid,
   Icon,
   Input,
   Label,
@@ -93,39 +94,50 @@ class Home extends Component {
   render() {
     const {searchValue} = this.state;
     return (
-      <div className="align-center">
-        <div>
-          <Input
-            id="expertise-search-bar"
-            ref={(input) => this.searchInput = input}
-            size="big"
-            icon='search'
-            placeholder='Search by expertise area...'
-            value={searchValue}
-            onChange={this.handleSearchChange}
-            onKeyPress={this.handleKeyPress}/>
+      <div>
+
+        <Grid centered className="margin-top15" textAlign='left' columns={3}>
+          <Grid.Row>
+            <Grid.Column>
+              {/* <div className="align-center"> */}
+              <div>
+                <Input
+                  id="expertise-search-bar"
+                  ref={(input) => this.searchInput = input}
+                  size="big"
+                  icon='search'
+                  placeholder='Search by expertise area...'
+                  value={searchValue}
+                  onChange={this.handleSearchChange}
+                  onKeyPress={this.handleKeyPress}/>
+              </div>
+              <div className="align-center">
+                <Button
+                  loading={this.state.isSearching}
+                  disabled={this.state.isSearching}
+                  size="large"
+                  color="teal"
+                  className="search-button"
+                  type='submit'
+                  onClick={this.search}>Search</Button>
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <div className="align-center">
+          {this.state.showErrorMessage
+            ? <div className="margin-top15">
+                <Message
+                  compact
+                  negative
+                  onDismiss={this.onDismissErrorMessage()}
+                  header='Search failed!'
+                  content='Search for expertise failed!'/>
+              </div>
+            : null}
+          {this.renderResults()}
         </div>
-        <div>
-          <Button
-            loading={this.state.isSearching}
-            disabled={this.state.isSearching}
-            size="large"
-            color="teal"
-            className="search-button"
-            type='submit'
-            onClick={this.search}>Search</Button>
-        </div>
-        {this.state.showErrorMessage
-          ? <div className="margin-top15">
-              <Message
-                compact
-                negative
-                onDismiss={this.onDismissErrorMessage()}
-                header='Search failed!'
-                content='Search for expertise failed!'/>
-            </div>
-          : null}
-        {this.renderResults()}
+
       </div>
     );
   }
