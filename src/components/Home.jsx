@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {Button, Divider, Input, Message} from 'semantic-ui-react'
+import {
+  Button,
+  Divider,
+  Icon,
+  Input,
+  Label,
+  Message
+} from 'semantic-ui-react'
 
 import ResultList from './ResultList'
 
@@ -50,7 +57,7 @@ class Home extends Component {
   showResults(response) {
     const {lastSearchValue} = this.state;
     if (lastSearchValue === response["query"]) {
-      this.setState({showResults: true, isSearching: false, results: response["results"], time: response["time"]})
+      this.setState({showResults: true, isSearching: false, results: response["results"], lastSearchTime: response["time"]})
     }
   }
 
@@ -105,7 +112,11 @@ class Home extends Component {
             </div>
           : null}
         {this.state.showResults
-          ? <div><Divider/><ResultList results={this.state.results}/></div>
+          ? <div><Divider/>
+              <Label>
+                <Icon name="time"/> {`${this.state.results.length} results in ${this.state.lastSearchTime.toFixed(3)}s`}
+              </Label>
+              <ResultList results={this.state.results}/></div>
           : null}
       </div>
     );
