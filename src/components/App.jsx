@@ -4,10 +4,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {IndexLinkContainer, LinkContainer} from 'react-router-bootstrap'
 
-import Home from './Home'
-import About from './About'
-import Profiles from './Profiles'
-import AuthorProfile from './AuthorProfile'
+import {Home, About, Profiles, AuthorProfile }  from '.'
 
 import './App.css';
 import './navbar.css';

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import api from '../api/api'
+import api from '../../api/api'
 
 import SearchBar from './SearchBar'
 
@@ -11,17 +11,19 @@ class Profiles extends Component {
     super(props);
     this.state = {
       ssearchValue: '',
-      searchResults:[],
+      searchResults: [],
       isLoading: false
     }
   }
 
   componentDidMount() {
-    this.searchBar.focus();
+    this
+      .searchBar
+      .focus();
   }
 
   handleResultSelect = (e, {result}) => {
-
+    this.props.history.push(`/profile/${result.id}`)
   }
 
   handleSearchChange = (e, {value}) => {
@@ -42,7 +44,7 @@ class Profiles extends Component {
                 .data
                 .authors
                 .map((author, index) => {
-                  return {"title": `${author.name} (${author.id})`, "description": author.institution};
+                  return {"title": author.name, "description": author.institution, "id": author.id};
                 })
             })
           }

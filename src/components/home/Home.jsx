@@ -12,7 +12,7 @@ import ResultList from './ResultList'
 
 import './Home.css'
 
-import api from '../api/api'
+import api from '../../api/api'
 
 class Home extends Component {
 
@@ -50,23 +50,23 @@ class Home extends Component {
       api
         .findExpertsByExpertise(searchValue)
         .then((res) => this.showResults(res.data))
-        .catch((err) => this.fail(err))
+        .catch(this.fail)
     }
   }
 
-  showResults(response) {
+  showResults = (response) => {
     const {lastSearchValue} = this.state;
     if (lastSearchValue === response["query"]) {
       this.setState({showResults: true, isSearching: false, results: response["results"], lastSearchTime: response["time"]})
     }
   }
 
-  fail(err) {
+  fail = (err) => {
     this.setState({isSearching: false, showErrorMessage: true})
 
   }
 
-  onDismissErrorMessage() {
+  onDismissErrorMessage = () => {
     this.setState({showErrorMessage: false})
   }
 
@@ -74,6 +74,19 @@ class Home extends Component {
     if (evt.key === "Enter") {
       this.search();
     }
+  }
+
+  renderResults = () => {
+    const {showResults, results, lastSearchTime} = this.state
+    if (showResults) 
+      return (
+        <div><Divider/>
+          <Label>
+            <Icon name="time"/> 
+            {`${results.length} results in ${lastSearchTime.toFixed(3)}s`}
+          </Label>
+          <ResultList results={results}/></div>
+      )
   }
 
   render() {
@@ -106,18 +119,12 @@ class Home extends Component {
               <Message
                 compact
                 negative
-                onDismiss={() => this.onDismissErrorMessage()}
+                onDismiss={this.onDismissErrorMessage()}
                 header='Search failed!'
                 content='Search for expertise failed!'/>
             </div>
           : null}
-        {this.state.showResults
-          ? <div><Divider/>
-              <Label>
-                <Icon name="time"/> {`${this.state.results.length} results in ${this.state.lastSearchTime.toFixed(3)}s`}
-              </Label>
-              <ResultList results={this.state.results}/></div>
-          : null}
+        {this.renderResults()}
       </div>
     );
   }

@@ -7,10 +7,20 @@ function findExpertsByExpertise(expertiseArea) {
 
 function findExpertsByName(expertName) {
     return axios(`${config.serverAddress}/find_experts_by_name?q=${expertName}`);
-    
+
+}
+
+function getAuthorProfile(authorId) {
+    return axios(`${config.serverAddress}/get_author_profile?id=${authorId}`);
+}
+
+function getAuthorTopics(authorId) {
+    return axios(`${config.serverAddress}/get_author_topics?id=${authorId}`);
 }
 
 export default {
     findExpertsByExpertise : findExpertsByExpertise,
-    findExpertsByName : findExpertsByName
+    findExpertsByName : findExpertsByName,
+    getAuthorProfile : getAuthorProfile,
+    getAuthorTopics : getAuthorTopics
 };
