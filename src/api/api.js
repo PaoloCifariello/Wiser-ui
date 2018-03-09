@@ -18,9 +18,14 @@ function getAuthorTopics(authorId) {
     return axios(`${config.serverAddress}/get_author_topics?id=${authorId}`);
 }
 
+function getAuthorPublications(authorId) {
+    return axios(`${config.serverAddress}/get_author_publications?id=${authorId}`);
+}
+
 export default {
     findExpertsByExpertise : findExpertsByExpertise,
     findExpertsByName : findExpertsByName,
     getAuthorProfile : getAuthorProfile,
-    getAuthorTopics : getAuthorTopics
+    getAuthorTopics : getAuthorTopics,
+    getAuthorPublications : getAuthorPublications
 };

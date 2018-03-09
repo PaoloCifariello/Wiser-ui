@@ -38,13 +38,11 @@ class ResultList extends Component {
 
     render() {
         return (
-            <Grid className="margin-top15" textAlign='left' columns={3}>
+            <Grid centered className="margin-top15" textAlign='left' columns={3}>
                 <Grid.Row>
-                    <Grid.Column></Grid.Column>
                     <Grid.Column>
                         {this.showResults()}
                     </Grid.Column>
-                    <Grid.Column></Grid.Column>
                 </Grid.Row>
             </Grid>
         );

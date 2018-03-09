@@ -82,8 +82,9 @@ class Home extends Component {
       return (
         <div><Divider/>
           <Label>
-            <Icon name="time"/> 
-            {`${results.length} results in ${lastSearchTime.toFixed(3)}s`}
+            <Icon name="time"/> {`${results
+              .length} results in ${lastSearchTime
+              .toFixed(3)}s`}
           </Label>
           <ResultList results={results}/></div>
       )
@@ -92,7 +93,7 @@ class Home extends Component {
   render() {
     const {searchValue} = this.state;
     return (
-      <div>
+      <div className="align-center">
         <div>
           <Input
             id="expertise-search-bar"

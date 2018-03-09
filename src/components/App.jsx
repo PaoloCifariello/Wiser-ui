@@ -37,7 +37,7 @@ class App extends Component {
             </Nav>
           </Navbar>
 
-          <div className="h100 align-text-center">
+          <div className="h100">
             <Route exact path="/" component={Home}/>
             <Route path="/about" component={About}/>
             <Route path="/profiles" component={Profiles}/>

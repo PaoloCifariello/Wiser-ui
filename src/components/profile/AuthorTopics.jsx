@@ -12,7 +12,7 @@ class AuthorTopics extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         const {authorId} = this.state;
 
         api
@@ -23,8 +23,9 @@ class AuthorTopics extends Component {
     renderTopicsList = () => {
         const {authorTopics} = this.state;
 
-        return authorTopics.map((topic, index) => <List.Item key={index}>{topic.entity_name}</ List.Item>)
+        return authorTopics.slice(0, 29).map((topic, index) => <List.Item key={index}>{topic.entity_name}</ List.Item>)
     }
+
     render = () => {
         return (
             <List>{this.renderTopicsList()}</List >

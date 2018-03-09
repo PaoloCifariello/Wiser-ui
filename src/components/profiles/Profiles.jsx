@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import {Grid} from 'semantic-ui-react'
+
 import api from '../../api/api'
 
 import SearchBar from './SearchBar'
@@ -23,7 +25,10 @@ class Profiles extends Component {
   }
 
   handleResultSelect = (e, {result}) => {
-    this.props.history.push(`/profile/${result.id}`)
+    this
+      .props
+      .history
+      .push(`/profile/${result.id}`)
   }
 
   handleSearchChange = (e, {value}) => {
@@ -57,24 +62,24 @@ class Profiles extends Component {
     const {isLoading, searchValue, searchResults} = this.state;
 
     return (
-      <div>
-        <div>
-          <SearchBar
-            ref={(searchBar => this.searchBar = searchBar)}
-            loading={isLoading}
-            showNoResults={!isLoading}
-            minCharacters={3}
-            placeholder="Search by author name..."
-            results={searchResults}
-            value={searchValue}
-            onResultSelect={this.handleResultSelect}
-            onSearchChange={this.handleSearchChange}/>
-        </div>
-        {/* <div>
-          <Button size="large" color="teal" className="search-button" type='submit'>Search</Button>
-        </div> */}
-
-      </div>
+      <Grid centered className="margin-top15" textAlign='left' columns={3}>
+        <Grid.Row>
+          <Grid.Column>
+            <div>
+              <SearchBar
+                ref={(searchBar => this.searchBar = searchBar)}
+                loading={isLoading}
+                showNoResults={!isLoading}
+                minCharacters={3}
+                placeholder="Search by author name..."
+                results={searchResults}
+                value={searchValue}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={this.handleSearchChange}/>
+            </div>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }

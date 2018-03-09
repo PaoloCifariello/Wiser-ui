@@ -69,7 +69,7 @@ class AuthorProfile extends Component {
 
     const panes = [
       {
-        menuItem: 'Topics',
+        menuItem: 'Main topics',
         render: () => <Tab.Pane attached={true}><AuthorTopics authorId={authorId}/></Tab.Pane>
       }, {
         menuItem: 'Publications',
@@ -87,7 +87,7 @@ class AuthorProfile extends Component {
       <Grid columns='equal'>
         <Grid.Column/>
         <Grid.Column width={10}>
-          <Segment>
+          <Segment basic>
             {this.renderAuthorInfo()}
             <Divider/>
             <Tab
