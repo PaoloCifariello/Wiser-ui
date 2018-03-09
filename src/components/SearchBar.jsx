@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
 
-import {Search} from 'semantic-ui-react'
+import {Input, Search} from 'semantic-ui-react'
 
 import './SearchBar.css'
 
 class SearchBar extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: '',
-            results: []
-        }
-    }
+    // constructor(props) {
+    //     super(props);
+    // }
 
+    focus = () => {
+        this.searchInput.focus();
+    }
     // onChangeInput = (e, {value}) => {
     //     this.setState({value: value});
     //     this
@@ -30,11 +29,11 @@ class SearchBar extends Component {
     // }
 
     render() {
-        const {value} = this.state;
         return (<Search
+            ref={(searchBar => this.searchBar = searchBar)}
+            input={<Input ref={input => { this.searchInput = input}} />}
             className="border-radius0 align-center"
             size="big"
-            value={value}
             {...this.props}/>)
     }
 }

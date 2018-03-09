@@ -16,17 +16,22 @@ class Profiles extends Component {
     }
   }
 
-  handleResultSelect = (e, {result}) => {}
+  componentDidMount() {
+    this.searchBar.focus();
+  }
+
+  handleResultSelect = (e, {result}) => {
+
+  }
 
   handleSearchChange = (e, {value}) => {
-    this.setState({searchValue: value});
+    this.setState({
+      searchValue: value,
+      isLoading: (value.length > 2),
+      searchResults: []
+    });
 
     if (value.length > 2) {
-      this.setState({
-        isLoading: true,
-        searchResults: []
-
-      });
       api
         .findExpertsByName(value)
         .then((res) => {
@@ -53,6 +58,7 @@ class Profiles extends Component {
       <div>
         <div>
           <SearchBar
+            ref={(searchBar => this.searchBar = searchBar)}
             loading={isLoading}
             showNoResults={!isLoading}
             minCharacters={3}

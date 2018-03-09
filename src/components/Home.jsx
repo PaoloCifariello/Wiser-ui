@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Input, Message} from 'semantic-ui-react'
+import {Button, Divider, Input, Message} from 'semantic-ui-react'
 
 import ResultList from './ResultList'
 
@@ -12,7 +12,8 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputValue: "",
+      searchValue: "",
+      lastSearchValue: "",
       isSearching: false,
       showErrorMessage: false,
       showResults: false,
@@ -26,22 +27,31 @@ class Home extends Component {
       .focus();
   }
 
-  updateInputValue(evt) {
-    this.setState({inputValue: evt.target.value});
+  handleSearchChange = (e, {value}) => {
+    this.setState({searchValue: value});
   }
 
-  search(evt) {
-    if (this.state.inputValue) {
-      this.setState({isSearching: true, showErrorMessage: false, showResults: false, results: null});
+  search = () => {
+    const searchValue = this
+      .state
+      .searchValue
+      .trim();
+    this.setState({searchValue: searchValue})
+
+    if (searchValue && !this.state.isSearching) {
+      this.setState({isSearching: true, showErrorMessage: false, showResults: false, results: null, lastSearchValue: searchValue});
       api
-        .findExpertsByExpertise(this.state.inputValue)
+        .findExpertsByExpertise(searchValue)
         .then((res) => this.showResults(res.data))
         .catch((err) => this.fail(err))
     }
   }
 
-  showResults(results) {
-    this.setState({showResults: true, isSearching: false, results: results[1], time: results[2]})
+  showResults(response) {
+    const {lastSearchValue} = this.state;
+    if (lastSearchValue === response["query"]) {
+      this.setState({showResults: true, isSearching: false, results: response["results"], time: response["time"]})
+    }
   }
 
   fail(err) {
@@ -53,25 +63,26 @@ class Home extends Component {
     this.setState({showErrorMessage: false})
   }
 
-  onKeyPress(evt) {
+  handleKeyPress = (evt) => {
     if (evt.key === "Enter") {
       this.search();
     }
   }
 
   render() {
+    const {searchValue} = this.state;
     return (
       <div>
         <div>
           <Input
             id="expertise-search-bar"
             ref={(input) => this.searchInput = input}
-            size="large"
+            size="big"
             icon='search'
             placeholder='Search by expertise area...'
-            value={this.state.inputValue}
-            onChange={evt => this.updateInputValue(evt)}
-            onKeyPress={evt => this.onKeyPress(evt)}/>
+            value={searchValue}
+            onChange={this.handleSearchChange}
+            onKeyPress={this.handleKeyPress}/>
         </div>
         <div>
           <Button
@@ -81,7 +92,7 @@ class Home extends Component {
             color="teal"
             className="search-button"
             type='submit'
-            onClick={evt => this.search(evt)}>Search</Button>
+            onClick={this.search}>Search</Button>
         </div>
         {this.state.showErrorMessage
           ? <div className="margin-top15">
@@ -94,9 +105,7 @@ class Home extends Component {
             </div>
           : null}
         {this.state.showResults
-          ? <div>
-              <ResultList results={this.state.results}/>
-            </div>
+          ? <div><Divider/><ResultList results={this.state.results}/></div>
           : null}
       </div>
     );

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {LinkContainer} from 'react-router-bootstrap'
 
-import {List, Grid} from 'semantic-ui-react'
+import {Card, List, Grid} from 'semantic-ui-react'
 
 class ResultList extends Component {
     constructor(props) {
@@ -13,17 +13,19 @@ class ResultList extends Component {
 
     showResults() {
         return (
-            <List celled size="big">
+            <List size="big">
                 {this
                     .state
                     .results
                     .map((author, index) => {
                         return (
-                            <List.Item key={index}>
+                            <List.Item key={index} className="align-center">
                                 <LinkContainer to={`/profile/${author.author_id}`}>
                                     <List.Content verticalAlign='middle'>
-                                        {/* <List.Header as='a'>{item.name}</List.Header> */}
-                                        {author.name}
+                                        <Card
+                                            fluid
+                                            header={author.name}
+                                            meta='Università di Pisa'/>
                                     </List.Content>
                                 </LinkContainer>
                             </List.Item>
