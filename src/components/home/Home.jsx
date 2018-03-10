@@ -127,25 +127,27 @@ class Home extends Component {
     return (
       <div>
         <Grid centered stackable className="margin-top15" textAlign='center'>
-          <Grid.Row columns={1}>
-            <Grid.Column textAlign="center">
-              {this.renderSearchBar()}
+          <Grid.Row>
+            {this.renderSearchBar()}
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
               {showResults
                 ? (<Divider/>)
                 : null}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
-              {showErrorMessage
-                ? <div className="margin-top15">
-                    <Message
-                      compact
-                      negative
-                      onDismiss={this.onDismissErrorMessage}
-                      header='Search failed!'
-                      content={lastError.message}/>
-                  </div>
-                : this.renderResults()}
+            {showErrorMessage
+              ? <div className="margin-top15">
+                  <Message
+                    compact
+                    negative
+                    onDismiss={this.onDismissErrorMessage}
+                    header='Search failed!'
+                    content={lastError.message}/>
+                </div>
+              : this.renderResults()}
           </Grid.Row>
         </Grid>
       </div>
