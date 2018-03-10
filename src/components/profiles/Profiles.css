@@ -1,3 +1,12 @@
 #profiles-search-bar {
   width: 500px;
 }
+
+.border-radius0  > div > input{
+  border-radius: .28571429rem !important;
+  width: 500px !important;
+}
+
+.align-text-left {
+  text-align: left;
+}

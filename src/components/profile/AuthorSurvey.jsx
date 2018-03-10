@@ -7,7 +7,7 @@ class AuthorSurvey extends Component {
 
     render = () => {
         return (
-            <div>asdasd</div>
+            <div>Awesome survey</div>
         )
     }
 }

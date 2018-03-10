@@ -26,12 +26,17 @@ class App extends Component {
               </Navbar.Brand>
             </Navbar.Header>
             <Nav>
-              <LinkContainer to="/profiles">
+              <LinkContainer exact to="/">
+                <NavItem>Home</NavItem>
+              </LinkContainer>
+            </Nav>
+            <Nav>
+              <LinkContainer exact to="/profiles">
                 <NavItem>Profiles</NavItem>
               </LinkContainer>
             </Nav>
             <Nav pullRight>
-              <LinkContainer to="/about">
+              <LinkContainer exact to="/about">
                 <NavItem>About</NavItem>
               </LinkContainer>
             </Nav>
@@ -39,24 +44,13 @@ class App extends Component {
 
           <div className="h100">
             <Route exact path="/" component={Home}/>
-            <Route path="/about" component={About}/>
-            <Route path="/profiles" component={Profiles}/>
+            <Route exact path="/about" component={About}/>
+            <Route exact path="/profiles" component={Profiles}/>
             <Route path="/profile/:authorId" component={AuthorProfile}/>
           </div>
         </div>
       </Router>
     );
-
-    // return (   <div className="App">     <Navbar inverse>       <Navbar.Header>
-    // {/* <Navbar.Brand>             <IndexLinkContainer to="/">
-    // <NavItem>Wiser</NavItem> </IndexLinkContainer>           </Navbar.Brand> */}
-    //  </Navbar.Header>       {/* <Navbar.Collapse> */}       <Nav pullRight>
-    // <IndexLinkContainer to="/about">           <NavItem>About</NavItem>
-    // </IndexLinkContainer>         <IndexLinkContainer to="/profiles">
-    // <NavItem>Profiles</NavItem>         </IndexLinkContainer>       </Nav>   {/*
-    // </Navbar.Collapse> */}     </Navbar>     <div>       <Route exact path="/"
-    // component={Home}/>       <Route path="/about" component={About}/>    <Route
-    // path="/profiles" component={Profiles}/>     </div>   </div> );
   }
 }
 

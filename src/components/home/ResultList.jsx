@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import {LinkContainer} from 'react-router-bootstrap'
 
-import {Card, List, Grid} from 'semantic-ui-react'
+import {Card, List} from 'semantic-ui-react'
+
+import './ResultList.css'
 
 class ResultList extends Component {
     constructor(props) {
@@ -11,40 +13,36 @@ class ResultList extends Component {
         };
     }
 
-    showResults() {
+    renderResult = (author, index) => {
         return (
-            <List size="big">
-                {this
-                    .state
-                    .results
-                    .map((author, index) => {
-                        return (
-                            <List.Item key={index} className="align-center">
-                                <LinkContainer to={`/profile/${author.author_id}`}>
-                                    <List.Content verticalAlign='middle'>
-                                        <Card
-                                            fluid
-                                            header={author.name}
-                                            meta='Università di Pisa'/>
-                                    </List.Content>
-                                </LinkContainer>
-                            </List.Item>
-                        );
-                    })
-}
-            </List>
+            <List.Item key={index} className="align-center">
+                <LinkContainer to={`/profile/${author.author_id}`}>
+                    <List.Content verticalAlign='middle'>
+                        <Card className="result-card">
+                            <Card.Content>
+                                <Card.Header>
+                                    {author.name}
+                                </Card.Header>
+                                <Card.Meta>
+                                    <span>
+                                        Università di Pisa
+                                    </span>
+                                </Card.Meta>
+                                <Card.Description></Card.Description>
+                            </Card.Content>
+                        </Card>
+                    </List.Content>
+                </LinkContainer>
+            </List.Item>
         );
     }
 
-    render() {
+    render = () => {
+        const {results} = this.state
         return (
-            <Grid centered className="margin-top15" textAlign='left' columns={3}>
-                <Grid.Row>
-                    <Grid.Column>
-                        {this.showResults()}
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
+            <List size="big">
+                {results.map(this.renderResult)}
+            </List>
         );
     }
 }

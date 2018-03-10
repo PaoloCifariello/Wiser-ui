@@ -1,0 +1,4 @@
+/* Size of each card in ResultList */
+.result-card {
+    width: 400px !important;
+}

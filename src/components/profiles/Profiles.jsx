@@ -1,18 +1,32 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 
-import {Grid} from 'semantic-ui-react'
+import {Grid, Input, Search} from 'semantic-ui-react'
 
 import api from '../../api/api'
 
-import SearchBar from './SearchBar'
-
 import './Profiles.css'
+
+const resultRenderer = ({id, name, institution}) => (
+  <div key={id} className="result align-text-left">
+    <div className="content">
+      <div className="title">{name}</div>
+      <div className="description">{institution}</div>
+    </div>
+  </div>
+);
+
+resultRenderer.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  institution: PropTypes.string
+}
 
 class Profiles extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ssearchValue: '',
+      searchValue: '',
       searchResults: [],
       isLoading: false
     }
@@ -20,7 +34,7 @@ class Profiles extends Component {
 
   componentDidMount() {
     this
-      .searchBar
+      .searchInput
       .focus();
   }
 
@@ -43,41 +57,34 @@ class Profiles extends Component {
         .findExpertsByName(value)
         .then((res) => {
           if (this.state.searchValue === value) {
-            this.setState({
-              isLoading: false,
-              searchResults: res
-                .data
-                .authors
-                .map((author, index) => {
-                  return {"title": author.name, "description": author.institution, "id": author.id};
-                })
-            })
+            this.setState({isLoading: false, searchResults: res.data.authors})
           }
-
         })
     }
   }
 
   render() {
     const {isLoading, searchValue, searchResults} = this.state;
-
     return (
-      <Grid centered className="margin-top15" textAlign='left' columns={3}>
-        <Grid.Row>
-          <Grid.Column>
-            <div>
-              <SearchBar
-                ref={(searchBar => this.searchBar = searchBar)}
-                loading={isLoading}
-                showNoResults={!isLoading}
-                minCharacters={3}
-                placeholder="Search by author name..."
-                results={searchResults}
-                value={searchValue}
-                onResultSelect={this.handleResultSelect}
-                onSearchChange={this.handleSearchChange}/>
-            </div>
-          </Grid.Column>
+      <Grid centered stackable className="margin-top15" textAlign='center'>
+        <Grid.Row >
+          <Search
+            input={< Input ref = {
+            input => {
+              this.searchInput = input
+            }
+          } />}
+            className="border-radius0"
+            size="big"
+            loading={isLoading}
+            showNoResults={!isLoading}
+            minCharacters={3}
+            placeholder="Search by author name..."
+            results={searchResults}
+            value={searchValue}
+            resultRenderer={resultRenderer}
+            onResultSelect={this.handleResultSelect}
+            onSearchChange={this.handleSearchChange}/>
         </Grid.Row>
       </Grid>
     );
