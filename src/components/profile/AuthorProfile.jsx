@@ -85,7 +85,7 @@ class AuthorProfile extends Component {
           }}/></Tab.Pane>
       }, {
         menuItem: 'Wordcloud',
-        render: () => <Tab.Pane attached={false}><AuthorWordcloud authorId={authorId}/></Tab.Pane>
+        render: () => <Tab.Pane attached={false}><AuthorWordcloud authorInformation={{authorId, authorYears}}/></Tab.Pane>
       }, {
         menuItem: 'Survey',
         render: () => <Tab.Pane attached={false}><AuthorSurvey authorId={authorId}/></Tab.Pane>

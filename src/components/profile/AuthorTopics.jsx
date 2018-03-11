@@ -7,13 +7,12 @@ class AuthorTopics extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorId: this.props.authorId,
             authorTopics: []
         }
     }
 
     componentDidMount = () => {
-        const {authorId} = this.state;
+        const {authorId} = this.props;
 
         api
             .getAuthorTopics(authorId)

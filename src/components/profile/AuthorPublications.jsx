@@ -38,6 +38,7 @@ class AuthorPublications extends Component {
         return (
             <Menu size='small' vertical>
                 {sortedAuthorYears.map((year, index) => <Menu.Item
+                    key={index}
                     year={year}
                     active={selectedYear === year}
                     onClick={this.handleItemClick}>
