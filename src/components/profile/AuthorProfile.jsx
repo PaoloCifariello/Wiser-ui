@@ -37,12 +37,12 @@ class AuthorProfile extends Component {
     this.setState({showErrorMessage: true});
   }
   updateAuthorInformation = (authorInformation) => {
-    this.setState({authorName: authorInformation["name"], authorInstitution: authorInformation["institution"], isLoaded: true})
+    this.setState({authorName: authorInformation["name"], authorInstitution: authorInformation["institution"], authorYears: authorInformation["years"], isLoaded: true})
   }
 
   renderErrorMessage = () => {
     return (
-      <div className="margin-top15">
+      <div className="margin-top15 align-center">
         <Message
           compact
           negative
@@ -53,19 +53,24 @@ class AuthorProfile extends Component {
   }
 
   renderAuthorInfo = () => {
-    const {authorName, authorInstitution} = this.state;
+    const {authorName, authorInstitution, authorYears} = this.state;
+    const sortedAuthorYears = Object.keys(authorYears).sort();
+
     return (
       <div>
         <Header as='h1' textAlign="left">{authorName}
           <Header.Subheader>
             {authorInstitution}
           </Header.Subheader>
+          <Header.Subheader>
+            {`${sortedAuthorYears[0]} - ${sortedAuthorYears[sortedAuthorYears.length - 1]}`}
+          </Header.Subheader>
         </Header>
       </div>
     );
   }
   renderAuthorProfile = () => {
-    const {authorId} = this.state;
+    const {authorId, authorYears} = this.state;
 
     const panes = [
       {
@@ -73,7 +78,11 @@ class AuthorProfile extends Component {
         render: () => <Tab.Pane attached={true}><AuthorTopics authorId={authorId}/></Tab.Pane>
       }, {
         menuItem: 'Publications',
-        render: () => <Tab.Pane attached={false}><AuthorPublications authorId={authorId}/></Tab.Pane>
+        render: () => <Tab.Pane attached={false}><AuthorPublications
+            authorInformation={{
+            authorId,
+            authorYears
+          }}/></Tab.Pane>
       }, {
         menuItem: 'Wordcloud',
         render: () => <Tab.Pane attached={false}><AuthorWordcloud authorId={authorId}/></Tab.Pane>

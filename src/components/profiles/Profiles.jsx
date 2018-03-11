@@ -42,7 +42,7 @@ class Profiles extends Component {
     this
       .props
       .history
-      .push(`/profile/${result.id}`)
+      .push(`/profile/${result.author_id}`)
   }
 
   handleSearchChange = (e, {value}) => {
@@ -57,7 +57,15 @@ class Profiles extends Component {
         .findExpertsByName(value)
         .then((res) => {
           if (this.state.searchValue === value) {
-            this.setState({isLoading: false, searchResults: res.data.authors})
+            this.setState({
+              isLoading: false,
+              searchResults: res
+                .data
+                .authors
+                .map(({id, name, institution}) => {
+                  return {author_id: id, childKey: id, name: name, institution: institution}
+                })
+            })
           }
         })
     }
@@ -74,6 +82,7 @@ class Profiles extends Component {
               this.searchInput = input
             }
           } />}
+            fluid
             className="border-radius0"
             size="big"
             loading={isLoading}

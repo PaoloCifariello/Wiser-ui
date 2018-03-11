@@ -18,8 +18,8 @@ function getAuthorTopics(authorId) {
     return axios.request(`${config.serverAddress}/get_author_topics?id=${authorId}`);
 }
 
-function getAuthorPublications(authorId) {
-    return axios.request(`${config.serverAddress}/get_author_publications?id=${authorId}`);
+function getAuthorPublications(authorId, publicationsYear) {
+    return axios.request(`${config.serverAddress}/get_author_publications?id=${authorId}&year=${publicationsYear}`);
 }
 
 export default {
