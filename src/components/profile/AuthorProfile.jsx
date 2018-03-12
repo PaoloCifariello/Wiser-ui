@@ -54,8 +54,9 @@ class AuthorProfile extends Component {
 
   renderAuthorInfo = () => {
     const {authorName, authorInstitution, authorYears} = this.state;
+    
     const sortedAuthorYears = Object.keys(authorYears).sort();
-
+    const authorPublications = Object.values(authorYears).reduce((accumulator, el) => accumulator + el)
     return (
       <div>
         <Header as='h1' textAlign="left">{authorName}
@@ -63,7 +64,7 @@ class AuthorProfile extends Component {
             {authorInstitution}
           </Header.Subheader>
           <Header.Subheader>
-            {`${sortedAuthorYears[0]} - ${sortedAuthorYears[sortedAuthorYears.length - 1]}`}
+            {`${authorPublications} publications from ${sortedAuthorYears[0]} to ${sortedAuthorYears[sortedAuthorYears.length - 1]}`}
           </Header.Subheader>
         </Header>
       </div>
