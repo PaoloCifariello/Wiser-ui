@@ -16,7 +16,7 @@ class App extends Component {
       <Router>
         <div>
           <Navbar className="margin-bottom-50">
-            <Navbar.Header>
+            {/* <Navbar.Header>
               <Navbar.Brand>
                 <IndexLinkContainer to="/" text="Wiser">
                   <a className="App-logo-container">
@@ -24,7 +24,7 @@ class App extends Component {
                   </a>
                 </IndexLinkContainer>
               </Navbar.Brand>
-            </Navbar.Header>
+            </Navbar.Header> */}
             <Nav>
               <LinkContainer exact to="/">
                 <NavItem>Home</NavItem>
