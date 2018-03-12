@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+
+import {Grid} from 'semantic-ui-react';
+
 import "./About.css"
 
 import WiserLogo from '../reusable/WiserLogo';
@@ -12,25 +15,31 @@ const projectTitle = `Un motore di ricerca semantico per la valorizzazione della
 class About extends Component {
   render() {
     return (
-      <div className="about-contianer">
-        <WiserLogo/>
-        <div className="about">
-          <span>
-            This system is being developed by Acube Lab (at the Department of Computer
-            Science of the University of Pisa), partially sponsored by MIUR project FFO 2016
-            (DM 6 luglio 2016, n. 552, art. 11) titled
-            <i>“{projectTitle}”</i>.
-          </span>
-          <br/>
-          <br/>
-          <span>
-            For any info please write an email to {myMail}
-            or {ferraMail}.
-            <br/>
-            <br/> {acubeLink}
-          </span>
-        </div>
-      </div>
+      <Grid centered stackable className="margin-top15" textAlign='center'>
+        <Grid.Row >
+          <WiserLogo/>
+        </Grid.Row>
+        <Grid.Row>
+          <div className="about-contianer">
+            <div className="about">
+              <span>
+                This system is being developed by Acube Lab (at the Department of Computer
+                Science of the University of Pisa), partially sponsored by MIUR project FFO 2016
+                (DM 6 luglio 2016, n. 552, art. 11) titled
+                <i>“{projectTitle}”</i>.
+              </span>
+              <br/>
+              <br/>
+              <span>
+                For any info please write an email to {myMail}
+                or {ferraMail}.
+                <br/>
+                <br/> {acubeLink}
+              </span>
+            </div>
+          </div>
+        </Grid.Row>
+      </Grid>
     );
   }
 }
