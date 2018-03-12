@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 
-import {Grid, Header, Input, Search} from 'semantic-ui-react'
+import {Grid, Input, Search} from 'semantic-ui-react'
 
 import api from '../../api/api'
 

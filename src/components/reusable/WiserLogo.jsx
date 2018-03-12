@@ -23,7 +23,6 @@ class WiserLogo extends Component {
                 <div>
                     <Header as="h1"
                         style={{
-                        marginBottom: -5,
                         fontWeight: 300,
                         fontVariant: "small-caps",
                         fontSize: "5rem",
