@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 
-import {Grid, Input, Search} from 'semantic-ui-react'
+import {Grid, Header, Input, Search} from 'semantic-ui-react'
 
 import api from '../../api/api'
 
 import './Profiles.css'
+import WiserLogo from '../reusable/WiserLogo';
 
 const resultRenderer = ({id, name, institution}) => (
   <div key={id} className="result align-text-left">
@@ -75,6 +76,9 @@ class Profiles extends Component {
     const {isLoading, searchValue, searchResults} = this.state;
     return (
       <Grid centered stackable className="margin-top15" textAlign='center'>
+        <Grid.Row >
+          <WiserLogo />
+        </Grid.Row>
         <Grid.Row >
           <Search
             input={< Input ref = {

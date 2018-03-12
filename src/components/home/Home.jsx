@@ -10,6 +10,7 @@ import {
 } from 'semantic-ui-react'
 
 import ResultList from './ResultList'
+import WiserLogo from '../reusable/WiserLogo';
 
 import './Home.css'
 
@@ -127,6 +128,9 @@ class Home extends Component {
     return (
       <div>
         <Grid centered stackable className="margin-top15" textAlign='center'>
+          <Grid.Row >
+            <WiserLogo/>
+          </Grid.Row>
           <Grid.Row>
             {this.renderSearchBar()}
           </Grid.Row>

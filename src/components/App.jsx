@@ -4,23 +4,23 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {IndexLinkContainer, LinkContainer} from 'react-router-bootstrap'
 
-import {Home, About, Profiles, AuthorProfile }  from '.'
+import {Home, About, Profiles, AuthorProfile} from '.'
 
 import './App.css';
 import './navbar.css';
-import wiserLogo from './wiser-logo.png'
+import wiserLogo from './wiser-logo.svg'
 
 class App extends Component {
   render() {
     return (
       <Router>
-        <div className="h100">
-          <Navbar>
+        <div>
+          <Navbar className="margin-bottom-50">
             <Navbar.Header>
               <Navbar.Brand>
                 <IndexLinkContainer to="/" text="Wiser">
                   <a className="App-logo-container">
-                    <img src={wiserLogo} className="App-logo" alt="logo"/> {/* <a>Wiser</a> */}
+                    <img src={wiserLogo} className="App-logo" alt="logo"/>
                   </a>
                 </IndexLinkContainer>
               </Navbar.Brand>
@@ -42,7 +42,7 @@ class App extends Component {
             </Nav>
           </Navbar>
 
-          <div className="h100">
+          <div>
             <Route exact path="/" component={Home}/>
             <Route exact path="/about" component={About}/>
             <Route exact path="/profiles" component={Profiles}/>
