@@ -53,18 +53,15 @@ class AuthorPublications extends Component {
         const {authorId, selectedYear} = this.state;
 
         return (
-            <Grid centered columns={2}>
-                {/* <Grid.Row> */}
-                <Grid.Column floated='left' width={4}>
+            <Grid columns={2}>
+                <Grid.Column floated='left' width={3}>
                     <div ref={this.handleContextRef}>
                         {this.renderMenu()}
                     </div>
                 </Grid.Column>
-                <Grid.Column floated='left' width={12}>
+                <Grid.Column floated='right' width={13}>
                     <AuthorPublicationList authorId={authorId} publicationsYear={selectedYear}/>
-                    {/* <List>{this.renderPublicationsList()}</List > */}
                 </Grid.Column>
-                {/* </Grid.Row> */}
             </Grid>
         );
     }
