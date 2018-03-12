@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Card, Form, Select} from 'semantic-ui-react'
 import {TagCloud} from 'react-tagcloud'
 
+// import Slider from 'rc-slider';
+
 import api from '../../api/api'
 
 const yearOptionsUpTo = 5;
@@ -44,25 +46,28 @@ class AuthorWordcloud extends Component {
             }))
     }
 
-    handleChange = (e, {name, value}) => {
+    handleChange = (e, {value}) => {
         this.setState({yearsStep: value});
     }
 
     renderWordCloud = (firstYear, lastYear) => {
         const {authorTopics} = this.state;
 
-        return (
-            <Card key={`${firstYear}-${lastYear}`} fluid>
-                <Card.Content header={`${firstYear} - ${lastYear}`}/>
-                <Card.Content >
-                    <TagCloud
-                        minSize={15}
-                        maxSize={30}
-                        tags={authorTopics.filter(({years}) => years.some((year) => year <= lastYear && year > firstYear)).slice(0, 30)}/>
-                </Card.Content >
-            </Card>
-        );
-    }
+        const topics = authorTopics.filter(({years}) => years.some((year) => year <= lastYear && year >= firstYear)).slice(0, 30)
+
+        if (topics.length) 
+            return (
+                <Card key={`${firstYear}-${lastYear}`} fluid>
+                    <Card.Content
+                        header={firstYear === lastYear
+                        ? firstYear
+                        : `${firstYear} - ${lastYear}`}/>
+                    <Card.Content >
+                        <TagCloud minSize={15} maxSize={30} tags={topics}/>
+                    </Card.Content >
+                </Card>
+            );
+        }
     renderWordClouds = () => {
         const {authorYears, yearsStep} = this.state,
             firstYear = authorYears[0],
@@ -70,7 +75,14 @@ class AuthorWordcloud extends Component {
 
         let tags = [];
         for (var i = lastYear; i >= firstYear; i -= yearsStep) {
-            tags.push(this.renderWordCloud(i - yearsStep, i))
+            // if firstYear is before first author publication, we move it to
+            // first author pub. year. We add only non empty clouds.
+
+            let wordCloud = this.renderWordCloud(i - yearsStep + 1 < firstYear
+                ? firstYear
+                : i - yearsStep + 1, i)
+            if (wordCloud) 
+                tags.push(wordCloud)
         }
 
         return tags;
@@ -81,6 +93,7 @@ class AuthorWordcloud extends Component {
 
         return (
             <div>
+                {/* <Slider min={1} max={5} defaultValue={5} onAfterChange={this.handleChange} /> */}
                 <Form>
                     <Form.Group>
                         <Form.Field
