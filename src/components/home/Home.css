@@ -2,10 +2,32 @@
   width: 500px;
 }
 
-.search-button {
-  margin-top: 15px !important;
-}
-
 .margin-top15 {
   margin-top: 15px !important;
 }
+
+.search-button {
+  margin: 0 15px 0 15px !important;
+}
+
+/* .toggle-column {
+  margin: 0;
+  padding: 0;
+  width: 80px !important;
+}
+
+.react-toggle--checked:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: #00BCD4 !important;
+}
+
+.search-toggle.react-toggle--checked .react-toggle-track {
+  background-color: #00BCD4 !important;
+}
+
+.react-toggle:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: #009688;
+}
+
+.search-toggle.react-toggle .react-toggle-track {
+  background-color: #009688;
+} */

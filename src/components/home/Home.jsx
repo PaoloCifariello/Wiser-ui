@@ -40,7 +40,7 @@ class Home extends Component {
     this.setState({searchValue: value});
   }
 
-  search = () => {
+  searchByExpertise = () => {
     const searchValue = this
       .state
       .searchValue
@@ -48,9 +48,39 @@ class Home extends Component {
     this.setState({searchValue: searchValue})
 
     if (searchValue && !this.state.isSearching) {
-      this.setState({isSearching: true, showErrorMessage: false, showResults: false, results: null, lastSearchValue: searchValue});
+      this.setState({
+        isSearching: true,
+        isSearchingByExpertise: true,
+        showErrorMessage: false,
+        showResults: false,
+        results: null,
+        lastSearchValue: searchValue
+      });
       api
         .findExpertsByExpertise(searchValue)
+        .then((res) => this.showResults(res.data))
+        .catch(this.fail)
+    }
+  }
+
+  searchByName = () => {
+    const searchValue = this
+      .state
+      .searchValue
+      .trim();
+    this.setState({searchValue: searchValue, isSearchingByName: true})
+
+    if (searchValue && !this.state.isSearching) {
+      this.setState({
+        isSearching: true,
+        isSearchingByName: true,
+        showErrorMessage: false,
+        showResults: false,
+        results: null,
+        lastSearchValue: searchValue
+      });
+      api
+        .findExpertsByName(searchValue)
         .then((res) => this.showResults(res.data))
         .catch(this.fail)
     }
@@ -59,7 +89,14 @@ class Home extends Component {
   showResults = (response) => {
     const {lastSearchValue} = this.state;
     if (lastSearchValue === response["query"]) {
-      this.setState({showResults: true, isSearching: false, results: response["results"], lastSearchTime: response["time"]})
+      this.setState({
+        showResults: true,
+        isSearching: false,
+        isSearchingByExpertise: false,
+        isSearchingByName: false,
+        results: response["results"],
+        lastSearchTime: response["time"]
+      })
     }
   }
 
@@ -74,7 +111,7 @@ class Home extends Component {
 
   handleKeyPress = (evt) => {
     if (evt.key === "Enter") {
-      this.search();
+      this.searchByExpertise();
     }
   }
 
@@ -97,30 +134,47 @@ class Home extends Component {
   renderSearchBar = () => {
     const {searchValue} = this.state;
     return (
-      <div>
+      <Grid.Row>
         <div>
           <Input
             id="expertise-search-bar"
             ref={(input) => this.searchInput = input}
             size="big"
             icon='search'
-            placeholder='Search by expertise area...'
+            placeholder='Search for expertise...'
             value={searchValue}
             onChange={this.handleSearchChange}
             onKeyPress={this.handleKeyPress}/>
         </div>
-        <div className="align-center">
+      </Grid.Row>
+    )
+  }
+
+  renderSearchButton = () => {
+    return (
+      <Grid.Row>
+        <div>
           <Button
-            loading={this.state.isSearching}
+            loading={this.state.isSearchingByExpertise}
             disabled={this.state.isSearching}
             size="large"
             color="teal"
             className="search-button"
             type='submit'
-            onClick={this.search}>Search</Button>
+            onClick={this.searchByExpertise}>Search by Expertise</Button>
         </div>
-      </div>
-    )
+        <div>
+          <Button
+            loading={this.state.isSearchingByName}
+            disabled={this.state.isSearching}
+            size="large"
+            color="teal"
+            className="search-button"
+            type='submit'
+            onClick={this.searchByName}>Search by name</Button>
+        </div>
+      </Grid.Row>
+    );
   }
 
   render() {
@@ -131,9 +185,8 @@ class Home extends Component {
           <Grid.Row >
             <WiserLogo/>
           </Grid.Row>
-          <Grid.Row>
-            {this.renderSearchBar()}
-          </Grid.Row>
+          {this.renderSearchBar()}
+          {this.renderSearchButton()}
           <Grid.Row>
             <Grid.Column>
               {showResults
