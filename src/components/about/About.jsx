@@ -30,9 +30,7 @@ class About extends Component {
               </span>
               <br/>
               <br/>
-              <span>
-                For any info please write an email to {myMail}
-                or {ferraMail}.
+              <span>For any info please write an email to {myMail}&nbsp;or&nbsp;{ferraMail}.
                 <br/>
                 <br/> {acubeLink}
               </span>
