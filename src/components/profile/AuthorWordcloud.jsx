@@ -16,6 +16,9 @@ const yearOptions = [...Array(yearOptionsUpTo)].map((_, index) => {
     }
 });
 
+const normalizeEntityName = (entity_name) => entity_name
+    .replace(/_/g, " ")
+
 class AuthorWordcloud extends Component {
     constructor(props) {
         super(props);
@@ -41,7 +44,7 @@ class AuthorWordcloud extends Component {
                     .data
                     .topics
                     .map(({entity_name, pr_score, years}) => {
-                        return {value: entity_name, count: pr_score, years: years}
+                        return {value: normalizeEntityName(entity_name), count: pr_score, years: years}
                     })
             }))
     }
@@ -75,8 +78,8 @@ class AuthorWordcloud extends Component {
 
         let tags = [];
         for (var i = lastYear; i >= firstYear; i -= yearsStep) {
-            // if firstYear is before first author publication, we move it to
-            // first author pub. year. We add only non empty clouds.
+            // if firstYear is before first author publication, we move it to first author
+            // pub. year. We add only non empty clouds.
 
             let wordCloud = this.renderWordCloud(i - yearsStep + 1 < firstYear
                 ? firstYear
