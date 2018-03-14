@@ -30,11 +30,11 @@ class App extends Component {
                 <NavItem>Home</NavItem>
               </LinkContainer>
             </Nav>
-            <Nav>
+            {/* <Nav>
               <LinkContainer exact to="/profiles">
                 <NavItem>Profiles</NavItem>
               </LinkContainer>
-            </Nav>
+            </Nav> */}
             <Nav pullRight>
               <LinkContainer exact to="/about">
                 <NavItem>About</NavItem>
@@ -45,7 +45,7 @@ class App extends Component {
           <div>
             <Route exact path="/" component={Home}/>
             <Route exact path="/about" component={About}/>
-            <Route exact path="/profiles" component={Profiles}/>
+            {/* <Route exact path="/profiles" component={Profiles}/> */}
             <Route path="/profile/:authorId" component={AuthorProfile}/>
           </div>
         </div>
