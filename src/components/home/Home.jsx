@@ -171,7 +171,7 @@ class Home extends Component {
             color="teal"
             className="search-button"
             type='submit'
-            onClick={this.searchByName}>Search by name</Button>
+            onClick={this.searchByName}>Search by Name</Button>
         </div>
       </Grid.Row>
     );
