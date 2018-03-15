@@ -94,6 +94,7 @@ class AuthorTopics extends Component {
             }, {
                 Header: "Years",
                 accessor: "years",
+                sortable: false,
                 Cell: ({value}) => this.renderTopicYears(value)
             }, {
                 Header: "Importance",
