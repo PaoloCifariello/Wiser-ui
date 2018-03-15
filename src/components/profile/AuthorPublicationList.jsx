@@ -23,7 +23,7 @@ class AuthorPublicationList extends Component {
     }
 
     componentWillReceiveProps = ({publicationsYear}) => {
-        if (this.props.publicationsYear != publicationsYear) 
+        if (this.props.publicationsYear !== publicationsYear) 
             this.setState({authorPublications: []});
         }
     
