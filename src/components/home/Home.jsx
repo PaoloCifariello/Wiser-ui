@@ -8,7 +8,6 @@ import {
   Label,
   Message
 } from 'semantic-ui-react'
-import {Route} from 'react-router-dom'
 
 import ResultList from './ResultList'
 import WiserLogo from '../reusable/WiserLogo';
@@ -21,7 +20,7 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
-    const {searchBy, query} = this.props.match.params;
+    const {query} = this.props.match.params;
 
     this.state = {
       searchValue: query || "",
@@ -43,9 +42,11 @@ class Home extends Component {
 
     switch (searchBy) {
       case "e":
-        return this._searchByExpertise(query.trim());
+        return this._searchByExpertise(query);
       case "n":
-        return this._searchByName(query.trim());
+        return this._searchByName(query);
+      default:
+        return this._resetSearch();
     }
   }
 
@@ -69,16 +70,11 @@ class Home extends Component {
   }
 
   _resetSearch = (searchValue) => {
-    this.setState({
-      searchValue: "",
-      isSearching: false,
-      showErrorMessage: false,
-      showResults: false,
-      results: null
-    });
+    this.setState({searchValue: "", isSearching: false, showErrorMessage: false, showResults: false, results: null});
   }
 
   _searchByExpertise = (searchValue) => {
+    searchValue = searchValue.trim();
     this.setState({searchValue: searchValue})
 
     if (searchValue && !this.state.isSearching) {
@@ -98,6 +94,7 @@ class Home extends Component {
   }
 
   _searchByName = (searchValue) => {
+    searchValue = searchValue.trim();
     this.setState({searchValue: searchValue, isSearchingByName: true})
 
     if (searchValue && !this.state.isSearching) {
