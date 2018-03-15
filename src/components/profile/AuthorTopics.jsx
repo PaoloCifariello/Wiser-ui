@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import {List} from 'semantic-ui-react'
 
+import ReactTable from "react-table";
+import "react-table/react-table.css";
+
+import "./AuthorTopics.css"
 import api from '../../api/api'
 
-const normalizeEntityName = (entity_name) => entity_name
-    .replace(/_/g, " ")
+const normalizeEntityName = (entity_name) => entity_name.replace(/_/g, " ")
 class AuthorTopics extends Component {
     constructor(props) {
         super(props);
@@ -24,13 +27,96 @@ class AuthorTopics extends Component {
     renderTopicsList = () => {
         const {authorTopics} = this.state;
 
-        return authorTopics.slice(0, 29).map((topic, index) => <List.Item key={index}>{normalizeEntityName(topic.entity_name)}</ List.Item>)
+        return authorTopics
+            .slice(0, 29)
+            .map((topic, index) => <List.Item key={index}>{normalizeEntityName(topic.entity_name)}</ List.Item>)
+    }
+
+    renderTopicName = (entityName) => {
+        return <a target="_blank" href={`https://en.wikipedia.org/wiki/${entityName}`}>{normalizeEntityName(entityName)}</a>
+    }
+
+    renderTopicYears = (years) => {
+        return years
+            .sort()
+            .join(" - ");
+    }
+
+    renderImportanceScoreCell = (prScore, maxPrScore) => {
+        const percValue = (prScore / maxPrScore) * 100
+        return (
+            <div
+                style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#dadada',
+                borderRadius: '2px'
+            }}>
+                <div
+                    style={{
+                    width: `${percValue}%`,
+                    height: '100%',
+                    backgroundColor: percValue > 66
+                        ? '#85cc00'
+                        : percValue > 33
+                            ? '#ffbf00'
+                            : '#ff2e00',
+                    borderRadius: '2px',
+                    transition: 'all .2s ease-out'
+                }}/>
+            </div>
+        )
+    }
+
+    renderTopicsTable = () => {
+        const {authorTopics} = this.state;
+        const maxPrScore = authorTopics.length > 0
+            ? authorTopics[0].pr_score
+            : 1
+
+        return <ReactTable
+            data={authorTopics}
+            columns={[
+            {
+                id: "entity_name",
+                Header: "Entity",
+                accessor: "entity_name",
+                width: 250,
+                Cell: ({value}) => this.renderTopicName(value)
+            }, {
+                Header: "Count",
+                accessor: "count",
+                width: 80
+            }, {
+                Header: "Document count",
+                accessor: "document_count",
+                width: 120
+            }, {
+                Header: "Years",
+                accessor: "years",
+                Cell: ({value}) => this.renderTopicYears(value)
+            }, {
+                Header: "Importance",
+                accessor: "pr_score",
+                width: 250,
+                Cell: ({value}) => this.renderImportanceScoreCell(value, maxPrScore)
+            }
+        ]}
+            defaultSorted={[{
+                id: "pr_score",
+                desc: true
+            }
+        ]}
+            pageSizeOptions={[10, 15, 20, 30, 50]}
+            defaultPageSize={15}
+            className="-striped -highlight"/>
     }
 
     render = () => {
-        return (
-            <List>{this.renderTopicsList()}</List >
-        )
+        return <div>
+            {this.renderTopicsTable()}
+        </div>
+        // <List>{this.renderTopicsList()}</List > )
     }
 }
 

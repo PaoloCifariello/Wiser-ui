@@ -1,0 +1,7 @@
+.ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
+    background-color: #00332e1a;
+}
+
+.rt-th.rt-resizable-header.-cursor-pointer:focus {
+    outline: unset;
+}
