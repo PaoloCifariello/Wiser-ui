@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
 
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {IndexLinkContainer, LinkContainer} from 'react-router-bootstrap'
@@ -43,10 +43,13 @@ class App extends Component {
           </Navbar>
 
           <div>
-            <Route exact path="/" component={Home}/>
-            <Route exact path="/about" component={About}/>
-            {/* <Route exact path="/profiles" component={Profiles}/> */}
-            <Route path="/profile/:authorId" component={AuthorProfile}/>
+            <Switch>
+              <Route exact path="/about" component={About}/>
+              <Route exact path="/profile/:authorId" component={AuthorProfile}/>
+              <Route exact path="/search" component={Home}/>
+              <Route exact path="/search/:searchBy(e|n)/:query(.+)/" component={Home}/>
+              <Route path="*" render={() => (<Redirect to="/search" />)} /> 
+            </Switch>
           </div>
         </div>
       </Router>

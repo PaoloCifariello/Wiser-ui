@@ -8,6 +8,7 @@ import {
   Label,
   Message
 } from 'semantic-ui-react'
+import {Route} from 'react-router-dom'
 
 import ResultList from './ResultList'
 import WiserLogo from '../reusable/WiserLogo';
@@ -20,31 +21,64 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
+    const {searchBy, query} = this.props.match.params;
+
     this.state = {
-      searchValue: "",
+      searchValue: query || "",
       lastSearchValue: "",
       isSearching: false,
       showErrorMessage: false,
       showResults: false,
       results: null
     }
+
   }
 
   componentDidMount() {
+    const {searchBy, query} = this.props.match.params;
+
     this
       .searchInput
       .focus();
+
+    switch (searchBy) {
+      case "e":
+        return this._searchByExpertise(query.trim());
+      case "n":
+        return this._searchByName(query.trim());
+    }
+  }
+
+  componentWillReceiveProps = ({match}) => {
+    const {searchBy, query} = match.params;
+
+    this.setState({searchValue: query});
+
+    switch (searchBy) {
+      case "e":
+        return this._searchByExpertise(query);
+      case "n":
+        return this._searchByName(query);
+      default:
+        return this._resetSearch();
+    }
   }
 
   handleSearchChange = (e, {value}) => {
     this.setState({searchValue: value});
   }
 
-  searchByExpertise = () => {
-    const searchValue = this
-      .state
-      .searchValue
-      .trim();
+  _resetSearch = (searchValue) => {
+    this.setState({
+      searchValue: "",
+      isSearching: false,
+      showErrorMessage: false,
+      showResults: false,
+      results: null
+    });
+  }
+
+  _searchByExpertise = (searchValue) => {
     this.setState({searchValue: searchValue})
 
     if (searchValue && !this.state.isSearching) {
@@ -63,11 +97,7 @@ class Home extends Component {
     }
   }
 
-  searchByName = () => {
-    const searchValue = this
-      .state
-      .searchValue
-      .trim();
+  _searchByName = (searchValue) => {
     this.setState({searchValue: searchValue, isSearchingByName: true})
 
     if (searchValue && !this.state.isSearching) {
@@ -86,6 +116,22 @@ class Home extends Component {
     }
   }
 
+  searchByExpertise = (history) => {
+    const {searchValue} = this.state;
+    this
+      .props
+      .history
+      .push(`/search/e/${searchValue}`);
+  }
+
+  searchByName = (history) => {
+    const {searchValue} = this.state;
+    this
+      .props
+      .history
+      .push(`/search/n/${searchValue}`);
+  }
+
   showResults = (response) => {
     const {lastSearchValue} = this.state;
     if (lastSearchValue === response["query"]) {
@@ -101,7 +147,7 @@ class Home extends Component {
   }
 
   fail = (err) => {
-    this.setState({isSearching: false, showErrorMessage: true, lastError: err})
+    this.setState({isSearching: false, isSearchingByExpertise: false, isSearchingByName: false, showErrorMessage: true, lastError: err})
 
   }
 
