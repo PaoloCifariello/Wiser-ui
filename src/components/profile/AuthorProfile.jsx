@@ -4,10 +4,12 @@ import {
   Grid,
   Header,
   Message,
+  Menu,
   Segment,
   Tab
 } from 'semantic-ui-react'
 
+import {NavLink} from 'react-router-dom'
 import api from '../../api/api'
 
 import AuthorTopics from './AuthorTopics'
@@ -15,9 +17,29 @@ import AuthorPublications from './AuthorPublications'
 import AuthorWordcloud from './AuthorWordcloud'
 import AuthorSurvey from './AuthorSurvey'
 
+const menuItems = [
+  {
+    selector: "topics",
+    name: "Main topics",
+    render: (props) => <AuthorTopics {...props}/>
+  }, {
+    selector: "publications",
+    name: "Publications",
+    render: (props) => <AuthorPublications {...props}/>
+  }, {
+    selector: "wordcloud",
+    name: "Wordcloud",
+    render: (props) => <AuthorWordcloud {...props}/>
+  }, {
+    selector: "survey",
+    name: "Survey",
+    render: (props) => <AuthorSurvey {...props}/>
+  }
+];
 class AuthorProfile extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       authorId: this.props.match.params.authorId,
       isLoaded: false,
@@ -27,6 +49,7 @@ class AuthorProfile extends Component {
 
   componentDidMount() {
     const {authorId} = this.state;
+
     api
       .getAuthorProfile(authorId)
       .then((res) => this.updateAuthorInformation(res.data))
@@ -77,48 +100,66 @@ class AuthorProfile extends Component {
   renderAuthorProfile = () => {
     const {authorId, authorYears} = this.state;
 
-    const panes = [
-      {
-        menuItem: 'Main topics',
-        render: () => <Tab.Pane attached={true}><AuthorTopics authorId={authorId}/></Tab.Pane>
-      }, {
-        menuItem: 'Publications',
-        render: () => <Tab.Pane attached={false}><AuthorPublications
-            authorInformation={{
-            authorId,
-            authorYears
-          }}/></Tab.Pane>
-      }, {
-        menuItem: 'Wordcloud',
-        render: () => <Tab.Pane attached={false}><AuthorWordcloud
-            authorInformation={{
-            authorId,
-            authorYears
-          }}/></Tab.Pane>
-      }, {
-        menuItem: 'Survey',
-        render: () => <Tab.Pane attached={false}><AuthorSurvey authorId={authorId}/></Tab.Pane>
-      }
-    ];
-
     return (
       <Grid centered stackable>
         <Grid.Column/>
-        <Grid.Column  mobile={16} tablet={16} computer={12} largeScreen={11} widescreen={10}>
+        <Grid.Column
+          mobile={16}
+          tablet={16}
+          computer={12}
+          largeScreen={11}
+          widescreen={10}>
           <Segment basic>
             {this.renderAuthorInfo()}
-            <Divider/>
-            <Tab
-              menu={{
-              secondary: true,
-              pointing: true
-            }}
-              panes={panes}/>
+            <Divider/> {this.renderAuthorMenu()}
+            <Divider/> {this.renderAuthorSection()}
+
           </Segment>
         </Grid.Column>
         <Grid.Column/>
       </Grid>
     );
+  }
+
+  renderAuthorMenu = () => {
+    const {
+      section = "topics",
+      authorId
+    } = this.props.match.params;
+
+    return (
+      <div>
+        <Menu pointing secondary>
+          {menuItems.map(({
+            selector,
+            name
+          }, index) => {
+            return <Menu.Item
+              key={selector}
+              as={NavLink}
+              to={`/profile/${authorId}/${selector}`}
+              name={name}
+              active={section === selector}/>
+          })}
+        </Menu>
+      </div>
+    )
+  }
+
+  renderAuthorSection = () => {
+    const {
+      section = "topics",
+      authorId
+    } = this.props.match.params;
+    const {authorYears} = this.state;
+
+    return menuItems.find(({selector}) => selector === section).render({
+      authorInformation: {
+        authorId,
+        authorYears
+      }
+
+    });
   }
   render() {
     const {isLoaded, showErrorMessage} = this.state;
@@ -130,7 +171,6 @@ class AuthorProfile extends Component {
       return null;
     else 
       return this.renderAuthorProfile()
-
   }
 }
 
