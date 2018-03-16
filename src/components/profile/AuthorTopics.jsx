@@ -17,7 +17,7 @@ class AuthorTopics extends Component {
     }
 
     componentDidMount = () => {
-        const {authorId} = this.props;
+        const {authorId} = this.props.authorInformation;
 
         api
             .getAuthorTopics(authorId)
