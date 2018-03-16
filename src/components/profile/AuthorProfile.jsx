@@ -54,9 +54,13 @@ class AuthorProfile extends Component {
 
   renderAuthorInfo = () => {
     const {authorName, authorInstitution, authorYears} = this.state;
-    
-    const sortedAuthorYears = Object.keys(authorYears).sort();
-    const authorPublications = Object.values(authorYears).reduce((accumulator, el) => accumulator + el)
+
+    const sortedAuthorYears = Object
+      .keys(authorYears)
+      .sort();
+    const authorPublications = Object
+      .values(authorYears)
+      .reduce((accumulator, el) => accumulator + el)
     return (
       <div>
         <Header as='h1' textAlign="left">{authorName}
@@ -86,7 +90,11 @@ class AuthorProfile extends Component {
           }}/></Tab.Pane>
       }, {
         menuItem: 'Wordcloud',
-        render: () => <Tab.Pane attached={false}><AuthorWordcloud authorInformation={{authorId, authorYears}}/></Tab.Pane>
+        render: () => <Tab.Pane attached={false}><AuthorWordcloud
+            authorInformation={{
+            authorId,
+            authorYears
+          }}/></Tab.Pane>
       }, {
         menuItem: 'Survey',
         render: () => <Tab.Pane attached={false}><AuthorSurvey authorId={authorId}/></Tab.Pane>
@@ -94,9 +102,9 @@ class AuthorProfile extends Component {
     ];
 
     return (
-      <Grid columns='equal'>
+      <Grid centered stackable>
         <Grid.Column/>
-        <Grid.Column width={10}>
+        <Grid.Column width={12}>
           <Segment basic>
             {this.renderAuthorInfo()}
             <Divider/>
