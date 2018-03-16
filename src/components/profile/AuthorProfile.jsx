@@ -5,11 +5,10 @@ import {
   Header,
   Message,
   Menu,
-  Segment,
-  Tab
+  Segment
 } from 'semantic-ui-react'
 
-import {NavLink} from 'react-router-dom'
+import {NavLink, Switch, Redirect, Route} from 'react-router-dom'
 import api from '../../api/api'
 
 import AuthorTopics from './AuthorTopics'
@@ -98,8 +97,6 @@ class AuthorProfile extends Component {
     );
   }
   renderAuthorProfile = () => {
-    const {authorId, authorYears} = this.state;
-
     return (
       <Grid centered stackable>
         <Grid.Column/>
@@ -113,7 +110,6 @@ class AuthorProfile extends Component {
             {this.renderAuthorInfo()}
             <Divider/> {this.renderAuthorMenu()}
             <Divider/> {this.renderAuthorSection()}
-
           </Segment>
         </Grid.Column>
         <Grid.Column/>
@@ -135,7 +131,7 @@ class AuthorProfile extends Component {
             name
           }, index) => {
             return <Menu.Item
-              key={selector}
+              key={index}
               as={NavLink}
               to={`/profile/${authorId}/${selector}`}
               name={name}
@@ -147,19 +143,28 @@ class AuthorProfile extends Component {
   }
 
   renderAuthorSection = () => {
-    const {
-      section = "topics",
-      authorId
-    } = this.props.match.params;
+    const {authorId} = this.props.match.params;
     const {authorYears} = this.state;
 
-    return menuItems.find(({selector}) => selector === section).render({
-      authorInformation: {
-        authorId,
-        authorYears
-      }
+    return <Switch>
+      <Route
+        exact
+        path={`/profile/${authorId}`}
+        render={() => (<Redirect to={`/profile/${authorId}/topics`}/>)}/> {menuItems.map(({
+        selector,
+        render
+      }, index) => <Route
+        key={selector}
+        exact
+        path={`/profile/${authorId}/${selector}`}
+        render={() => render({
+        authorInformation: {
+          authorId,
+          authorYears
+        }
+      })}/>)}
+    </Switch>
 
-    });
   }
   render() {
     const {isLoaded, showErrorMessage} = this.state;
