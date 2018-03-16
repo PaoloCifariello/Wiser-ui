@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 
-import {Home, About, AuthorProfile} from '.'
+import {Search, About, AuthorProfile} from '.'
 
 import './App.css';
 import './navbar.css';
@@ -31,8 +31,8 @@ class App extends Component {
             <Switch>
               <Route exact path="/about" component={About}/>
               <Route exact path="/profile/:authorId" component={AuthorProfile}/>
-              <Route exact path="/search" component={Home}/>
-              <Route exact path="/search/:searchBy(e|n)/:query(.+)/" component={Home}/>
+              <Route exact path="/search" component={Search}/>
+              <Route exact path="/search/:searchBy(e|n)/:query(.+)/" component={Search}/>
               <Route path="*" render={() => (<Redirect to="/search"/>)}/>
             </Switch>
           </div>

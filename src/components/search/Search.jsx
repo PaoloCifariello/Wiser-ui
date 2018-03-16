@@ -12,11 +12,11 @@ import {
 import ResultList from './ResultList'
 import WiserLogo from '../reusable/WiserLogo';
 
-import './Home.css'
+import './Search.css'
 
 import api from '../../api/api'
 
-class Home extends Component {
+class Search extends Component {
 
   constructor(props) {
     super(props);
@@ -255,4 +255,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Search;

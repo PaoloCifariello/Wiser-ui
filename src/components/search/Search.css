@@ -1,0 +1,19 @@
+.margin-top15 {
+  margin-top: 15px !important;
+}
+
+.search-button {
+  margin: 10px 15px 0 15px !important;
+}
+
+@media only screen and (max-width: 600px) {
+  #expertise-search-bar {
+    width: 90vw;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  #expertise-search-bar {
+    width: 500px;
+  }
+}
