@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
-import {
-    Grid,
-    Label,
-    Menu,
-} from 'semantic-ui-react'
+import {Label, Menu, Tab} from 'semantic-ui-react'
 
 import AuthorPublicationList from './AuthorPublicationList'
 
@@ -18,52 +14,40 @@ class AuthorPublications extends Component {
             .sort((a, b) => b - a);
 
         this.state = {
-            authorId: authorId,
-            authorYears: authorYears,
-            selectedYear: sortedAuthorYears[0]
+            activeIndex: 0,
+            authorId,
+            authorYears,
+            sortedAuthorYears
         }
     }
 
-
     handleItemClick = (e, {year}) => this.setState({selectedYear: year})
-
-    handleContextRef = contextRef => this.setState({contextRef})
-
-    renderMenu = () => {
-        const {selectedYear, authorYears} = this.state
-        const sortedAuthorYears = Object
-            .keys(authorYears)
-            .sort((a, b) => b - a);
-
-        return (
-            <Menu size='small' vertical>
-                {sortedAuthorYears.map((year, index) => <Menu.Item
-                    key={index}
-                    year={year}
-                    active={selectedYear === year}
-                    onClick={this.handleItemClick}>
-                    <Label color={selectedYear === year ? "teal": "grey"}>{authorYears[year]}</Label>
-                    {year}
-                </Menu.Item>)}
-            </Menu>
-        );
+    handleTabChange = (e, {activeIndex}) => {
+        this.setState({activeIndex})
     }
-
     render = () => {
-        const {authorId, selectedYear} = this.state;
+        const {authorId, activeIndex, authorYears, sortedAuthorYears} = this.state
 
-        return (
-            <Grid columns={2}>
-                <Grid.Column floated='left' width={3}>
-                    <div ref={this.handleContextRef}>
-                        {this.renderMenu()}
-                    </div>
-                </Grid.Column>
-                <Grid.Column floated='right' width={13}>
-                    <AuthorPublicationList authorId={authorId} publicationsYear={selectedYear}/>
-                </Grid.Column>
-            </Grid>
-        );
+        const panes = sortedAuthorYears.map((year, index) => {
+            return {
+                menuItem: <Menu.Item key={year}>
+                    <Label
+                        circular
+                        color={activeIndex === index
+                        ? "teal"
+                        : "grey"}>{authorYears[year]}</Label>{year}</Menu.Item>,
+                render: () => <AuthorPublicationList authorId={authorId} publicationsYear={year}/>
+            }
+        });
+
+        return (<Tab
+            menu={{
+            fluid: true,
+            vertical: true,
+            tabular: 'right'
+        }}
+            onTabChange={this.handleTabChange}
+            panes={panes}/>);
     }
 }
 
