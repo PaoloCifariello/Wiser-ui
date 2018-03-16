@@ -16,7 +16,7 @@ class AuthorPublicationList extends Component {
 
     componentDidMount = () => {
         const {authorId, publicationsYear} = this.props;
-        
+
         api
             .getAuthorPublications(authorId, publicationsYear)
             .then((res) => this.setState({authorPublications: res.data.publications}))
@@ -44,7 +44,7 @@ class AuthorPublicationList extends Component {
         }}/>
         return (
             <Card className="margin-bottom-10" fluid>
-                <Card.Content header={publication.doi || publication.id}/>
+                <Card.Content header={publication.title || publication.doi || publication.id}/>
                 <Card.Content description={publicationText}/>
                 <Card.Content extra>
                     <div>
