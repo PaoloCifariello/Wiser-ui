@@ -104,7 +104,7 @@ class AuthorProfile extends Component {
     return (
       <Grid centered stackable>
         <Grid.Column/>
-        <Grid.Column width={12}>
+        <Grid.Column  mobile={16} tablet={16} computer={12} largeScreen={11} widescreen={10}>
           <Segment basic>
             {this.renderAuthorInfo()}
             <Divider/>
