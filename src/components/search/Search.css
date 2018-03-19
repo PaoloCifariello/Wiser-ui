@@ -6,6 +6,11 @@
   margin: 10px 15px 0 15px !important;
 }
 
+.margin-lr-10 {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 @media only screen and (max-width: 600px) {
   #expertise-search-bar {
     width: 90vw;

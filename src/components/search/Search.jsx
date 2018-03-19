@@ -15,6 +15,7 @@ import WiserLogo from '../reusable/WiserLogo';
 import './Search.css'
 
 import api from '../../api/api'
+import {renderEntityLink} from '../reusable/Entity';
 
 class Search extends Component {
 
@@ -28,7 +29,8 @@ class Search extends Component {
       isSearching: false,
       showErrorMessage: false,
       showResults: false,
-      results: null
+      results: null,
+      queryEntities: null
     }
 
   }
@@ -84,6 +86,7 @@ class Search extends Component {
         showErrorMessage: false,
         showResults: false,
         results: null,
+        queryEntities: null,
         lastSearchValue: searchValue
       });
       api
@@ -104,6 +107,7 @@ class Search extends Component {
         showErrorMessage: false,
         showResults: false,
         results: null,
+        queryEntities: null,
         lastSearchValue: searchValue
       });
       api
@@ -138,6 +142,7 @@ class Search extends Component {
         isSearchingByExpertise: false,
         isSearchingByName: false,
         results: response["results"],
+        queryEntities: response["queryEntities"],
         lastSearchTime: response["time"]
       })
     }
@@ -158,18 +163,28 @@ class Search extends Component {
     }
   }
 
+  renderQueryEntities = () => {
+    const {queryEntities} = this.state;
+    const queryEntitiesLinks = queryEntities.map((queryEntity, index) => <span class="margin-lr-10" key={index}>{renderEntityLink(queryEntity.entity_name)}</span>)
+    return <div className="margin-bottom-10">{queryEntitiesLinks}</div>
+  }
+
   renderResults = () => {
     const {showResults, results, lastSearchTime} = this.state
     if (showResults) 
       return (
         <div>
-          <Label>
-            <Icon name="time"/> {`${results
-              .length} results in ${lastSearchTime
-              .toFixed(3)}s`}
-          </Label>
-          <Divider hidden/>
-          <ResultList results={results}/>
+          {this.renderQueryEntities()}
+
+          <div>
+            <Label>
+              <Icon name="time"/> {`${results
+                .length} results in ${lastSearchTime
+                .toFixed(3)}s`}
+            </Label>
+            <Divider hidden/>
+            <ResultList results={results}/>
+          </div>
         </div>
       )
   }
