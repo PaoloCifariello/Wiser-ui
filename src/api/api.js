@@ -22,10 +22,16 @@ function getAuthorPublications(authorId, publicationsYear) {
     return axios.request(`${config.serverAddress}/get_author_publications?id=${authorId}&year=${publicationsYear}`);
 }
 
+function getAuthorPublication(publicationId) {
+    return axios.request(`${config.serverAddress}/get_author_publication?pid=${publicationId}`);
+}
+
+
 export default {
     findExpertsByExpertise : findExpertsByExpertise,
     findExpertsByName : findExpertsByName,
     getAuthorProfile : getAuthorProfile,
     getAuthorTopics : getAuthorTopics,
-    getAuthorPublications : getAuthorPublications
+    getAuthorPublications : getAuthorPublications,
+    getAuthorPublication: getAuthorPublication
 };
