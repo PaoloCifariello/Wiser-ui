@@ -165,7 +165,7 @@ class Search extends Component {
 
   renderQueryEntities = () => {
     const {queryEntities} = this.state;
-    const queryEntitiesLinks = queryEntities.map((queryEntity, index) => <span class="margin-lr-10" key={index}>{renderEntityLink(queryEntity.entity_name)}</span>)
+    const queryEntitiesLinks = queryEntities.map((queryEntity, index) => <span className="margin-lr-10" key={index}>{renderEntityLink(queryEntity.entity_name)}</span>)
     return <div className="margin-bottom-10">{queryEntitiesLinks}</div>
   }
 
