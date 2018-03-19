@@ -6,8 +6,8 @@ import "react-table/react-table.css";
 
 import "./AuthorTopics.css"
 import api from '../../api/api'
+import {normalizeEntityName, renderEntityLink} from '../reusable/Entity'
 
-const normalizeEntityName = (entity_name) => entity_name.replace(/_/g, " ")
 class AuthorTopics extends Component {
     constructor(props) {
         super(props);
@@ -30,10 +30,6 @@ class AuthorTopics extends Component {
         return authorTopics
             .slice(0, 29)
             .map((topic, index) => <List.Item key={index}>{normalizeEntityName(topic.entity_name)}</ List.Item>)
-    }
-
-    renderTopicName = (entityName) => {
-        return <a target="_blank" href={`https://en.wikipedia.org/wiki/${entityName}`}>{normalizeEntityName(entityName)}</a>
     }
 
     renderTopicYears = (years) => {
@@ -82,7 +78,7 @@ class AuthorTopics extends Component {
                 Header: "Entity",
                 accessor: "entity_name",
                 width: 250,
-                Cell: ({value}) => this.renderTopicName(value)
+                Cell: ({value}) => renderEntityLink(value)
             }, {
                 Header: "Count",
                 accessor: "count",
