@@ -15,6 +15,7 @@ import AuthorTopics from './AuthorTopics'
 import AuthorPublications from './AuthorPublications'
 import AuthorWordcloud from './AuthorWordcloud'
 import AuthorSurvey from './AuthorSurvey'
+import AuthorPublication from './AuthorPublication'
 
 const menuItems = [
   {
@@ -149,20 +150,26 @@ class AuthorProfile extends Component {
     return <Switch>
       <Route
         exact
-        path={`/profile/${authorId}`}
+        path={`/profile/:authorId`}
         render={() => (<Redirect to={`/profile/${authorId}/topics`}/>)}/> {menuItems.map(({
         selector,
         render
       }, index) => <Route
         key={selector}
         exact
-        path={`/profile/${authorId}/${selector}`}
+        path={`/profile/:authorId/${selector}`}
         render={() => render({
         authorInformation: {
           authorId,
           authorYears
         }
-      })}/>)}
+      })}/>)
+}
+      <Route
+        exact
+        key="publication"
+        path={`/profile/:authorId/publication/:publicationId`}
+        component={AuthorPublication}/>
     </Switch>
 
   }
