@@ -30,9 +30,9 @@ class App extends Component {
           <div>
             <Switch>
               <Route exact path="/about" component={About}/>
-              <Route exact path="/profile/:authorId/:section?" component={AuthorProfile}/>
               <Route exact path="/search" component={Search}/>
               <Route exact path="/search/:searchBy(e|n)/:query(.+)/" component={Search}/>
+              <Route path="/profile/:authorId/:section?" component={AuthorProfile}/>
               <Route path="*" render={() => (<Redirect to="/search"/>)}/>
             </Switch>
           </div>
