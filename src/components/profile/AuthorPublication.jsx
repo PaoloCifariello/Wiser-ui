@@ -15,8 +15,7 @@ import "react-table/react-table.css";
 import api from '../../api/api'
 import {renderEntityLink} from '../reusable/Entity';
 
-const shortParagraphImage = './shortParagraphImage.png';
-
+import './AuthorPublication.css'
 
 class AuthorPublication extends Component {
     constructor(props) {
@@ -30,6 +29,21 @@ class AuthorPublication extends Component {
         api
             .getAuthorPublication(publicationId)
             .then((res) => this.setState({publication: res.data}))
+    }
+
+    componentDidUpdate = () => {
+        const {clean_entities, filtered_entities} = this.state.publication;
+        const annotations = document.querySelectorAll('.annotation');
+
+        annotations.forEach((annotation) => {
+            const annotationName = annotation.getAttribute('entity');
+            const fe = filtered_entities.find((el) => el.entity_name === annotationName);
+            if (fe) {
+                annotation.setAttribute("class", `annotation annotation-filtered-${fe.filtered}`)
+            } else {
+                annotation.setAttribute("class", `annotation annotation-clean`)
+            }
+        })
     }
 
     renderPublicationText = () => {
@@ -47,7 +61,7 @@ class AuthorPublication extends Component {
                 <Card.Content description={publicationText}/>
                 <Card.Content extra>
                     <div>
-                        <Icon className="padding0" name='unordered list'/> {` ${publication.clean_entities.length} Topics`}
+                        <Icon className="padding0" name='unordered list'/> {` ${publication.clean_entities.length} Topics (${publication.filtered_entities.length} filtered)`}
                     </div>
                 </Card.Content>
             </Card>
@@ -61,14 +75,18 @@ class AuthorPublication extends Component {
                     style={{
                     color: row.value === 1
                         ? '#ff2e00'
-                        : '#ffbf00',
+                        : row.value === 2
+                            ? '#ffbf00'
+                            : "#57d500",
                     transition: 'all .3s ease'
                 }}>
                     &#x25cf;
                 </span>
                 {row.value === 1
                     ? 'Wrong annotation'
-                    : 'Not pertinent'}
+                    : row.value === 2
+                        ? 'Not pertinent'
+                        : "Good"}
             </span>
         )
     }
@@ -77,7 +95,7 @@ class AuthorPublication extends Component {
         const {filtered_entities} = this.state.publication;
 
         return <div>
-            <Header>Filtered topics  ({filtered_entities.length})</Header>
+            <Header>Filtered topics ({filtered_entities.length})</Header>
             <ReactTable
                 data={filtered_entities}
                 columns={[
@@ -110,12 +128,12 @@ class AuthorPublication extends Component {
     }
 
     renderTopicsTable = () => {
-        const {clean_entities} = this.state.publication;
+        const {clean_entities, filtered_entities} = this.state.publication;
 
         return <div>
-            <Header>Topics ({clean_entities.length})</Header>
+            <Header>Topics</Header>
             <ReactTable
-                data={clean_entities}
+                data={clean_entities.concat(filtered_entities)}
                 columns={[
                 {
                     id: "entity_name",
@@ -127,6 +145,11 @@ class AuthorPublication extends Component {
                     Header: "Count",
                     accessor: "count",
                     width: 80
+                }, {
+                    Header: "Filtered",
+                    accessor: "filtered",
+                    width: 300,
+                    Cell: this.renderFilteredCause
                 }
             ]}
                 defaultSorted={[{
@@ -134,8 +157,8 @@ class AuthorPublication extends Component {
                     desc: true
                 }
             ]}
-                pageSizeOptions={[5, 10, 15, 20, 30]}
-                defaultPageSize={10}
+                pageSizeOptions={[10, 15, 20, 30, 40]}
+                defaultPageSize={15}
                 className="-striped -highlight"/>
         </div>
     }
@@ -146,8 +169,6 @@ class AuthorPublication extends Component {
                 <Dimmer active inverted>
                     <Loader inverted>Loading</Loader>
                 </Dimmer>
-
-                <Image src={shortParagraphImage}/>
             </Segment>
         );
     }
@@ -159,7 +180,7 @@ class AuthorPublication extends Component {
                 <div>
                     {this.renderPublicationText()}
                     <Divider/> {this.renderTopicsTable()}
-                    <Divider/> {this.renderFilteredTopicsTable()}
+                    {/* <Divider/> {this.renderFilteredTopicsTable()} */}
                 </div>
             );
         else 
