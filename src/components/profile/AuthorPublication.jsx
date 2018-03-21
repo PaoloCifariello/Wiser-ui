@@ -5,7 +5,6 @@ import {
     Divider,
     Header,
     Icon,
-    Image,
     Loader,
     Segment
 } from 'semantic-ui-react'
@@ -32,7 +31,7 @@ class AuthorPublication extends Component {
     }
 
     componentDidUpdate = () => {
-        const {clean_entities, filtered_entities} = this.state.publication;
+        const {filtered_entities} = this.state.publication;
         const annotations = document.querySelectorAll('.annotation');
 
         annotations.forEach((annotation) => {
