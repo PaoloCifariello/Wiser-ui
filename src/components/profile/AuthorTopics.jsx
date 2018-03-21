@@ -21,7 +21,13 @@ class AuthorTopics extends Component {
 
         api
             .getAuthorTopics(authorId)
-            .then((res) => this.setState({authorTopics: res.data.topics}))
+            .then((res) => {
+                const authorTopics = res.data.topics.map((topic) => {
+                    topic["importance_score"] = Math.log(1 + (topic["document_count"] * Math.sqrt(topic["pr_score"]) * topic["iaf"]))   
+                    return topic
+                }).sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"])
+                this.setState({authorTopics: authorTopics}) 
+            })
     }
 
     renderTopicsList = () => {
@@ -66,8 +72,8 @@ class AuthorTopics extends Component {
 
     renderTopicsTable = () => {
         const {authorTopics} = this.state;
-        const maxPrScore = authorTopics.length > 0
-            ? authorTopics[0].pr_score
+        const maxImportanceScore = authorTopics.length > 0
+            ? authorTopics[0].importance_score
             : 1
 
         return <ReactTable
@@ -94,13 +100,13 @@ class AuthorTopics extends Component {
                 Cell: ({value}) => this.renderTopicYears(value)
             }, {
                 Header: "Importance",
-                accessor: "pr_score",
+                accessor: "importance_score",
                 width: 250,
-                Cell: ({value}) => this.renderImportanceScoreCell(value, maxPrScore)
+                Cell: ({value}) => this.renderImportanceScoreCell(value, maxImportanceScore)
             }
         ]}
             defaultSorted={[{
-                id: "pr_score",
+                id: "importance_score",
                 desc: true
             }
         ]}
