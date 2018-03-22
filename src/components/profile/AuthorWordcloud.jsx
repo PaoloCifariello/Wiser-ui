@@ -6,6 +6,8 @@ import {TagCloud} from 'react-tagcloud'
 
 import api from '../../api/api'
 
+import {normalizeEntityName, computeEnttyReciaf} from '../reusable/Entity'
+
 const yearOptionsUpTo = 5;
 const yearOptions = [...Array(yearOptionsUpTo)].map((_, index) => {
     index += 1
@@ -15,9 +17,6 @@ const yearOptions = [...Array(yearOptionsUpTo)].map((_, index) => {
         text: index.toString()
     }
 });
-
-const normalizeEntityName = (entity_name) => entity_name
-    .replace(/_/g, " ")
 
 class AuthorWordcloud extends Component {
     constructor(props) {
@@ -43,8 +42,12 @@ class AuthorWordcloud extends Component {
                 authorTopics: res
                     .data
                     .topics
-                    .map(({entity_name, pr_score, years}) => {
-                        return {value: normalizeEntityName(entity_name), count: pr_score, years: years}
+                    .map((entity) => {
+                        return {
+                            value: normalizeEntityName(entity.entity_name),
+                            count: computeEnttyReciaf(entity),
+                            years: entity.years
+                        }
                     })
             }))
     }

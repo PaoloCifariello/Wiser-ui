@@ -22,11 +22,15 @@ class AuthorTopics extends Component {
         api
             .getAuthorTopics(authorId)
             .then((res) => {
-                const authorTopics = res.data.topics.map((topic) => {
-                    topic["importance_score"] = Math.log(1 + (topic["document_count"] * Math.sqrt(topic["pr_score"]) * topic["iaf"]))   
-                    return topic
-                }).sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"])
-                this.setState({authorTopics: authorTopics}) 
+                const authorTopics = res
+                    .data
+                    .topics
+                    .map((topic) => {
+                        topic["importance_score"] = Math.log(1 + (topic["document_count"] * Math.sqrt(topic["pr_score"]) * topic["iaf"]))
+                        return topic
+                    })
+                    .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"]);
+                this.setState({authorTopics: authorTopics});
             })
     }
 
