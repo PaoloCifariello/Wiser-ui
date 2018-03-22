@@ -82,10 +82,10 @@ class AuthorPublication extends Component {
                     &#x25cf;
                 </span>
                 {row.value === 1
-                    ? 'Wrong annotation'
+                    ? ' Wrong annotation, because of a small ρ'
                     : row.value === 2
-                        ? 'Not pertinent'
-                        : "Good"}
+                        ? ' Not pertinent, because of a zero centrality'
+                        : " Good"}
             </span>
         )
     }
@@ -179,7 +179,6 @@ class AuthorPublication extends Component {
                 <div>
                     {this.renderPublicationText()}
                     <Divider/> {this.renderTopicsTable()}
-                    {/* <Divider/> {this.renderFilteredTopicsTable()} */}
                 </div>
             );
         else 
