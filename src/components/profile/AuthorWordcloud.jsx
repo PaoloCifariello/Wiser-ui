@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {Card, Form, Select} from 'semantic-ui-react'
 import {TagCloud} from 'react-tagcloud'
 
@@ -18,7 +18,7 @@ const yearOptions = [...Array(yearOptionsUpTo)].map((_, index) => {
     }
 });
 
-class AuthorWordcloud extends Component {
+class AuthorWordcloud extends PureComponent {
     constructor(props) {
         super(props);
         const {authorInformation} = this.props;
