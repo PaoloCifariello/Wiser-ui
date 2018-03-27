@@ -56,7 +56,14 @@ class AuthorPublication extends Component {
 
         return (
             <Card className="margin-bottom-10" fluid>
-                <Card.Content header={publicationTitle}/>
+                <Card.Content>
+                    <Card.Header>
+                        {publicationTitle}
+                    </Card.Header>
+                    <Card.Meta>
+                        <span>{publication.year}</span>
+                    </Card.Meta>
+                </Card.Content>
                 <Card.Content description={publicationText}/>
                 <Card.Content extra>
                     <div>
