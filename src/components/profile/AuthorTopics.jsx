@@ -87,6 +87,8 @@ class AuthorTopics extends Component {
                 id: "entity_name",
                 Header: "Entity",
                 accessor: "entity_name",
+                filterable: true,
+                filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1,
                 width: 250,
                 Cell: ({value}) => renderEntityLink(value)
             }, {
