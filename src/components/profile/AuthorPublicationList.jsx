@@ -3,41 +3,7 @@ import {Card, Icon, List} from 'semantic-ui-react'
 import {NavLink} from 'react-router-dom'
 import './AuthorPublicationList.css'
 
-import api from '../../api/api'
-
 class AuthorPublicationList extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            authorPublications: []
-        }
-    }
-
-    componentDidMount = () => {
-        const {authorId, publicationsYear} = this.props;
-
-        api
-            .getAuthorPublications(authorId, publicationsYear)
-            .then((res) => this.setState({authorPublications: res.data.publications}))
-    }
-
-    componentWillReceiveProps = ({publicationsYear}) => {
-        if (this.props.publicationsYear !== publicationsYear) {
-            this.setState({authorPublications: []});
-        }
-    }
-
-    componentDidUpdate = (prevProps) => {
-        const {authorId, publicationsYear} = this.props;
-
-        if (prevProps.publicationsYear !== this.props.publicationsYear) {
-            api
-                .getAuthorPublications(authorId, publicationsYear)
-                .then((res) => this.setState({authorPublications: res.data.publications}))
-        }
-    }
-
     renderPublication = (publication) => {
         const {authorId} = this.props;
 
@@ -61,13 +27,7 @@ class AuthorPublicationList extends Component {
     }
 
     render = () => {
-        const {filterTopics} = this.props;
-        var {authorPublications} = this.state;
-
-        if (filterTopics.length > 0) {
-            authorPublications = authorPublications.filter((publication) => filterTopics.every((filterTopic) => publication.entities.some((entity) => filterTopic === entity.entity_id)));
-
-        }
+        const {authorPublications} = this.props;
         return authorPublications.map((publication, index) => <List.Item key={index}>{this.renderPublication(publication)}</ List.Item>)
     }
 

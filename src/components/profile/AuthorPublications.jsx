@@ -8,15 +8,6 @@ import {normalizeEntityName} from '../reusable/Entity'
 
 import api from '../../api/api'
 
-const intersect = (a, b) => {
-    var t;
-    if (b.length > a.length) 
-        t = b,
-        b = a,
-        a = t; // indexOf to loop over shorter
-    return a.filter((e1) => b.some((e2) => e1 == e2));
-}
-
 class AuthorPublications extends Component {
     constructor(props) {
         super(props);
@@ -28,21 +19,23 @@ class AuthorPublications extends Component {
         this.state = {
             activeIndex: 0,
             authorId,
-            authorYears,
             authorTopics: [],
+            authorYears,
             sortedAuthorYears,
-            filterByTopics: []
+            authorPublications: [],
+            filterTopics: []
         }
     }
 
     componentDidMount = () => {
         const {authorId} = this.state;
 
-        api
-            .getAuthorTopics(authorId)
-            .then((res) => {
-                this.setState({authorTopics: res.data.topics})
-            });
+        Promise.all([
+            api.getAuthorTopics(authorId),
+            api.getAuthorPublications(authorId)
+        ]).then((res) => {
+            this.setState({authorTopics: res[0].data.topics, authorPublications: res[1].data.publications})
+        });
     }
 
     handleItemClick = (e, {year}) => this.setState({selectedYear: year})
@@ -51,7 +44,7 @@ class AuthorPublications extends Component {
     }
 
     changedFilterEntities = (event, {value}) => {
-        this.setState({filterByTopics: value})
+        this.setState({filterTopics: value})
     }
 
     renderEntityFilter = () => {
@@ -74,61 +67,73 @@ class AuthorPublications extends Component {
             options={options}/>);
     }
 
-    renderYearsTab = () => {
-        const {
-            authorId,
-            activeIndex,
-            authorYears,
-            authorTopics,
-            sortedAuthorYears,
-            filterByTopics
-        } = this.state
+    filterAuthorPublications = () => {
+        const {authorPublications, filterTopics} = this.state
 
-        var years = sortedAuthorYears;
-        if (filterByTopics.length > 0) {
-            const selectedFiltertopics = authorTopics.filter((topic) => filterByTopics.includes(topic.entity_id));
-            debugger;
-            years = selectedFiltertopics.reduce((years, topic) => intersect(years, topic.years), years)
+        const filteredPublications = authorPublications.filter((publication) => filterTopics.every((filterTopic) => publication.entities.some((entity) => filterTopic === entity.entity_id)));
+
+        return filteredPublications.reduce((publicationsMap, publication) => {
+            const publicationYear = publication.year,
+                yearPublications = publicationsMap.get(publicationYear);
+
+            if (yearPublications) {
+                yearPublications.push(publication)
+                publicationsMap.set(publicationYear, yearPublications)
+            } else {
+                publicationsMap.set(publicationYear, [publication])
+            }
+
+            return publicationsMap;
+        }, new Map());
+    }
+
+    renderYearsTab = () => {
+        const {authorId, activeIndex} = this.state
+
+            const publicationsMap = this.filterAuthorPublications(),
+                years = Array
+                    .from(publicationsMap.keys())
+                    .sort()
+                    .reverse()
+
+            const panes = years.map((year, index) => {
+                return {
+                    menuItem: <Menu.Item key={year}>
+                        <Label
+                            circular
+                            color={activeIndex === index
+                            ? "teal"
+                            : "grey"}>{publicationsMap
+                                .get(year)
+                                .length}</Label>{year}</Menu.Item>,
+                    render: () => <AuthorPublicationList
+                            authorId={authorId}
+                            publicationsYear={year}
+                            authorPublications={publicationsMap.get(year)}/>
+                }
+            });
+
+            return (<Tab
+                menu={{
+                fluid: true,
+                vertical: true,
+                tabular: 'right'
+            }}
+                onTabChange={this.handleTabChange}
+                panes={panes}/>);
         }
 
-        debugger;
+        render = () => {
+            return (
+                <div>
+                    {this.renderEntityFilter()}
+                    <div style={{
+                        height: 20
+                    }}/> {this.renderYearsTab()}
 
-        const panes = years.map((year, index) => {
-            return {
-                menuItem: <Menu.Item key={year}>
-                    <Label
-                        circular
-                        color={activeIndex === index
-                        ? "teal"
-                        : "grey"}>{authorYears[year]}</Label>{year}</Menu.Item>,
-                render: () => <AuthorPublicationList
-                        authorId={authorId}
-                        publicationsYear={year}
-                        filterTopics={filterByTopics}/>
-            }
-        });
-
-        return (<Tab
-            menu={{
-            fluid: true,
-            vertical: true,
-            tabular: 'right'
-        }}
-            onTabChange={this.handleTabChange}
-            panes={panes}/>);
+                </div>
+            );
+        }
     }
 
-    render = () => {
-        return (
-            <div>
-                {this.renderEntityFilter()}
-                <div style={{
-                    height: 20
-                }}/> {this.renderYearsTab()}
-
-            </div>
-        );
-    }
-}
-
-export default AuthorPublications;
+    export default AuthorPublications;

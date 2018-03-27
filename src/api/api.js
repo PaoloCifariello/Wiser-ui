@@ -18,14 +18,17 @@ function getAuthorTopics(authorId) {
     return axios.request(`${config.serverAddress}/get_author_topics?id=${authorId}`);
 }
 
-function getAuthorPublications(authorId, publicationsYear) {
-    return axios.request(`${config.serverAddress}/get_author_publications?id=${authorId}&year=${publicationsYear}`);
+function getAuthorPublications(authorId, filterTopics) {
+    return axios.request(`${config.serverAddress}/get_author_publications`, {
+        params: {
+            id: authorId
+        }
+    });
 }
 
 function getAuthorPublication(publicationId) {
     return axios.request(`${config.serverAddress}/get_author_publication?pid=${publicationId}`);
 }
-
 
 export default {
     findExpertsByExpertise : findExpertsByExpertise,
@@ -33,5 +36,5 @@ export default {
     getAuthorProfile : getAuthorProfile,
     getAuthorTopics : getAuthorTopics,
     getAuthorPublications : getAuthorPublications,
-    getAuthorPublication: getAuthorPublication
+    getAuthorPublication : getAuthorPublication
 };
