@@ -65,7 +65,7 @@ class AuthorPublicationList extends Component {
         var {authorPublications} = this.state;
 
         if (filterTopics.length > 0) {
-            authorPublications = authorPublications.filter((publication) => publication.entities.some((entity) => filterTopics.includes(entity.entity_id)))
+            authorPublications = authorPublications.filter((publication) => filterTopics.every((filterTopic) => publication.entities.some((entity) => filterTopic === entity.entity_id)));
 
         }
         return authorPublications.map((publication, index) => <List.Item key={index}>{this.renderPublication(publication)}</ List.Item>)

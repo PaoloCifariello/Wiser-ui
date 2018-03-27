@@ -7,6 +7,16 @@ import './AuthorPublications.css'
 import {normalizeEntityName} from '../reusable/Entity'
 
 import api from '../../api/api'
+
+const intersect = (a, b) => {
+    var t;
+    if (b.length > a.length) 
+        t = b,
+        b = a,
+        a = t; // indexOf to loop over shorter
+    return a.filter((e1) => b.some((e2) => e1 == e2));
+}
+
 class AuthorPublications extends Component {
     constructor(props) {
         super(props);
@@ -41,9 +51,7 @@ class AuthorPublications extends Component {
     }
 
     changedFilterEntities = (event, {value}) => {
-        this.setState({
-            filterByTopics: value
-        })
+        this.setState({filterByTopics: value})
     }
 
     renderEntityFilter = () => {
@@ -67,14 +75,23 @@ class AuthorPublications extends Component {
     }
 
     renderYearsTab = () => {
-        const {authorId, activeIndex, authorYears, authorTopics, sortedAuthorYears, filterByTopics} = this.state
+        const {
+            authorId,
+            activeIndex,
+            authorYears,
+            authorTopics,
+            sortedAuthorYears,
+            filterByTopics
+        } = this.state
 
         var years = sortedAuthorYears;
         if (filterByTopics.length > 0) {
             const selectedFiltertopics = authorTopics.filter((topic) => filterByTopics.includes(topic.entity_id));
-            years = [...new Set(selectedFiltertopics.reduce((years, topic) => years.concat(topic.years), []))].sort().reverse();
+            debugger;
+            years = selectedFiltertopics.reduce((years, topic) => intersect(years, topic.years), years)
         }
-        
+
+        debugger;
 
         const panes = years.map((year, index) => {
             return {
@@ -84,7 +101,10 @@ class AuthorPublications extends Component {
                         color={activeIndex === index
                         ? "teal"
                         : "grey"}>{authorYears[year]}</Label>{year}</Menu.Item>,
-                render: () => <AuthorPublicationList authorId={authorId} publicationsYear={year} filterTopics={filterByTopics} />
+                render: () => <AuthorPublicationList
+                        authorId={authorId}
+                        publicationsYear={year}
+                        filterTopics={filterByTopics}/>
             }
         });
 
