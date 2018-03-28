@@ -12,7 +12,7 @@ import {
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import api from '../../api/api'
-import {renderEntityLink} from '../reusable/Entity';
+import {normalizeEntityName, renderEntityLink} from '../reusable/Entity';
 
 import './AuthorPublication.css'
 
@@ -146,7 +146,9 @@ class AuthorPublication extends Component {
                     Header: "Entity",
                     accessor: "entity_name",
                     width: 250,
-                    Cell: ({value}) => renderEntityLink(value)
+                    filterable: true,
+                    Cell: ({value}) => renderEntityLink(value),
+                    filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1
                 }, {
                     Header: "Count",
                     accessor: "count",
