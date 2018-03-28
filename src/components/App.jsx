@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 
-import {Search, About, AuthorProfile} from '.'
+import {About, AuthorProfile, Search, WiserStatistics} from '.'
 
 import './App.css';
 import './navbar.css';
@@ -21,6 +21,9 @@ class App extends Component {
               </LinkContainer>
             </Nav>
             <Nav pullRight>
+              <LinkContainer exact to="/statistics">
+                <NavItem>Statistics</NavItem>
+              </LinkContainer>
               <LinkContainer exact to="/about">
                 <NavItem>About</NavItem>
               </LinkContainer>
@@ -31,6 +34,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/about" component={About}/>
               <Route exact path="/search" component={Search}/>
+              <Route exact path="/statistics" component={WiserStatistics}/>
               <Route exact path="/search/:searchBy(e|n)/:query(.+)/" component={Search}/>
               <Route path="/profile/:authorId/:section?" component={AuthorProfile}/>
               <Route path="*" render={() => (<Redirect to="/search"/>)}/>
