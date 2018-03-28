@@ -15,7 +15,11 @@ function getAuthorProfile(authorId) {
 }
 
 function getAuthorTopics(authorId) {
-    return axios.request(`${config.serverAddress}/get_author_topics?id=${authorId}`);
+    return axios.request(`${config.serverAddress}/get_author_topics`, {
+        params: {
+            id: authorId
+        }
+    });
 }
 
 function getAuthorPublications(authorId, filterTopics) {
@@ -27,7 +31,15 @@ function getAuthorPublications(authorId, filterTopics) {
 }
 
 function getAuthorPublication(publicationId) {
-    return axios.request(`${config.serverAddress}/get_author_publication?pid=${publicationId}`);
+    return axios.request(`${config.serverAddress}/get_author_publication`, {
+        params: {
+            pid: publicationId
+        }
+    });
+}
+
+function getStatistics() {
+    return axios.request(`${config.serverAddress}/get_statistics`);
 }
 
 export default {
@@ -36,5 +48,6 @@ export default {
     getAuthorProfile : getAuthorProfile,
     getAuthorTopics : getAuthorTopics,
     getAuthorPublications : getAuthorPublications,
-    getAuthorPublication : getAuthorPublication
+    getAuthorPublication : getAuthorPublication,
+    getStatistics : getStatistics
 };
