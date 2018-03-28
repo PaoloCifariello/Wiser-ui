@@ -23,9 +23,10 @@ class About extends Component {
           <div className="about-contianer">
             <div className="about">
               <span>
-                This system is being developed by Acube Lab (at the Department of Computer
-                Science of the University of Pisa), partially sponsored by MIUR project FFO 2016
-                (DM 6 luglio 2016, n. 552, art. 11) titled
+                This system is being developed by Acube Lab (at the Department of Computer Science of the University of Pisa).
+                <br /> 
+                It is partially sponsored by MIUR project FFO 2016 (DM 6 luglio 2016, n. 552, art. 11) titled:
+                <br />
                 <i>“{projectTitle}”</i>.
               </span>
               <br/>
