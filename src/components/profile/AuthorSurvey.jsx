@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
 
-import {Card, Rating} from 'semantic-ui-react'
+import {
+    Button,
+    Card,
+    Divider,
+    Message,
+    Rating,
+    Statistic
+} from 'semantic-ui-react'
 
 import api from '../../api/api'
 import {normalizeEntityName, computeEnttyReciaf} from '../reusable/Entity'
@@ -11,7 +18,8 @@ class AuthorSurvey extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorTopics: []
+            authorTopics: [],
+            rates: new Map()
         }
     }
     componentDidMount = () => {
@@ -32,6 +40,20 @@ class AuthorSurvey extends Component {
             });
     }
 
+    rateTopic = (entityId, rate) => {
+        const {rates} = this.state;
+        rates.set(entityId, rate)
+        this.setState({rates})
+    }
+    saveRates = () => {
+        // TODO:
+        // const {rates} = this.state;
+        // code to save rates
+        // formate rates (if needed) into some JSON and
+        // send to server
+        // api.saveRates(rates)
+    }
+
     renderAuthorTopic = ({entity_id, entity_name, document_count}) => {
         return <Card
             style={{
@@ -43,21 +65,52 @@ class AuthorSurvey extends Component {
                 <Card.Header>
                     <a target="_blank" href={`https://en.wikipedia.org/wiki/${entity_name}`}>{normalizeEntityName(entity_name)}</a>
                 </Card.Header>
-                <Card.Description><Rating maxRating={5} icon='star' size='massive'/></Card.Description>
+                <Card.Description><Rating
+                    maxRating={5}
+                    icon='star'
+                    size='massive'
+                    onRate={(e, {rating}) => this.rateTopic(entity_id, rating)}/></Card.Description>
             </Card.Content>
             <Card.Content extra>{`Appears in ${document_count} documents`}</Card.Content>
         </Card>
     }
 
     render = () => {
-        const {authorTopics} = this.state;
+        const {authorTopics, rates} = this.state;
 
         return (
-            <Card.Group>
-                {authorTopics
-                    .slice(0, TOP_K_TOPICS)
-                    .map(this.renderAuthorTopic)}
-            </Card.Group>
+            <div>
+                <Message>
+                    <Message.Header>Survey.</Message.Header>
+                    <Message.Content>
+                        Please rate the following topics based on your knowledge. For each topic choose
+                        a rate from
+                        <Rating icon='star' disabled defaultRating={1} maxRating={1}/>
+                        to
+                        <Rating icon='star' disabled defaultRating={5} maxRating={5}/>
+                        and then save your feedback.
+                    </Message.Content>
+                </Message>
+                <Card.Group>
+                    {authorTopics
+                        .slice(0, TOP_K_TOPICS)
+                        .map(this.renderAuthorTopic)}
+                </Card.Group>
+                <Divider horizontal/>
+                <Divider horizontal/>
+                <div className="align-center">
+                    <div>
+                        <Button color='teal' size='big' onClick={this.saveRates}>Save</Button>
+                        <Statistic
+                            style={{
+                            marginLeft: 15
+                        }}
+                            size='tiny'
+                            label='Rates'
+                            value={`${rates.size}/${TOP_K_TOPICS}`}/>
+                    </div>
+                </div>
+            </div>
         )
     }
 }
