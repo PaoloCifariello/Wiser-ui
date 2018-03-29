@@ -52,7 +52,7 @@ class AuthorProfile extends Component {
 
     api
       .getAuthorProfile(authorId)
-      .then((res) => this.updateAuthorInformation(res.data))
+      .then(this.updateAuthorInformation)
       .catch(this.fail)
   }
 

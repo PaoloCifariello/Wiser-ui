@@ -91,7 +91,7 @@ class Search extends Component {
       });
       api
         .findExpertsByExpertise(searchValue)
-        .then((res) => this.showResults(res.data))
+        .then(this.showResults)
         .catch(this.fail)
     }
   }
@@ -112,7 +112,7 @@ class Search extends Component {
       });
       api
         .findExpertsByName(searchValue)
-        .then((res) => this.showResults(res.data))
+        .then(this.showResults)
         .catch(this.fail)
     }
   }

@@ -33,8 +33,8 @@ class AuthorPublications extends Component {
         Promise.all([
             api.getAuthorTopics(authorId),
             api.getAuthorPublications(authorId)
-        ]).then((res) => {
-            this.setState({authorTopics: res[0].data.topics, authorPublications: res[1].data.publications})
+        ]).then((data) => {
+            this.setState({authorTopics: data[0].topics, authorPublications: data[1].publications})
         });
     }
 

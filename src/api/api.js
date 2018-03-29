@@ -1,45 +1,63 @@
 import axios from 'axios'
 import config from '../config.json'
 
-function findExpertsByExpertise(expertiseArea) {
-    return axios.request(`${config.serverAddress}/find_experts_by_field?q=${expertiseArea}`);
+const API_STATUS = Object.freeze({OK: 0, ERROR: 1});
+
+const api = (httpPromise) => httpPromise.then((res) => res.data.status === API_STATUS.OK
+    ? Promise.resolve(res.data.content)
+    : Promise.reject(res.data.content));
+
+async function findExpertsByExpertise(expertiseArea) {
+    return api(axios.request(`${config.serverAddress}/find_experts_by_field?q=${expertiseArea}`));
 }
 
-function findExpertsByName(expertName) {
-    return axios.request(`${config.serverAddress}/find_experts_by_name?q=${expertName}`);
+async function findExpertsByName(expertName) {
+    return api(axios.request(`${config.serverAddress}/find_experts_by_name?q=${expertName}`));
 
 }
 
-function getAuthorProfile(authorId) {
-    return axios.request(`${config.serverAddress}/get_author_profile?id=${authorId}`);
-}
-
-function getAuthorTopics(authorId) {
-    return axios.request(`${config.serverAddress}/get_author_topics`, {
+async function getAuthorProfile(authorId) {
+    return api(axios.request(`${config.serverAddress}/get_author_profile`, {
         params: {
             id: authorId
         }
-    });
+    }));
 }
 
-function getAuthorPublications(authorId, filterTopics) {
-    return axios.request(`${config.serverAddress}/get_author_publications`, {
+async function getAuthorTopics(authorId) {
+    return api(axios.request(`${config.serverAddress}/get_author_topics`, {
         params: {
             id: authorId
         }
-    });
+    }));
 }
 
-function getAuthorPublication(publicationId) {
-    return axios.request(`${config.serverAddress}/get_author_publication`, {
+async function getAuthorTopicsForSurvey(authorId) {
+    return api(axios.request(`${config.serverAddress}/get_author_topics_survey`, {
+        params: {
+            id: authorId
+        }
+    }));
+}
+
+async function getAuthorPublications(authorId, filterTopics) {
+    return api(axios.request(`${config.serverAddress}/get_author_publications`, {
+        params: {
+            id: authorId
+        }
+    }));
+}
+
+async function getAuthorPublication(publicationId) {
+    return api(axios.request(`${config.serverAddress}/get_author_publication`, {
         params: {
             pid: publicationId
         }
-    });
+    }));
 }
 
-function getStatistics() {
-    return axios.request(`${config.serverAddress}/get_statistics`);
+async function getStatistics() {
+    return api(axios.request(`${config.serverAddress}/get_statistics`));
 }
 
 export default {
@@ -47,6 +65,7 @@ export default {
     findExpertsByName : findExpertsByName,
     getAuthorProfile : getAuthorProfile,
     getAuthorTopics : getAuthorTopics,
+    getAuthorTopicsForSurvey : getAuthorTopicsForSurvey,
     getAuthorPublications : getAuthorPublications,
     getAuthorPublication : getAuthorPublication,
     getStatistics : getStatistics

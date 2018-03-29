@@ -18,20 +18,21 @@ class WiserStatistics extends Component {
     componentDidMount = () => {
         api
             .getStatistics()
-            .then((res) => {
-                const data = res.data;
-                this.setState({
-                    documentCount: data.document_count,
-                    authorCount: data.author_count,
-                    topicCount: data.topic_count,
-                    queryCount: data.query_count,
-                    profileViewCount: data.profile_view_count,
-                    queryText: data.query_text,
-                    queryTopic: data.query_topic,
-                    queryProfile: data.query_profile,
-                    loading: false
-                })
-            });
+            .then(this.setStatisticInformation)
+    }
+
+    setStatisticInformation = (data) => {
+        this.setState({
+            documentCount: data.document_count,
+            authorCount: data.author_count,
+            topicCount: data.topic_count,
+            queryCount: data.query_count,
+            profileViewCount: data.profile_view_count,
+            queryText: data.query_text,
+            queryTopic: data.query_topic,
+            queryProfile: data.query_profile,
+            loading: false
+        });
     }
 
     renderLoader = () => {
@@ -94,7 +95,7 @@ class WiserStatistics extends Component {
                             <Statistic.Label>Queries</Statistic.Label>
                         </Statistic>
                         <Statistic >
-                        <Statistic.Value>{profileViewCount}</Statistic.Value>
+                            <Statistic.Value>{profileViewCount}</Statistic.Value>
                             <Statistic.Label>Profile views</Statistic.Label>
                         </Statistic>
                     </Statistic.Group>

@@ -6,7 +6,7 @@ import {TagCloud} from 'react-tagcloud'
 
 import api from '../../api/api'
 
-import {normalizeEntityName, computeEnttyReciaf} from '../reusable/Entity'
+import {normalizeEntityName, computeEntityReciaf} from '../reusable/Entity'
 
 const yearOptionsUpTo = 5;
 const yearOptions = [...Array(yearOptionsUpTo)].map((_, index) => {
@@ -38,19 +38,20 @@ class AuthorWordcloud extends PureComponent {
 
         api
             .getAuthorTopics(authorId)
-            .then((res) => this.setState({
-                authorTopics: res
-                    .data
-                    .topics
-                    .map((entity) => {
-                        return {
-                            value: normalizeEntityName(entity.entity_name),
-                            count: computeEnttyReciaf(entity),
-                            years: entity.years
-                        }
-                    })
-            }))
+            .then(this.setAuthorTopicsState)
     }
+
+    setAuthorTopicsState = (data) => this.setState({
+        authorTopics: data
+            .topics
+            .map((entity) => {
+                return {
+                    value: normalizeEntityName(entity.entity_name),
+                    count: computeEntityReciaf(entity),
+                    years: entity.years
+                }
+            })
+    })
 
     handleChange = (e, {value}) => {
         this.setState({yearsStep: value});

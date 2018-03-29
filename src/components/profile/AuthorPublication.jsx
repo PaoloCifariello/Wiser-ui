@@ -27,7 +27,7 @@ class AuthorPublication extends Component {
 
         api
             .getAuthorPublication(publicationId)
-            .then((res) => this.setState({publication: res.data}))
+            .then((data) => this.setState({publication: data}))
     }
 
     componentDidUpdate = () => {
