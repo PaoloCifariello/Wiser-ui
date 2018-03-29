@@ -21,9 +21,9 @@ class App extends Component {
               </LinkContainer>
             </Nav>
             <Nav pullRight>
-              <LinkContainer exact to="/statistics">
+              {/* <LinkContainer exact to="/statistics">
                 <NavItem>Statistics</NavItem>
-              </LinkContainer>
+              </LinkContainer> */}
               <LinkContainer exact to="/about">
                 <NavItem>About</NavItem>
               </LinkContainer>
