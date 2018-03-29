@@ -27,7 +27,9 @@ class About extends Component {
                 <br /> 
                 It is partially sponsored by MIUR project FFO 2016 (DM 6 luglio 2016, n. 552, art. 11) titled:
                 <br />
-                <i>“{projectTitle}”</i>.
+                <br />
+                <i className="project-title">“{projectTitle}”</i>.
+                <br />
               </span>
               <br/>
               <br/>
