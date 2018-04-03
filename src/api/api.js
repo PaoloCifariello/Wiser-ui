@@ -60,6 +60,17 @@ async function getStatistics() {
     return api(axios.request(`${config.serverAddress}/get_statistics`));
 }
 
+async function submitSurvey(authorId, surveyRates) {
+    // return api(axios.post(`${config.serverAddress}/submit_survey`, surveyRates));
+    return api(axios.request(`${config.serverAddress}/submit_survey`, {
+        params: {
+            id: authorId
+        },
+        method: "post",
+        data: surveyRates
+    }));
+}
+
 export default {
     findExpertsByExpertise : findExpertsByExpertise,
     findExpertsByName : findExpertsByName,
@@ -68,5 +79,6 @@ export default {
     getAuthorTopicsForSurvey : getAuthorTopicsForSurvey,
     getAuthorPublications : getAuthorPublications,
     getAuthorPublication : getAuthorPublication,
-    getStatistics : getStatistics
+    getStatistics : getStatistics,
+    submitSurvey : submitSurvey
 };

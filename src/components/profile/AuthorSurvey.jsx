@@ -10,7 +10,7 @@ import {
 } from 'semantic-ui-react'
 
 import api from '../../api/api'
-import {normalizeEntityName, computeEntityReciaf} from '../reusable/Entity'
+import {normalizeEntityName} from '../reusable/Entity'
 
 const TOP_K_TOPICS = 30;
 
@@ -19,7 +19,7 @@ class AuthorSurvey extends Component {
         super(props);
         this.state = {
             authorTopics: [],
-            error: false,
+            showMessage: false,
             rates: new Map()
         }
     }
@@ -33,14 +33,7 @@ class AuthorSurvey extends Component {
     }
 
     setAuthorTopics = (data) => {
-        const authorTopics = data
-            .topics
-            .map((topic) => {
-                topic["importance_score"] = Math.log(1 + computeEntityReciaf(topic))
-                return topic
-            })
-            .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"])
-        this.setState({authorTopics: authorTopics})
+        this.setState({authorTopics: data.topics})
     }
 
     rateTopic = (entityId, rate) => {
@@ -49,13 +42,39 @@ class AuthorSurvey extends Component {
         this.setState({rates})
     }
 
-    showErrorMessage = (message) => {
-        this.setState({error: true, errorMessage: message})
+    showSuccessfulMessage = (content) => {
+        this.setState({
+            showMessage: true,
+            message: {
+                type: "positive",
+                text: content.message
+            }
+        })
+    }
+
+    showErrorMessage = (content) => {
+        this.setState({
+            showMessage: true,
+            message: {
+                type: "negative",
+                text: content.message
+            }
+        })
     }
 
     saveRates = () => {
-        // TODO: const {rates} = this.state; code to save rates formate rates (if
-        // needed) into some JSON and send to server api.saveRates(rates)
+        const {authorId} = this.props.authorInformation;
+        const {rates} = this.state;
+        const obj = {};
+        rates.forEach((v, k) => {
+            obj[k] = v
+        });
+        api
+            .submitSurvey(authorId, obj)
+            .then(this.showSuccessfulMessage)
+            .catch(this.showErrorMessage)
+            // TODO: const {rates} = this.state; code to save rates formate rates (if
+            // needed) into some JSON and send to server api.saveRates(rates)
     }
 
     renderAuthorTopic = ({entity_id, entity_name, document_count}) => {
@@ -80,7 +99,7 @@ class AuthorSurvey extends Component {
     }
     renderSurvey = () => {
         const {authorTopics, rates} = this.state;
-        
+
         return (
             <div>
                 <Message>
@@ -95,9 +114,7 @@ class AuthorSurvey extends Component {
                     </Message.Content>
                 </Message>
                 <Card.Group>
-                    {authorTopics
-                        .slice(0, TOP_K_TOPICS)
-                        .map(this.renderAuthorTopic)}
+                    {authorTopics.map(this.renderAuthorTopic)}
                 </Card.Group>
                 <Divider horizontal/>
                 <Divider horizontal/>
@@ -117,22 +134,28 @@ class AuthorSurvey extends Component {
         )
     }
 
-    renderErrorMessage = () => {
-        const {errorMesage} = this.state;
+    renderMessage = () => {
+        const {message} = this.state;
 
         return (
-            <Message negative>
-                <Message.Header>Error</Message.Header>
-                <p>{errorMesage}</p>
+            <Message
+                positive={message.type === "positive"}
+                negative={message.type === "negative"}>
+                <Message.Header>
+                    {message.type === "positive"
+                        ? "Success"
+                        : "Error"}
+                </Message.Header>
+                <p>{message.text}</p>
             </Message>
         )
     }
 
     render = () => {
-        const {error} = this.state;
+        const {showMessage} = this.state;
 
-        return error
-            ? this.renderErrorMessage()
+        return showMessage
+            ? this.renderMessage()
             : this.renderSurvey();
 
     }
