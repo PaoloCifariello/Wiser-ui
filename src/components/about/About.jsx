@@ -9,6 +9,7 @@ import WiserLogo from '../reusable/WiserLogo';
 const projectTitle = `Un motore di ricerca semantico per la valorizzazione della ricerca e il trasferimento 
       tecnologico dell’Università di Pisa`,
   myMail = <a href="mailto:paolocifa@gmail.com">Paolo Cifariello</a>,
+  ponzaMail = <a href="mailto:marco.ponza@di.unipi.it">Marco Ponza</a>,
   ferraMail = <a href="mailto:paolo.ferragina@unipi.it">Paolo Ferragina</a>,
   acubeLink = <a href="http://acube.di.unipi.it/" target="_blank" rel="noopener noreferrer">@Acube Lab 2016-2017</a>;
 
@@ -33,7 +34,7 @@ class About extends Component {
               </span>
               <br/>
               <br/>
-              <span>For any info please write an email to {myMail}&nbsp;or&nbsp;{ferraMail}.
+              <span>For any info please write an email to {myMail},&nbsp;{ponzaMail}&nbsp;or&nbsp;{ferraMail}.
                 <br/>
                 <br/> {acubeLink}
               </span>
