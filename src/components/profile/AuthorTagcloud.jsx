@@ -18,7 +18,7 @@ const yearOptions = [...Array(yearOptionsUpTo)].map((_, index) => {
     }
 });
 
-class AuthorWordcloud extends PureComponent {
+class AuthorTagcloud extends PureComponent {
     constructor(props) {
         super(props);
         const {authorInformation} = this.props;
@@ -120,4 +120,4 @@ class AuthorWordcloud extends PureComponent {
     }
 }
 
-export default AuthorWordcloud;
+export default AuthorTagcloud;

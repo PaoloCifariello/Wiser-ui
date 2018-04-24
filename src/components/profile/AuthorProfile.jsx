@@ -13,7 +13,7 @@ import api from '../../api/api'
 
 import AuthorTopics from './AuthorTopics'
 import AuthorPublications from './AuthorPublications'
-import AuthorWordcloud from './AuthorWordcloud'
+import AuthorTagcloud from './AuthorTagcloud'
 import AuthorSurvey from './AuthorSurvey'
 import AuthorPublication from './AuthorPublication'
 
@@ -27,9 +27,9 @@ const menuItems = [
     name: "Publications",
     render: (props) => <AuthorPublications {...props}/>
   }, {
-    selector: "wordcloud",
-    name: "Wordcloud",
-    render: (props) => <AuthorWordcloud {...props}/>
+    selector: "tagcloud",
+    name: "Tagcloud",
+    render: (props) => <AuthorTagcloud {...props}/>
   }, {
     selector: "survey",
     name: "Survey",
