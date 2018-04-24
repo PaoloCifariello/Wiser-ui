@@ -20,18 +20,22 @@ import AuthorPublication from './AuthorPublication'
 const menuItems = [
   {
     selector: "topics",
+    link: "topics",
     name: "Main topics",
     render: (props) => <AuthorTopics {...props}/>
   }, {
     selector: "publications/:entity_id_filter?",
+    link: "publications",
     name: "Publications",
     render: (props) => <AuthorPublications {...props}/>
   }, {
     selector: "tagcloud",
+    link: "tagcloud",
     name: "Tagcloud",
     render: (props) => <AuthorTagcloud {...props}/>
   }, {
     selector: "survey",
+    link: "survey",
     name: "Survey",
     render: (props) => <AuthorSurvey {...props}/>
   }
@@ -128,15 +132,15 @@ class AuthorProfile extends Component {
       <div>
         <Menu pointing secondary>
           {menuItems.map(({
-            selector,
+            link,
             name
           }, index) => {
             return <Menu.Item
               key={index}
               as={NavLink}
-              to={`/profile/${authorId}/${selector}`}
+              to={`/profile/${authorId}/${link}`}
               name={name}
-              active={section === selector}/>
+              active={section === link}/>
           })}
         </Menu>
       </div>
