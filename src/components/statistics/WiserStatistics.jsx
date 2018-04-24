@@ -28,9 +28,9 @@ class WiserStatistics extends Component {
             topicCount: data.topic_count,
             queryCount: data.query_count,
             profileViewCount: data.profile_view_count,
-            queryText: data.query_text,
-            queryTopic: data.query_topic,
-            queryProfile: data.query_profile,
+            mostFrequentQueries: data.most_frequent_queries,
+            mostFrequentTopics: data.most_frequent_topics,
+            mostFrequentProfiles: data.most_frequent_profiles,
             loading: false
         });
     }
@@ -46,9 +46,9 @@ class WiserStatistics extends Component {
             topicCount,
             queryCount,
             profileViewCount,
-            queryText,
-            queryTopic,
-            queryProfile
+            mostFrequentQueries,
+            mostFrequentTopics,
+            mostFrequentProfiles
         } = this.state;
 
         return (
@@ -101,17 +101,17 @@ class WiserStatistics extends Component {
                     </Statistic.Group>
                 </Grid.Row>
                 <Grid.Row>
-                    <Statistic.Group size="tiny">
-                        <Statistic >
-                            <Statistic.Value>{`${queryText.text} (${queryText.count})`}</Statistic.Value>
+                    <Statistic.Group size="mini">
+                        <Statistic>
+                            {mostFrequentQueries.map((queryText, i) => <Statistic.Value key={i}>{`${queryText.query} (${queryText.count})`}</Statistic.Value>)}
                             <Statistic.Label>Most searched query</Statistic.Label>
                         </Statistic>
                         <Statistic >
-                            <Statistic.Value>{`${normalizeEntityName(queryTopic.topic_name)} (${queryTopic.count})`}</Statistic.Value>
+                            {mostFrequentTopics.map((queryTopic, i) => <Statistic.Value key={i}>{`${normalizeEntityName(queryTopic.entity_name)} (${queryTopic.count})`}</Statistic.Value>)}
                             <Statistic.Label>Most searched topic</Statistic.Label>
                         </Statistic>
                         <Statistic >
-                            <Statistic.Value>{`${queryProfile.author_name} (${queryProfile.count})`}</Statistic.Value>
+                            {mostFrequentProfiles.map((queryProfile, i) => <Statistic.Value key={i}>{`${queryProfile.author_name} (${queryProfile.count})`}</Statistic.Value>)}
                             <Statistic.Label>Most popular profile</Statistic.Label>
                         </Statistic>
                     </Statistic.Group>
