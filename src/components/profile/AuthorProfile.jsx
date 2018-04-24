@@ -23,7 +23,7 @@ const menuItems = [
     name: "Main topics",
     render: (props) => <AuthorTopics {...props}/>
   }, {
-    selector: "publications",
+    selector: "publications/:entity_id_filter?",
     name: "Publications",
     render: (props) => <AuthorPublications {...props}/>
   }, {
@@ -151,19 +151,18 @@ class AuthorProfile extends Component {
       <Route
         exact
         path={`/profile/:authorId`}
-        render={() => (<Redirect to={`/profile/${authorId}/topics`}/>)}/> {menuItems.map(({
-        selector,
-        render
-      }, index) => <Route
+        render={() => (<Redirect to={`/profile/${authorId}/topics`}/>)}
+      /> 
+      {menuItems.map(({selector, render}, index) => <Route
         key={selector}
         exact
         path={`/profile/:authorId/${selector}`}
-        render={() => render({
+        render={(props) => render({...props,
         authorInformation: {
           authorId,
           authorYears
         }
-      })}/>)
+      })} />)
 }
       <Route
         exact

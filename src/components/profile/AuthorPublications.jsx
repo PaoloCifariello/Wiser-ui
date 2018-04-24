@@ -16,6 +16,8 @@ class AuthorPublications extends Component {
             .keys(authorYears)
             .sort((a, b) => b - a);
 
+        const entityIdFilter = this.props.match.params.entity_id_filter;
+
         this.state = {
             activeIndex: 0,
             authorId,
@@ -23,12 +25,14 @@ class AuthorPublications extends Component {
             authorYears,
             sortedAuthorYears,
             authorPublications: [],
-            filterTopics: []
+            filterTopics: entityIdFilter ? [parseInt(entityIdFilter, 10)] : []
         }
     }
 
     componentDidMount = () => {
         const {authorId} = this.state;
+        
+        
 
         Promise.all([
             api.getAuthorTopics(authorId),
@@ -48,7 +52,7 @@ class AuthorPublications extends Component {
     }
 
     renderEntityFilter = () => {
-        const {authorTopics} = this.state;
+        const {authorTopics, filterTopics} = this.state;
         const options = authorTopics.map((topic) => {
             return {
                 key: topic.entity_id,
@@ -63,6 +67,7 @@ class AuthorPublications extends Component {
             fluid
             multiple
             search
+            defaultValue={filterTopics}
             selection
             options={options}/>);
     }

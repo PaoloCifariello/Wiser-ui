@@ -77,6 +77,7 @@ class AuthorTopics extends Component {
 
     renderTopicsTable = () => {
         const {authorTopics} = this.state;
+        const {authorId} = this.props.authorInformation;
         const maxImportanceScore = authorTopics.length > 0
             ? authorTopics[0].importance_score
             : 1
@@ -91,7 +92,7 @@ class AuthorTopics extends Component {
                 filterable: true,
                 filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1,
                 width: 250,
-                Cell: ({value}) => renderEntityLink(value)
+                Cell: ({original}) => renderEntityLink(authorId, original.entity_id, original.entity_name)
             }, {
                 Header: "Count",
                 accessor: "count",

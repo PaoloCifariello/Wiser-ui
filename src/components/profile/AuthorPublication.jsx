@@ -24,7 +24,7 @@ class AuthorPublication extends Component {
 
     componentDidMount = () => {
         const {publicationId} = this.props.match.params;
-
+ 
         api
             .getAuthorPublication(publicationId)
             .then((data) => this.setState({publication: data}))
@@ -98,6 +98,7 @@ class AuthorPublication extends Component {
     }
 
     renderFilteredTopicsTable = () => {
+        const {authorId} = this.props.match.params;
         const {filtered_entities} = this.state.publication;
 
         return <div>
@@ -110,7 +111,7 @@ class AuthorPublication extends Component {
                     Header: "Entity",
                     accessor: "entity_name",
                     width: 250,
-                    Cell: ({value}) => renderEntityLink(value)
+                    Cell: ({original}) => renderEntityLink(authorId, original.entity_id, original.entity_name)
                 }, {
                     Header: "Count",
                     accessor: "count",
@@ -134,6 +135,7 @@ class AuthorPublication extends Component {
     }
 
     renderTopicsTable = () => {
+        const {authorId} = this.props.match.params;
         const {clean_entities, filtered_entities} = this.state.publication;
 
         return <div>
@@ -147,7 +149,7 @@ class AuthorPublication extends Component {
                     accessor: "entity_name",
                     width: 250,
                     filterable: true,
-                    Cell: ({value}) => renderEntityLink(value),
+                    Cell: ({original}) => renderEntityLink(authorId, original.entity_id, original.entity_name),
                     filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1
                 }, {
                     Header: "Count",
