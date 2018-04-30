@@ -6,7 +6,7 @@ import "react-table/react-table.css";
 
 import "./AuthorTopics.css"
 import api from '../../api/api'
-import {normalizeEntityName, renderEntityLink} from '../reusable/Entity'
+import {normalizeEntityName, renderAuthorEntityLink} from '../reusable/Entity'
 
 class AuthorTopics extends Component {
     constructor(props) {
@@ -92,7 +92,7 @@ class AuthorTopics extends Component {
                 filterable: true,
                 filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1,
                 width: 250,
-                Cell: ({original}) => renderEntityLink(authorId, original.entity_id, original.entity_name)
+                Cell: ({original}) => renderAuthorEntityLink(authorId, original.entity_id, original.entity_name)
             }, {
                 Header: "Count",
                 accessor: "count",

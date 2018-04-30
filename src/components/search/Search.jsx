@@ -15,7 +15,7 @@ import WiserLogo from '../reusable/WiserLogo';
 import './Search.css'
 
 import api from '../../api/api'
-import {renderEntityLink} from '../reusable/Entity';
+import {renderWikiEntityLink} from '../reusable/Entity';
 
 class Search extends Component {
 
@@ -166,7 +166,7 @@ class Search extends Component {
   renderQueryEntities = () => {
     const {queryEntities} = this.state;
     if (queryEntities) {
-      const queryEntitiesLinks = queryEntities.map((queryEntity, index) => <span className="margin-lr-10" key={index}>{renderEntityLink(queryEntity.entity_name)}</span>)
+      const queryEntitiesLinks = queryEntities.map((queryEntity, index) => <span className="margin-lr-10" key={index}>{renderWikiEntityLink(queryEntity.entity_name)}</span>)
       return <div className="margin-bottom-10">{queryEntitiesLinks}</div>
     } else {
       return null;
