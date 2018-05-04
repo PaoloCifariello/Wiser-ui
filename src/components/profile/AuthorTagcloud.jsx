@@ -100,7 +100,6 @@ class AuthorTagcloud extends PureComponent {
 
         return (
             <div>
-                {/* <Slider min={1} max={5} defaultValue={5} onAfterChange={this.handleChange} /> */}
                 <Form>
                     <Form.Group>
                         <Form.Field
