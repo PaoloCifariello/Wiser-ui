@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
+    "d3-scale-chromatic": "^1.2.0",
     "lodash": "^4.17.5",
     "material-ui": "^1.0.0-beta.35",
     "material-ui-icons": "^1.0.0-beta.35",
@@ -18,6 +19,7 @@
     "react-scripts": "1.1.1",
     "react-table": "^6.8.0",
     "react-tagcloud": "^1.2.0",
+    "recharts": "^1.0.0-beta.10",
     "semantic-ui-css": "^2.3.0",
     "semantic-ui-react": "^0.78.3",
     "typeface-lato": "0.0.54",
