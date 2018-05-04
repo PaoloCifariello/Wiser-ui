@@ -16,6 +16,8 @@ import AuthorPublications from './AuthorPublications'
 import AuthorTagcloud from './AuthorTagcloud'
 import AuthorSurvey from './AuthorSurvey'
 import AuthorPublication from './AuthorPublication'
+import AuthorTagStreamGraph from './AuthorTagStreamGraph'
+
 
 const menuItems = [
   {
@@ -33,6 +35,11 @@ const menuItems = [
     link: "tagcloud",
     name: "Tagcloud",
     render: (props) => <AuthorTagcloud {...props}/>
+  }, {
+    selector: "streamgraph",
+    link: "streamgraph",
+    name: "StreamGraph",
+    render: (props) => <AuthorTagStreamGraph {...props}/>
   }, {
     selector: "survey",
     link: "survey",
