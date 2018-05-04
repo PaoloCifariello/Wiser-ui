@@ -33,7 +33,7 @@ const menuItems = [
   }, {
     selector: "tagcloud",
     link: "tagcloud",
-    name: "Tagcloud",
+    name: "TagCloud",
     render: (props) => <AuthorTagcloud {...props}/>
   }, {
     selector: "streamgraph",
