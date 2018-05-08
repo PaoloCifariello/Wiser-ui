@@ -56,6 +56,14 @@ async function getAuthorPublication(publicationId) {
     }));
 }
 
+async function getAuthorTopicsMatrix(authorId) {
+    return api(axios.request(`${config.serverAddress}/get_author_topics_matrix`, {
+        params: {
+            aid: authorId
+        }
+    }));
+}
+
 async function getStatistics() {
     return api(axios.request(`${config.serverAddress}/get_statistics`));
 }
@@ -79,6 +87,7 @@ export default {
     getAuthorTopicsForSurvey : getAuthorTopicsForSurvey,
     getAuthorPublications : getAuthorPublications,
     getAuthorPublication : getAuthorPublication,
+    getAuthorTopicsMatrix: getAuthorTopicsMatrix,
     getStatistics : getStatistics,
     submitSurvey : submitSurvey
 };
