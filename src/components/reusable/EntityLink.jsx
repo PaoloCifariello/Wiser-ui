@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {Popup} from 'semantic-ui-react';
 
 import {normalizeEntityName} from "../reusable/Entity"
 import wiki_api from '../../api/wiki_api';
 
-class EntityLink extends Component {
+class EntityLink extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -23,6 +23,22 @@ class EntityLink extends Component {
             .then((popupSummary) => {
                 this.setState({popupSummary: popupSummary})
             })
+        }
+    
+    componentWillReceiveProps = () => {
+        this.setState({
+            popupSummary: null
+        });
+    }
+
+    componentDidUpdate = () => {
+            const {entityName} = this.props;
+    
+            wiki_api
+                .getSummary(entityName)
+                .then((popupSummary) => {
+                    this.setState({popupSummary: popupSummary})
+                })
     }
 
     renderEntityLink = () => {
