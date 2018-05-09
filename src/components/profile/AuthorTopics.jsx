@@ -9,22 +9,57 @@ import {range} from 'lodash';
 import "./AuthorTopics.css"
 import api from '../../api/api'
 import {normalizeEntityName, renderAuthorEntityLink} from '../reusable/Entity'
+import {inRange} from '../reusable/Util'
 
 class AuthorTopics extends Component {
     constructor(props) {
         super(props);
         const {authorInformation} = this.props;
-        const authorYears = Object
+        let authorYears = Object
             .keys(authorInformation.authorYears)
             .map((val) => parseInt(val, 10))
             .sort();
 
         this.state = {
             authorTopics: [],
-            authorYears: range(authorYears[0], authorYears[authorYears.length - 1] + 1)
+            authorYears: this.generateAuthorYears(authorYears)
         }
     }
 
+    generateAuthorYears = (authorYears) => {
+        authorYears = range(authorYears[0], authorYears[authorYears.length - 1] + 1);
+        if (authorYears.length > 12) {
+            let oldYearsGranularity = Math.floor((authorYears.length - 6) / 6);
+            let recentYears = authorYears
+                .slice(-6)
+                .map((year, _) => {
+                    return {from: year, to: year}
+                })
+
+            let oldYears = []
+
+            let currentYear = authorYears[authorYears.length - 7];
+
+            for (var i = 0; i < 5; i++) {
+                oldYears.push({
+                    from: currentYear - oldYearsGranularity + 1,
+                    to: currentYear
+                });
+
+                currentYear -= oldYearsGranularity
+            }
+            oldYears.push({from: authorYears[0], to: currentYear})
+
+            return oldYears
+                .reverse()
+                .concat(recentYears);
+
+        } else {
+            return authorYears.map((year, _) => {
+                return {from: year, to: year}
+            })
+        }
+    }
     componentDidMount = () => {
         const {authorId} = this.props.authorInformation;
 
@@ -59,12 +94,15 @@ class AuthorTopics extends Component {
         return (
             <div
                 style={{
-                width: 28 * authorYears.length
+                width: 33 * authorYears.length
             }}
                 className="years-container">
-                {authorYears.map((authorYear, _) => topicYears.some((topicYear, _) => topicYear === authorYear)
-                    ? <div className="single-year-value year-present"/>
-                    : <div className="single-year-value year-absent"/>)}
+                {authorYears.map(({
+                    from,
+                    to
+                }, index) => topicYears.some((topicYear, _) => inRange(topicYear, from, to))
+                    ? <div key={index} className="single-year-value year-present"/>
+                    : <div key={index} className="single-year-value year-absent"/>)}
             </div>
         )
     }
@@ -102,9 +140,14 @@ class AuthorTopics extends Component {
             <div
                 className="years-container"
                 style={{
-                width: 27.5 * authorYears.length
+                width: 33 * authorYears.length
             }}>
-                {authorYears.map((year, _) => <div className="single-year-header">{year}</div>)}
+                {authorYears.map(({
+                    from,
+                    to
+                }, index) => from === to
+                    ? <div key={index} className="single-year-header">{from}</div>
+                    : <div key={index} className="single-year-header">{from}<br/>{to}</div>)}
             </div>
         )
     }
