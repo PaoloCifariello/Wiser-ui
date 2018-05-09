@@ -4,11 +4,13 @@ import {List} from 'semantic-ui-react'
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
+import EntityLink from "../reusable/EntityLink"
+
 import {range} from 'lodash';
 
 import "./AuthorTopics.css"
 import api from '../../api/api'
-import {normalizeEntityName, renderAuthorEntityLink} from '../reusable/Entity'
+import {normalizeEntityName} from '../reusable/Entity'
 import {inRange} from '../reusable/Util'
 
 class AuthorTopics extends Component {
@@ -169,7 +171,10 @@ class AuthorTopics extends Component {
                 filterable: true,
                 filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1,
                 width: 200,
-                Cell: ({original}) => renderAuthorEntityLink(authorId, original.entity_id, original.entity_name)
+                Cell: ({original}) => <EntityLink
+                        authorId={authorId}
+                        entityId={original.entity_id}
+                        entityName={original.entity_name}/>
             }, {
                 Header: "Count",
                 accessor: "count",

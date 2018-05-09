@@ -8,11 +8,12 @@ import {
     Loader,
     Segment
 } from 'semantic-ui-react'
+import EntityLink from "../reusable/EntityLink"
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import api from '../../api/api'
-import {normalizeEntityName, renderAuthorEntityLink} from '../reusable/Entity';
+import {normalizeEntityName} from '../reusable/Entity';
 
 import './AuthorPublication.css'
 
@@ -24,7 +25,7 @@ class AuthorPublication extends Component {
 
     componentDidMount = () => {
         const {publicationId} = this.props.match.params;
- 
+
         api
             .getAuthorPublication(publicationId)
             .then((data) => this.setState({publication: data}))
@@ -111,7 +112,10 @@ class AuthorPublication extends Component {
                     Header: "Entity",
                     accessor: "entity_name",
                     width: 250,
-                    Cell: ({original}) => renderAuthorEntityLink(authorId, original.entity_id, original.entity_name)
+                    Cell: ({original}) => <EntityLink
+                            authorId={authorId}
+                            entityId={original.entity_id}
+                            entityName={original.entity_name}/>
                 }, {
                     Header: "Count",
                     accessor: "count",
@@ -149,7 +153,10 @@ class AuthorPublication extends Component {
                     accessor: "entity_name",
                     width: 250,
                     filterable: true,
-                    Cell: ({original}) => renderAuthorEntityLink(authorId, original.entity_id, original.entity_name),
+                    Cell: ({original}) => <EntityLink
+                        authorId={authorId}
+                        entityId={original.entity_id}
+                        entityName={original.entity_name}/>,
                     filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1
                 }, {
                     Header: "Count",
