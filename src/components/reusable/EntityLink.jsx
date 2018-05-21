@@ -22,22 +22,20 @@ class EntityLink extends PureComponent {
             .then((popupSummary) => {
                 this.setState({popupSummary: popupSummary})
             })
-        }
-    
+    }
+
     componentWillReceiveProps = () => {
-        this.setState({
-            popupSummary: null
-        });
+        this.setState({popupSummary: null});
     }
 
     componentDidUpdate = () => {
-            const {entityName} = this.props;
-    
-            wiki_api
-                .getSummary(entityName)
-                .then((popupSummary) => {
-                    this.setState({popupSummary: popupSummary})
-                })
+        const {entityName} = this.props;
+
+        wiki_api
+            .getSummary(entityName)
+            .then((popupSummary) => {
+                this.setState({popupSummary: popupSummary})
+            })
     }
 
     renderEntityLink = () => {
@@ -57,7 +55,11 @@ class EntityLink extends PureComponent {
         }}/>,
             entityLink = this.renderEntityLink()
 
-        return (<Popup trigger={entityLink} content={popupContent} basic/>);
+        return (<Popup
+            position="right center"
+            trigger={entityLink}
+            content={popupContent}
+            basic/>);
     }
 
     render = () => {
