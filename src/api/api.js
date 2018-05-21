@@ -1,11 +1,14 @@
 import axios from 'axios'
 import config from '../config.json'
 
-const API_STATUS = Object.freeze({OK: 0, ERROR: 1});
+const API_STATUS = Object.freeze({
+    OK: 0,
+    ERROR: 1
+});
 
-const api = (httpPromise) => httpPromise.then((res) => res.data.status === API_STATUS.OK
-    ? Promise.resolve(res.data.content)
-    : Promise.reject(res.data.content));
+const api = (httpPromise) => httpPromise.then((res) => res.data.status === API_STATUS.OK ?
+    Promise.resolve(res.data.content) :
+    Promise.reject(res.data.content));
 
 async function findExpertsByExpertise(expertiseArea) {
     return api(axios.request(`${config.serverAddress}/find_experts_by_field?q=${expertiseArea}`));
@@ -68,6 +71,15 @@ async function getStatistics() {
     return api(axios.request(`${config.serverAddress}/get_statistics`));
 }
 
+async function getAuthorAreas(authorId, k) {
+    return api(axios.request(`${config.serverAddress}/get_clusters`, {
+        params: {
+            k: k,
+            aid: authorId
+        }
+    }));
+}
+
 async function submitSurvey(authorId, surveyRates) {
     // return api(axios.post(`${config.serverAddress}/submit_survey`, surveyRates));
     return api(axios.request(`${config.serverAddress}/submit_survey`, {
@@ -80,14 +92,15 @@ async function submitSurvey(authorId, surveyRates) {
 }
 
 export default {
-    findExpertsByExpertise : findExpertsByExpertise,
-    findExpertsByName : findExpertsByName,
-    getAuthorProfile : getAuthorProfile,
-    getAuthorTopics : getAuthorTopics,
-    getAuthorTopicsForSurvey : getAuthorTopicsForSurvey,
-    getAuthorPublications : getAuthorPublications,
-    getAuthorPublication : getAuthorPublication,
+    findExpertsByExpertise: findExpertsByExpertise,
+    findExpertsByName: findExpertsByName,
+    getAuthorProfile: getAuthorProfile,
+    getAuthorTopics: getAuthorTopics,
+    getAuthorTopicsForSurvey: getAuthorTopicsForSurvey,
+    getAuthorPublications: getAuthorPublications,
+    getAuthorPublication: getAuthorPublication,
     getAuthorTopicsMatrix: getAuthorTopicsMatrix,
-    getStatistics : getStatistics,
-    submitSurvey : submitSurvey
+    getStatistics: getStatistics,
+    getAuthorAreas: getAuthorAreas,
+    submitSurvey: submitSurvey
 };

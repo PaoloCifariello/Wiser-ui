@@ -189,12 +189,14 @@ class AuthorTopics extends Component {
                 sortable: false,
                 filterable: true,
                 Filter: () => this.renderTopicYearsHeader(),
-                Cell: ({value}) => this.renderTopicYears(value)
+                Cell: ({value}) => this.renderTopicYears(value),
+                minWidth: 400
             }, {
                 Header: "Importance",
                 accessor: "importance_score",
-                width: 200,
-                Cell: ({value}) => this.renderImportanceScoreCell(value, maxImportanceScore)
+                Cell: ({value}) => this.renderImportanceScoreCell(value, maxImportanceScore),
+                minWidth: 150,
+                maxWidth: 300
             }
         ]}
             defaultSorted={[{

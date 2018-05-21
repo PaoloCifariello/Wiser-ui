@@ -12,6 +12,7 @@ import {NavLink, Switch, Redirect, Route} from 'react-router-dom'
 import api from '../../api/api'
 
 import AuthorTopics from './AuthorTopics'
+import AuthorAreas from './AuthorAreas'
 import AuthorPublications from './AuthorPublications'
 import AuthorTagcloud from './AuthorTagcloud'
 import AuthorSurvey from './AuthorSurvey'
@@ -26,6 +27,11 @@ const menuItems = [
     link: "topics",
     name: "Main topics",
     render: (props) => <AuthorTopics {...props}/>
+  }, {
+    selector: "areas",
+    link: "areas",
+    name: "Main areas",
+    render: (props) => <AuthorAreas {...props}/>
   }, {
     selector: "publications/:entity_id_filter?",
     link: "publications",
