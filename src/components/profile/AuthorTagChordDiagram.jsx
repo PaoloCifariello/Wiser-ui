@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {Card, Form, List, Select} from 'semantic-ui-react'
+import {Form, List, Select} from 'semantic-ui-react'
 
 import ChordDiagram from 'react-chord-diagram'
 
@@ -21,7 +21,6 @@ const topEntitiesOptions = range(5, 11).map((value, _) => {
 class AuthorTagChordDiagram extends PureComponent {
     constructor(props) {
         super(props);
-        const {authorInformation} = this.props;
 
         this.state = {
             topEntities: 8

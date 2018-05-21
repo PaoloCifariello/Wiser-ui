@@ -8,7 +8,6 @@ class EntityLink extends PureComponent {
 
     constructor(props) {
         super(props);
-        const {authorId, entitId, entityName} = this.props;
 
         this.state = {
             popupSummary: null
@@ -50,7 +49,6 @@ class EntityLink extends PureComponent {
     }
 
     renderWikipediaPopup = () => {
-        const {authorId, entityId, entityName} = this.props;
         const {popupSummary} = this.state;
 
         const popupContent = <div
