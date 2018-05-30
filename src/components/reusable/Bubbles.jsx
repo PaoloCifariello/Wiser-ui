@@ -22,6 +22,7 @@ export class Bubbles extends Component {
             .on('tick', this.ticked.bind(this))
             .stop()
 
+            
         this.regroupBubbles(group);
     }
 
@@ -123,8 +124,8 @@ export class Bubbles extends Component {
             .attr('fill', d => d3.rgb(schemeCategory10[d.group]).darker())
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'central')
-            .text(d => d.radius > 15
-                ? d.name
+            .text(d => d.radius > 20
+                ? d.name.replace(/ \(.+\)/g, '')
                 : "")
             .on('mouseover', showDetail) // eslint-disable-line
             .on('mouseout', hideDetail) // eslint-disable-line
@@ -151,7 +152,6 @@ export class Bubbles extends Component {
                     .alpha(1)
                     .restart()
             });
-        // bubblesE.append("text")   .attr("dx", d => -20)   .text(d => d.name)
     }
 
     render() {
@@ -164,7 +164,10 @@ export class Bubbles extends Component {
 }
 
 Bubbles.propTypes = {
-    center: PropTypes.shape({x: PropTypes.number.isRequired, y: PropTypes.number.isRequired}),
+    center: PropTypes.shape({
+        x: PropTypes.number.isRequired, 
+        y: PropTypes.number.isRequired
+    }),
     forceStrength: PropTypes.number.isRequired,
     group: PropTypes.bool.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({x: PropTypes.number.isRequired, id: PropTypes.number.isRequired, radius: PropTypes.number.isRequired, value: PropTypes.number.isRequired, name: PropTypes.string.isRequired}))
@@ -175,12 +178,11 @@ Bubbles.propTypes = {
 * details of a bubble in the tooltip.
 */
 export function showDetail(d) {
-    // change outline to indicate hover state.
-    // d3
-    //     .select(this)
-    //     .attr('stroke', 'black')
+    // change outline to indicate hover state. d3     .select(this)
+    // .attr('stroke', 'black')
 
-    const content = `<div class="flex"><span class="bubble-chart-name">Topic: </span>&nbsp;<span class="bubble-chart-value">${d.name}</span></div><div class="flex"><span class="bubble-chart-name">Group:&nbsp;</span><div class="bubble-chart-group" 
+    const content = `<div class="flex"><span class="bubble-chart-name">Topic: </span>&nbsp;<span class="bubble-chart-value">${d
+        .name}</span></div><div class="flex"><span class="bubble-chart-name">Group:&nbsp;</span><div class="bubble-chart-group" 
     style="background-color: ${d3
         .rgb(schemeCategory10[d.group])
         .brighter()}" /></div>`;
@@ -192,10 +194,8 @@ export function showDetail(d) {
 * Hides tooltip
 */
 export function hideDetail(d) {
-    // reset outline
-    // d3
-    //     .select(this)
-    //     .attr('stroke', d3.rgb(schemeCategory10[d.group]).darker())
+    // reset outline d3     .select(this)     .attr('stroke',
+    // d3.rgb(schemeCategory10[d.group]).darker())
 
     tooltip.hideTooltip()
 }
