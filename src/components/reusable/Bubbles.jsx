@@ -178,14 +178,23 @@ Bubbles.propTypes = {
 * details of a bubble in the tooltip.
 */
 export function showDetail(d) {
-    // change outline to indicate hover state. d3     .select(this)
-    // .attr('stroke', 'black')
+    const importanceBackgroundColor = d.groupImportance > 0.66 ? '#85cc00' : d.groupImportance > 0.33 ? '#ffbf00' : '#ff2e00';
 
-    const content = `<div class="flex"><span class="bubble-chart-name">Topic: </span>&nbsp;<span class="bubble-chart-value">${d
-        .name}</span></div><div class="flex"><span class="bubble-chart-name">Group:&nbsp;</span><div class="bubble-chart-group" 
-    style="background-color: ${d3
-        .rgb(schemeCategory10[d.group])
-        .brighter()}" /></div>`;
+    const content = `
+    <div class="flex">
+        <span class="bubble-chart-name">Topic: </span>&nbsp;<span class="bubble-chart-value">${d.name}</span>
+    </div>
+    <div class="flex">
+        <span class="bubble-chart-name">Group:&nbsp;</span>
+        <div class="bubble-chart-group" style="background-color: ${d3.rgb(schemeCategory10[d.group]).brighter()}"></div>
+    </div>
+    <div class="flex">
+        <span class="bubble-chart-name">Importance:</span>&nbsp;
+        <div class="importance-bar-grey">
+            <div class="importance-bar-green" style="width: ${d.groupImportance * 100}%; background-color: ${importanceBackgroundColor}"> </div>
+        </div>
+    </div>
+    `;
 
     tooltip.showTooltip(content, d3.event)
 }

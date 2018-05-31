@@ -3,28 +3,10 @@ import PropTypes from 'prop-types';
 import {Bubbles} from './Bubbles'
 
 import * as d3 from 'd3'
+import {range} from 'lodash'
 
 import './BubbleChart.css'
-
 //TODO: compute them automatically
-var groupCenters = {
-    0: {
-        x: 150,
-        y: 200
-    },
-    1: {
-        x: 350,
-        y: 200
-    },
-    2: {
-        x: 550,
-        y: 200
-    },
-    3: {
-        x: 750,
-        y: 200
-    }
-};
 
 export class BubbleChart extends Component {
 
@@ -41,8 +23,47 @@ export class BubbleChart extends Component {
         }
     }
 
+    computeGroupCenters = (data) => {
+        const WINDOWS_WIDTH = window.innerWidth,
+            STACK_WIDTH_BREAKPOINT = 992,
+            WIDTH_FACTOR = 1.48,
+            TOP_MARGIN = 200,
+            SINGLE_CLUSTER_HEIGHT = 250,
+            IS_STACKED = WINDOWS_WIDTH <= STACK_WIDTH_BREAKPOINT,
+            TOTAL_WIDTH = IS_STACKED ?  WINDOWS_WIDTH : (WINDOWS_WIDTH / WIDTH_FACTOR),
+            CLUSTER_PER_ROW = IS_STACKED ? 2 : 4,
+            TOTAL_HEIGHT = TOP_MARGIN + Math.ceil(data.length / CLUSTER_PER_ROW) * SINGLE_CLUSTER_HEIGHT,
+            SINGLE_CLUSTER_WIDTH = TOTAL_WIDTH / CLUSTER_PER_ROW;
+
+        const GROUP_CENTERS = range(0, 20).map((i) => ({
+            index: i,
+            x: SINGLE_CLUSTER_WIDTH / 2 + (SINGLE_CLUSTER_WIDTH * (i % CLUSTER_PER_ROW)),
+            y: TOP_MARGIN + Math.floor(i / CLUSTER_PER_ROW) * SINGLE_CLUSTER_HEIGHT
+
+        })).reduce((obj, item) => {
+            obj[item.index] = {
+                x: item.x,
+                y: item.y
+            }
+            return obj;
+        }, {});
+
+        return {
+            groupCenters: GROUP_CENTERS,
+            width: TOTAL_WIDTH,
+            height: TOTAL_HEIGHT
+        }
+    }
+
     render = () => {
-        const {width, height, forceStrength, group, maxRadius, data} = this.props;
+        const {
+            forceStrength,
+            group,
+            maxRadius,
+            data
+        } = this.props;
+
+        const {groupCenters, width, height} = this.computeGroupCenters(data);
 
         return (
             <svg className="bubbleChart" width={width} height={height}>
@@ -50,8 +71,8 @@ export class BubbleChart extends Component {
                     data={createNodes([].concat.apply([], data), maxRadius)}
                     forceStrength={forceStrength}
                     center={{
-                    x: 960 / 2,
-                    y: 640 / 2
+                    x: width / 2,
+                    y: height / 2
                 }}
                     groupCenters={groupCenters}
                     group={group}/>
@@ -60,9 +81,7 @@ export class BubbleChart extends Component {
     }
 }
 
-BubbleChart.propTypes = {
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
+BubbleChart.propTypes = {   
     forceStrength: PropTypes.number,
     group: PropTypes.bool
 }
@@ -70,12 +89,13 @@ BubbleChart.propTypes = {
 export function createNodes(rawData, maxRadius) {
     // Use the max total_amount in the data as the max in the scale's domain note we
     // have to ensure the total_amount is a number.
-    const maxAmount = d3.max(rawData, d => + d.value)
+    const maxAmount = d3.max(rawData, d => + d.value),
+        maxGroupImportance = d3.max(rawData, d => + d.groupImportance)
 
     // Sizes bubbles based on area. @v4: new flattened scale names.
     const radiusScale = d3
         .scalePow()
-        .exponent(0.9)
+        .exponent(0.8)
         .range([1, maxRadius])
         .domain([0, maxAmount])
 
@@ -87,6 +107,7 @@ export function createNodes(rawData, maxRadius) {
         value: + d.value,
         name: d.title,
         group: d.group,
+        groupImportance: d.groupImportance / maxGroupImportance,
         x: radiusScale(+ d.value) + Math.random() * (900 - radiusScale(+ d.value)),
         y: radiusScale(+ d.value) + Math.random() * (800 - radiusScale(+ d.value))
     }))
