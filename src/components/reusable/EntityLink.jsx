@@ -27,35 +27,37 @@ class EntityLink extends Component {
     componentWillReceiveProps = () => {
         this.setState({popupSummary: null});
     }
-    
+
     entityIsChanged = (nextEntityId) => {
         const {entityId} = this.props;
 
         return entityId !== nextEntityId;
     }
 
-    summaryNeedsReload = () => {
+    summaryNeedsReload = (nextPopupSummary) => {
         const {entityId} = this.props;
         const {popupSummary} = this.state;
 
-        if (!popupSummary || popupSummary.pageid !== entityId)
-            return true;
-        else
+        if (nextPopupSummary || (popupSummary && popupSummary.pageid === entityId)) {
             return false;
+        } else {
+            return true;
+        }
     }
-    
+
     shouldComponentUpdate = (nextProps, nextState) => {
+        const {popupSummary} = nextState;
 
         if (this.entityIsChanged(nextProps.entityId)) {
             return true;
         }
 
-        if (this.summaryNeedsReload()) 
+        if (this.summaryNeedsReload(popupSummary)) 
             return true;
-
+        
         return false;
     }
-    
+
     componentDidUpdate = () => {
         const {entityName} = this.props;
 
