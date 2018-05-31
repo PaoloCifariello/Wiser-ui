@@ -79,6 +79,24 @@ async function getAuthorAreas(authorId) {
     }));
 }
 
+async function getDepartmentProfile(department) {
+    return api(axios.request(`${config.serverAddress}/get_department_profile`, {
+        params: {
+            department: department
+        }
+    }));
+}
+
+async function getDepartmentTopics(department) {
+    return api(axios.request(`${config.serverAddress}/get_department_topics`, {
+        params: {
+            department: department
+        }
+    }));
+}
+
+
+
 async function submitSurvey(authorId, surveyRates) {
     // return api(axios.post(`${config.serverAddress}/submit_survey`, surveyRates));
     return api(axios.request(`${config.serverAddress}/submit_survey`, {
@@ -101,5 +119,7 @@ export default {
     getAuthorTopicsMatrix: getAuthorTopicsMatrix,
     getStatistics: getStatistics,
     getAuthorAreas: getAuthorAreas,
+    getDepartmentProfile: getDepartmentProfile,
+    getDepartmentTopics: getDepartmentTopics,
     submitSurvey: submitSurvey
 };
