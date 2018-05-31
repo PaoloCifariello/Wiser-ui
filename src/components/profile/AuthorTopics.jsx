@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {List} from 'semantic-ui-react'
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -73,20 +72,14 @@ class AuthorTopics extends Component {
     setAuthorTopicsImportance = (data) => {
         const authorTopics = data
             .topics
-            .map((topic) => {
-                topic["importance_score"] = Math.log(1 + (topic["document_count"] * Math.sqrt(topic["pr_score"]) * topic["iaf"]))
-                return topic
-            })
-            .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"]);
+            .map((topic) => Object.defineProperty(topic, "importance_score", {
+                value: Math.log(1 + (topic["document_count"] * Math.sqrt(topic["pr_score"]) * topic["iaf"]))
+            }))
+            .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"])
+            .map((topic, index) => Object.defineProperty(topic, 'importance_rank', {
+                value: index + 1
+            }));
         this.setState({authorTopics: authorTopics});
-    }
-
-    renderTopicsList = () => {
-        const {authorTopics} = this.state;
-
-        return authorTopics
-            .slice(0, 29)
-            .map((topic, index) => <List.Item key={index}>{normalizeEntityName(topic.entity_name)}</ List.Item>)
     }
 
     renderTopicYears = (topicYears) => {
@@ -165,6 +158,10 @@ class AuthorTopics extends Component {
             data={authorTopics}
             columns={[
             {
+                Header: "Rank",
+                accessor: "importance_rank",
+                width: 40
+            }, {
                 id: "entity_name",
                 Header: "Entity",
                 accessor: "entity_name",
@@ -213,7 +210,6 @@ class AuthorTopics extends Component {
         return <div>
             {this.renderTopicsTable()}
         </div>
-        // <List>{this.renderTopicsList()}</List > )
     }
 }
 
