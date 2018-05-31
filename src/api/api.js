@@ -71,10 +71,9 @@ async function getStatistics() {
     return api(axios.request(`${config.serverAddress}/get_statistics`));
 }
 
-async function getAuthorAreas(authorId, k) {
+async function getAuthorAreas(authorId) {
     return api(axios.request(`${config.serverAddress}/get_clusters`, {
         params: {
-            k: k,
             aid: authorId
         }
     }));
