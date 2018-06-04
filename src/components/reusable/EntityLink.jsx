@@ -38,7 +38,7 @@ class EntityLink extends Component {
         const {entityId} = this.props;
         const {popupSummary} = this.state;
 
-        if (nextPopupSummary || (popupSummary && popupSummary.pageid === entityId)) {
+        if (popupSummary && popupSummary.pageid === entityId) {
             return false;
         } else {
             return true;
@@ -48,10 +48,13 @@ class EntityLink extends Component {
     shouldComponentUpdate = (nextProps, nextState) => {
         const {popupSummary} = nextState;
 
+        // we need to update the component if entityId is changed
         if (this.entityIsChanged(nextProps.entityId)) {
             return true;
         }
 
+        // we need to update the component if the actual popupSummary 
+        // is not for the actual entity
         if (this.summaryNeedsReload(popupSummary)) 
             return true;
         
