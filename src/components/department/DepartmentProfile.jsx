@@ -11,6 +11,8 @@ import {
 import {NavLink, Switch, Redirect, Route} from 'react-router-dom'
 import api from '../../api/api'
 
+import {range} from 'lodash';
+
 import DepartmentTopics from './DepartmentTopics'
 
 const menuItems = [
@@ -46,10 +48,11 @@ class DepartmentProfile extends Component {
 
     updateDepartmentInformation = (departmentInformation) => {
         this.setState({
-            departmentName: departmentInformation["name"],
-            departmentAuthors: departmentInformation["authors"], 
-            num_departmentAuthors: departmentInformation["authors"].length, 
-            num_departmentPublications: departmentInformation["publications"], 
+            departmentName: departmentInformation["department_name"],
+            numDepartmentAuthors: departmentInformation["n_authors"],
+            numDepartmentPublications: departmentInformation["n_documents"],
+            firstYear: departmentInformation["first_year"],
+            lastYear: departmentInformation["last_year"],
             isLoaded: true
         })
     }
@@ -67,13 +70,16 @@ class DepartmentProfile extends Component {
     }
 
     renderDepartmentInfo = () => {
-        const {departmentName, num_departmentAuthors, num_departmentPublications} = this.state;
+        const {departmentName, numDepartmentAuthors, numDepartmentPublications, firstYear, lastYear} = this.state;
 
         return (
             <div>
                 <Header as='h1' textAlign="left">{departmentName}
                     <Header.Subheader>
-                        {`${num_departmentPublications} publications from ${num_departmentAuthors} authors`}
+                        {`${numDepartmentPublications} publications from ${numDepartmentAuthors} authors`}
+                    </Header.Subheader>
+                    <Header.Subheader>
+                        {`${firstYear} - ${lastYear}`}
                     </Header.Subheader>
                 </Header>
             </div>
@@ -129,6 +135,7 @@ class DepartmentProfile extends Component {
 
     renderDepartmentSection = () => {
         const {departmentName} = this.props.match.params;
+        const {firstYear, lastYear} = this.state;
 
         return <Switch>
             <Route
@@ -144,6 +151,7 @@ class DepartmentProfile extends Component {
                 render={(props) => render({
                 ...props,
                 departmentInformation: {
+                    departmentYears: range(firstYear, lastYear)
                 }
             })}/>)
 }

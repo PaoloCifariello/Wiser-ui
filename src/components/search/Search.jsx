@@ -46,6 +46,8 @@ class Search extends Component {
         return this._searchByExpertise(query);
       case "n":
         return this._searchByName(query);
+      case "d":
+        return this._searchByDepartment(query);
       default:
         return this._resetSearch();
     }
@@ -61,6 +63,8 @@ class Search extends Component {
         return this._searchByExpertise(query);
       case "n":
         return this._searchByName(query);
+      case "d":
+        return this._searchByDepartment(query);
       default:
         return this._resetSearch();
     }
@@ -116,6 +120,27 @@ class Search extends Component {
     }
   }
 
+  _searchByDepartment = (searchValue) => {
+    searchValue = searchValue.trim();
+    this.setState({searchValue: searchValue, isSearchingByDepartment: true})
+
+    if (searchValue && !this.state.isSearching) {
+      this.setState({
+        isSearching: true,
+        isSearchingByDepartment: true,
+        showErrorMessage: false,
+        showResults: false,
+        results: null,
+        queryEntities: null,
+        lastSearchValue: searchValue
+      });
+      api
+        .findDepartmentsByName(searchValue)
+        .then(this.showResults)
+        .catch(this.fail)
+    }
+  }
+
   searchByExpertise = (history) => {
     const {searchValue} = this.state;
     this
@@ -132,6 +157,14 @@ class Search extends Component {
       .push(`/search/n/${searchValue}`);
   }
 
+  searchByDepartment = (history) => {
+    const {searchValue} = this.state;
+    this
+      .props
+      .history
+      .push(`/search/d/${searchValue}`);
+  }
+
   showResults = (response) => {
     const {lastSearchValue} = this.state;
     if (lastSearchValue === response["query"]) {
@@ -140,6 +173,7 @@ class Search extends Component {
         isSearching: false,
         isSearchingByExpertise: false,
         isSearchingByName: false,
+        isSearchingByDepartment: false,
         results: response["results"],
         queryEntities: response["queryEntities"],
         lastSearchTime: response["time"]
@@ -237,6 +271,16 @@ class Search extends Component {
             className="search-button"
             type='submit'
             onClick={this.searchByName}>Search by Name</Button>
+        </div>
+        <div>
+          <Button
+            loading={this.state.isSearchingByDepartment}
+            disabled={this.state.isSearching}
+            size="large"
+            color="teal"
+            className="search-button"
+            type='submit'
+            onClick={this.searchByDepartment}>Search by Department</Button>
         </div>
       </Grid.Row>
     );

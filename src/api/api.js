@@ -19,6 +19,11 @@ async function findExpertsByName(expertName) {
 
 }
 
+async function findDepartmentsByName(departmentName) {
+    return api(axios.request(`${config.serverAddress}/find_departments_by_name?q=${departmentName}`));
+
+}
+
 async function getAuthorProfile(authorId) {
     return api(axios.request(`${config.serverAddress}/get_author_profile`, {
         params: {
@@ -71,10 +76,11 @@ async function getStatistics() {
     return api(axios.request(`${config.serverAddress}/get_statistics`));
 }
 
-async function getAuthorAreas(authorId) {
+async function getAuthorAreas(authorId, scoreThreshold) {
     return api(axios.request(`${config.serverAddress}/get_clusters`, {
         params: {
-            aid: authorId
+            aid: authorId,
+            scoreThreshold: scoreThreshold
         }
     }));
 }
@@ -111,15 +117,20 @@ async function submitSurvey(authorId, surveyRates) {
 export default {
     findExpertsByExpertise: findExpertsByExpertise,
     findExpertsByName: findExpertsByName,
+
     getAuthorProfile: getAuthorProfile,
     getAuthorTopics: getAuthorTopics,
-    getAuthorTopicsForSurvey: getAuthorTopicsForSurvey,
+    getAuthorAreas: getAuthorAreas,
     getAuthorPublications: getAuthorPublications,
     getAuthorPublication: getAuthorPublication,
     getAuthorTopicsMatrix: getAuthorTopicsMatrix,
-    getStatistics: getStatistics,
-    getAuthorAreas: getAuthorAreas,
+    getAuthorTopicsForSurvey: getAuthorTopicsForSurvey,
+    submitSurvey: submitSurvey,
+
+    findDepartmentsByName: findDepartmentsByName,
+
     getDepartmentProfile: getDepartmentProfile,
     getDepartmentTopics: getDepartmentTopics,
-    submitSurvey: submitSurvey
+
+    getStatistics: getStatistics
 };

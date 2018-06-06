@@ -19,7 +19,8 @@ class DepartmentTopics extends Component {
         const {departmentInformation} = this.props;
 
         this.state = {
-            departmentTopics: []
+            departmentTopics: [],
+            departmentYears: this.generateDepartmentYears(departmentInformation.departmentYears)
         }
     }
 
@@ -32,21 +33,132 @@ class DepartmentTopics extends Component {
     }
 
     setDepartmentTopics = (data) => {
-        const {departmentName, departmentTopics} = data;
+        const departmentName = data.department_name,
+            departmentTopics = data
+                .department_topics
+                .sort((topic1, topic2) => topic2["reciaf"] - topic1["reciaf"])
+                .map((topic, index) => Object.defineProperty(topic, 'importance_rank', {
+                    value: index + 1
+                }));
 
-        this.setState({
-            departmentName: departmentName,
-            departmentTopics: departmentTopics
-        });
+        this.setState({departmentName: departmentName, departmentTopics: departmentTopics});
+    }
+
+    generateDepartmentYears = (departmentYears) => {
+        departmentYears = range(departmentYears[0], departmentYears[departmentYears.length - 1] + 1);
+        if (departmentYears.length > 12) {
+            let oldYearsGranularity = Math.floor((departmentYears.length - 6) / 6);
+            let recentYears = departmentYears
+                .slice(-6)
+                .map((year, _) => {
+                    return {from: year, to: year}
+                })
+
+            let oldYears = []
+
+            let currentYear = departmentYears[departmentYears.length - 7];
+
+            for (var i = 0; i < 5; i++) {
+                oldYears.push({
+                    from: currentYear - oldYearsGranularity + 1,
+                    to: currentYear
+                });
+
+                currentYear -= oldYearsGranularity
+            }
+            oldYears.push({from: departmentYears[0], to: currentYear})
+
+            return oldYears
+                .reverse()
+                .concat(recentYears);
+
+        } else {
+            return departmentYears.map((year, _) => {
+                return {from: year, to: year}
+            })
+        }
+    }
+
+    renderTopicYearsHeader = () => {
+        const {departmentYears} = this.state;
+
+        return (
+            <div
+                className="years-container"
+                style={{
+                width: 33 * departmentYears.length
+            }}>
+                {departmentYears.map(({
+                    from,
+                    to
+                }, index) => from === to
+                    ? <div key={index} className="single-year-header">{from}</div>
+                    : <div key={index} className="single-year-header">{from}<br/>{to}</div>)}
+            </div>
+        )
+    }
+
+    renderTopicYears = (topicYears) => {
+        const {departmentYears} = this.state;
+
+        const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
+
+        return (
+            <div
+                style={{
+                width: 33 * departmentYears.length
+            }}
+                className="years-container">
+                {departmentYears.map(({
+                    from,
+                    to
+                }, index) => topicYears.some((topicYear, _) => inRange(topicYear, from, to))
+                    ? <div key={index} className="single-year-value year-present"/>
+                    : <div key={index} className="single-year-value year-absent"/>)}
+            </div>
+        )
+    }
+
+    renderImportanceScoreCell = (prScore, maxPrScore) => {
+        const percValue = (prScore / maxPrScore) * 100
+        return (
+            <div
+                style={{
+                width: '100%',
+                height: '18px',
+                backgroundColor: '#dadada',
+                borderRadius: '2px'
+            }}>
+                <div
+                    style={{
+                    width: `${percValue}%`,
+                    height: '100%',
+                    backgroundColor: percValue > 66
+                        ? '#85cc00'
+                        : percValue > 33
+                            ? '#ffbf00'
+                            : '#ff2e00',
+                    borderRadius: '2px',
+                    transition: 'all .2s ease-out'
+                }}/>
+            </div>
+        )
     }
 
     renderTopicsTable = () => {
         const {departmentTopics} = this.state;
+        const maxImportanceScore = departmentTopics.length > 0
+            ? departmentTopics[0].reciaf
+            : 1.0;
 
         return <ReactTable
             data={departmentTopics}
             columns={[
             {
+                Header: "Rank",
+                accessor: "importance_rank",
+                width: 40
+            }, {
                 id: "entity_name",
                 Header: "Entity",
                 accessor: "entity_name",
@@ -54,31 +166,31 @@ class DepartmentTopics extends Component {
                 filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1,
                 width: 200
             }, {
-                Header: "Authors count",
+                Header: "Authors",
                 accessor: "n_authors",
-                width: 120
+                width: 65
             }, {
-                Header: "Document count",
+                Header: "Doc. count",
                 accessor: "document_count",
-                width: 120
+                width: 80
             }, {
-                Header: "RECIAF",
+                Header: "Years",
+                accessor: "years",
+                sortable: false,
+                filterable: true,
+                Filter: () => this.renderTopicYearsHeader(),
+                Cell: ({value}) => this.renderTopicYears(value),
+                minWidth: 400
+            }, {
+                Header: "Importance",
                 accessor: "reciaf",
-                width: 150
-            }, {
-                id: "reciaf2",
-                Header: "RECIAF * n_authors",
-                accessor: row => row["reciaf"] * row["n_authors"],
-                width: 150
-            }, {
-                id: "reciaf3",
-                Header: "RECIAF * n_authors * doc_count",
-                accessor: row => row["reciaf"] * row["n_authors"] * row["document_count"],
-                width: 180
+                Cell: ({value}) => this.renderImportanceScoreCell(value, maxImportanceScore),
+                minWidth: 150,
+                maxWidth: 300
             }
         ]}
             defaultSorted={[{
-                id: "document_count",
+                id: "reciaf",
                 desc: true
             }
         ]}

@@ -35,7 +35,7 @@ class App extends Component {
               <Route exact path="/about" component={About}/>
               <Route exact path="/search" component={Search}/>
               <Route exact path="/statistics" component={WiserStatistics}/>
-              <Route exact path="/search/:searchBy(e|n)/:query(.+)/" component={Search}/>
+              <Route exact path="/search/:searchBy(e|n|d)/:query(.+)/" component={Search}/>
               <Route path="/profile/:authorId/:section?" component={AuthorProfile}/>
               <Route path="/department/:departmentName/:section?" component={DepartmentProfile}/>
               <Route path="*" render={() => (<Redirect to="/search"/>)}/>

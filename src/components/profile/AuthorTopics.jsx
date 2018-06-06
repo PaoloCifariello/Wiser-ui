@@ -61,6 +61,7 @@ class AuthorTopics extends Component {
             })
         }
     }
+    
     componentDidMount = () => {
         const {authorId} = this.props.authorInformation;
 
@@ -73,7 +74,8 @@ class AuthorTopics extends Component {
         const authorTopics = data
             .topics
             .map((topic) => Object.defineProperty(topic, "importance_score", {
-                value: Math.log(1 + (topic["document_count"] * Math.sqrt(topic["pr_score"]) * topic["iaf"]))
+                // value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"]) * topic["iaf"])
+                value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"]) * topic["iaf"])
             }))
             .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"])
             .map((topic, index) => Object.defineProperty(topic, 'importance_rank', {

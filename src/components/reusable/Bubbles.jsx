@@ -22,12 +22,11 @@ export class Bubbles extends Component {
             .on('tick', this.ticked.bind(this))
             .stop()
 
-            
         this.regroupBubbles(group);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.data !== this.props.data) {
+        if (nextProps.data.length !== this.props.data.length) {
             this.renderBubbles(nextProps.data)
         }
         if (nextProps.group !== this.props.group) {
@@ -94,13 +93,22 @@ export class Bubbles extends Component {
             .state
             .g
             .selectAll('.bubble')
-            .data(data, d => d.id)
+            .data(data, d => d.id);
+            const labels = this
+            .state
+            .g
+            .selectAll('.cluster-topic-label')
+            .data(data, d => d.id);
 
         // Exit
         bubbles
             .exit()
             .remove()
 
+        // Exit
+        labels
+            .exit()
+            .remove()
         // Enter
         const bubblesE = bubbles
             .enter()
@@ -115,7 +123,7 @@ export class Bubbles extends Component {
             .on('mouseover', showDetail) // eslint-disable-line
             .on('mouseout', hideDetail) // eslint-disable-line
 
-        const labelsE = bubbles
+        const labelsE = labels
             .enter()
             .append('text')
             .classed('cluster-topic-label', true)
@@ -164,10 +172,7 @@ export class Bubbles extends Component {
 }
 
 Bubbles.propTypes = {
-    center: PropTypes.shape({
-        x: PropTypes.number.isRequired, 
-        y: PropTypes.number.isRequired
-    }),
+    center: PropTypes.shape({x: PropTypes.number.isRequired, y: PropTypes.number.isRequired}),
     forceStrength: PropTypes.number.isRequired,
     group: PropTypes.bool.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({x: PropTypes.number.isRequired, id: PropTypes.number.isRequired, radius: PropTypes.number.isRequired, value: PropTypes.number.isRequired, name: PropTypes.string.isRequired}))
@@ -178,20 +183,28 @@ Bubbles.propTypes = {
 * details of a bubble in the tooltip.
 */
 export function showDetail(d) {
-    const importanceBackgroundColor = d.groupImportance > 0.66 ? '#85cc00' : d.groupImportance > 0.33 ? '#ffbf00' : '#ff2e00';
+    const importanceBackgroundColor = d.groupImportance > 0.66
+        ? '#85cc00'
+        : d.groupImportance > 0.33
+            ? '#ffbf00'
+            : '#ff2e00';
 
     const content = `
     <div class="flex">
-        <span class="bubble-chart-name">Topic: </span>&nbsp;<span class="bubble-chart-value">${d.name}</span>
+        <span class="bubble-chart-name">Topic: </span>&nbsp;<span class="bubble-chart-value">${d
+        .name}</span>
     </div>
     <div class="flex">
         <span class="bubble-chart-name">Group:&nbsp;</span>
-        <div class="bubble-chart-group" style="background-color: ${d3.rgb(schemeCategory10[d.group]).brighter()}"></div>
+        <div class="bubble-chart-group" style="background-color: ${d3
+        .rgb(schemeCategory10[d.group])
+        .brighter()}"></div>
     </div>
     <div class="flex">
         <span class="bubble-chart-name">Importance:</span>&nbsp;
         <div class="importance-bar-grey">
-            <div class="importance-bar-green" style="width: ${d.groupImportance * 100}%; background-color: ${importanceBackgroundColor}"> </div>
+            <div class="importance-bar-green" style="width: ${d
+        .groupImportance * 100}%; background-color: ${importanceBackgroundColor}"> </div>
         </div>
     </div>
     `;

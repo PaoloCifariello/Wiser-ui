@@ -57,7 +57,11 @@ const renderTooltipContent = (o) => {
             <List>
                 {payload.map((entry, index) => (
                     <List.Item key={`item-${index}`}>
-                        <List.Icon name='circle' style={{color: entry.color}}/>
+                        <List.Icon
+                            name='circle'
+                            style={{
+                            color: entry.color
+                        }}/>
                         <List.Content>{`${entry.name}: ${getPercent(entry.value, total)}`}</List.Content>
                     </List.Item>
                 ))
@@ -85,8 +89,6 @@ class AuthorTagStreamGraph extends PureComponent {
     componentDidMount = () => {
         const {authorId} = this.props.authorInformation;
 
-        // api     .getAuthorTopics(authorId)     .then(this.setAuthorTopicsState)
-
         api
             .getAuthorTopics(authorId)
             .then(this.setAuthorTopicsState)
@@ -100,7 +102,7 @@ class AuthorTagStreamGraph extends PureComponent {
                     return {
                         entity_name: normalizeEntityName(entity.entity_name),
                         entity_id: entity.entity_id,
-                        reciaf: computeEntityReciaf(entity),
+                        reciaf: entity.reciaf,
                         years: entity.years
 
                     }
@@ -109,18 +111,6 @@ class AuthorTagStreamGraph extends PureComponent {
                 .slice(0, TOP_NUM_ENTITIES)
         })
     }
-
-    setAuthorTopicsState_old = (data) => this.setState({
-        authorTopics: data
-            .topics
-            .map((entity) => {
-                return {
-                    value: normalizeEntityName(entity.entity_name),
-                    count: computeEntityReciaf(entity),
-                    years: entity.years
-                }
-            })
-    })
 
     handleChange = (e, {value}) => {
         this.setState({yearsStep: value});
@@ -144,7 +134,7 @@ class AuthorTagStreamGraph extends PureComponent {
                     .filter((year) => inRange(year, minYear, maxYear));
 
             if (inRangeYears.length > 0) {
-                let entityImportance = entity.reciaf * (1 + Math.exp(inRangeYears.length));
+                let entityImportance = entity.reciaf * inRangeYears.length;
                 rangeYearObject[entity.entity_name] = entityImportance
                 totalSum += entityImportance;
             }
