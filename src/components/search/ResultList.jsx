@@ -13,15 +13,16 @@ class ResultList extends Component {
         };
     }
 
-    renderResult = (author, index) => {
+    renderResult = (result, index) => {
+        const profileLink = result.author_id ? `/profile/${result.author_id}` : `/department/${result.id}`
         return (
             <List.Item key={index} className="align-center">
-                <LinkContainer to={`/profile/${author.author_id}`}>
+                <LinkContainer to={profileLink}>
                     <List.Content verticalAlign='middle'>
                         <Card className="result-card">
                             <Card.Content>
                                 <Card.Header>
-                                    {author.name}
+                                    {result.name}
                                 </Card.Header>
                                 <Card.Meta>
                                     <span>

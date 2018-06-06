@@ -27,7 +27,7 @@ export class BubbleChart extends Component {
         const WINDOWS_WIDTH = window.innerWidth,
             STACK_WIDTH_BREAKPOINT = 992,
             WIDTH_FACTOR = 1.48,
-            TOP_MARGIN = 200,
+            TOP_MARGIN = 300,
             SINGLE_CLUSTER_HEIGHT = 250,
             IS_STACKED = WINDOWS_WIDTH <= STACK_WIDTH_BREAKPOINT,
             TOTAL_WIDTH = IS_STACKED ?  WINDOWS_WIDTH : (WINDOWS_WIDTH / WIDTH_FACTOR),

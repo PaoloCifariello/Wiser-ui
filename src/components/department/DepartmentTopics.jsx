@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {List} from 'semantic-ui-react'
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -7,31 +8,47 @@ import EntityLink from "../reusable/EntityLink"
 
 import {range} from 'lodash';
 
-import "./AuthorTopics.css"
+import "./DepartmentTopics.css"
 import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
 import {inRange} from '../reusable/Util'
 
-class AuthorTopics extends Component {
+class DepartmentTopics extends Component {
     constructor(props) {
         super(props);
-        const {authorInformation} = this.props;
-        let authorYears = Object
-            .keys(authorInformation.authorYears)
-            .map((val) => parseInt(val, 10))
-            .sort();
+        const {departmentInformation} = this.props;
 
         this.state = {
-            authorTopics: [],
-            authorYears: this.generateAuthorYears(authorYears)
+            departmentTopics: [],
+            departmentYears: this.generateDepartmentYears(departmentInformation.departmentYears)
         }
     }
 
-    generateAuthorYears = (authorYears) => {
-        authorYears = range(authorYears[0], authorYears[authorYears.length - 1] + 1);
-        if (authorYears.length > 12) {
-            let oldYearsGranularity = Math.floor((authorYears.length - 6) / 6);
-            let recentYears = authorYears
+    componentDidMount = () => {
+        const {departmentName} = this.props.match.params;
+
+        api
+            .getDepartmentTopics(departmentName)
+            .then(this.setDepartmentTopics);
+    }
+
+    setDepartmentTopics = (data) => {
+        const departmentName = data.department_name,
+            departmentTopics = data
+                .department_topics
+                .sort((topic1, topic2) => topic2["reciaf"] - topic1["reciaf"])
+                .map((topic, index) => Object.defineProperty(topic, 'importance_rank', {
+                    value: index + 1
+                }));
+
+        this.setState({departmentName: departmentName, departmentTopics: departmentTopics});
+    }
+
+    generateDepartmentYears = (departmentYears) => {
+        departmentYears = range(departmentYears[0], departmentYears[departmentYears.length - 1] + 1);
+        if (departmentYears.length > 12) {
+            let oldYearsGranularity = Math.floor((departmentYears.length - 6) / 6);
+            let recentYears = departmentYears
                 .slice(-6)
                 .map((year, _) => {
                     return {from: year, to: year}
@@ -39,7 +56,7 @@ class AuthorTopics extends Component {
 
             let oldYears = []
 
-            let currentYear = authorYears[authorYears.length - 7];
+            let currentYear = departmentYears[departmentYears.length - 7];
 
             for (var i = 0; i < 5; i++) {
                 oldYears.push({
@@ -49,52 +66,50 @@ class AuthorTopics extends Component {
 
                 currentYear -= oldYearsGranularity
             }
-            oldYears.push({from: authorYears[0], to: currentYear})
+            oldYears.push({from: departmentYears[0], to: currentYear})
 
             return oldYears
                 .reverse()
                 .concat(recentYears);
 
         } else {
-            return authorYears.map((year, _) => {
+            return departmentYears.map((year, _) => {
                 return {from: year, to: year}
             })
         }
     }
-    
-    componentDidMount = () => {
-        const {authorId} = this.props.authorInformation;
 
-        api
-            .getAuthorTopics(authorId)
-            .then(this.setAuthorTopicsImportance);
-    }
+    renderTopicYearsHeader = () => {
+        const {departmentYears} = this.state;
 
-    setAuthorTopicsImportance = (data) => {
-        const authorTopics = data
-            .topics
-            .map((topic) => Object.defineProperty(topic, "importance_score", {
-                // value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"]) * topic["iaf"])
-                value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"]) * topic["iaf"])
-            }))
-            .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"])
-            .map((topic, index) => Object.defineProperty(topic, 'importance_rank', {
-                value: index + 1
-            }));
-        this.setState({authorTopics: authorTopics});
+        return (
+            <div
+                className="years-container"
+                style={{
+                width: 33 * departmentYears.length
+            }}>
+                {departmentYears.map(({
+                    from,
+                    to
+                }, index) => from === to
+                    ? <div key={index} className="single-year-header">{from}</div>
+                    : <div key={index} className="single-year-header">{from}<br/>{to}</div>)}
+            </div>
+        )
     }
 
     renderTopicYears = (topicYears) => {
-        const {authorYears} = this.state;
+        const {departmentYears} = this.state;
+
         const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
 
         return (
             <div
                 style={{
-                width: 33 * authorYears.length
+                width: 33 * departmentYears.length
             }}
                 className="years-container">
-                {authorYears.map(({
+                {departmentYears.map(({
                     from,
                     to
                 }, index) => topicYears.some((topicYear, _) => inRange(topicYear, from, to))
@@ -130,34 +145,14 @@ class AuthorTopics extends Component {
         )
     }
 
-    renderTopicYearsHeader = () => {
-        const {authorYears} = this.state;
-
-        return (
-            <div
-                className="years-container"
-                style={{
-                width: 33 * authorYears.length
-            }}>
-                {authorYears.map(({
-                    from,
-                    to
-                }, index) => from === to
-                    ? <div key={index} className="single-year-header">{from}</div>
-                    : <div key={index} className="single-year-header">{from}<br/>{to}</div>)}
-            </div>
-        )
-    }
-
     renderTopicsTable = () => {
-        const {authorTopics} = this.state;
-        const {authorId} = this.props.authorInformation;
-        const maxImportanceScore = authorTopics.length > 0
-            ? authorTopics[0].importance_score
-            : 1
+        const {departmentTopics} = this.state;
+        const maxImportanceScore = departmentTopics.length > 0
+            ? departmentTopics[0].reciaf
+            : 1.0;
 
         return <ReactTable
-            data={authorTopics}
+            data={departmentTopics}
             columns={[
             {
                 Header: "Rank",
@@ -169,15 +164,11 @@ class AuthorTopics extends Component {
                 accessor: "entity_name",
                 filterable: true,
                 filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1,
-                width: 200,
-                Cell: ({original}) => <EntityLink
-                        authorId={authorId}
-                        entityId={original.entity_id}
-                        entityName={original.entity_name}/>
+                width: 200
             }, {
-                Header: "Count",
-                accessor: "count",
-                width: 60
+                Header: "Authors",
+                accessor: "n_authors",
+                width: 65
             }, {
                 Header: "Doc. count",
                 accessor: "document_count",
@@ -192,14 +183,14 @@ class AuthorTopics extends Component {
                 minWidth: 400
             }, {
                 Header: "Importance",
-                accessor: "importance_score",
+                accessor: "reciaf",
                 Cell: ({value}) => this.renderImportanceScoreCell(value, maxImportanceScore),
                 minWidth: 150,
                 maxWidth: 300
             }
         ]}
             defaultSorted={[{
-                id: "importance_score",
+                id: "reciaf",
                 desc: true
             }
         ]}
@@ -215,4 +206,4 @@ class AuthorTopics extends Component {
     }
 }
 
-export default AuthorTopics;
+export default DepartmentTopics;
