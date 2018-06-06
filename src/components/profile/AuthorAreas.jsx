@@ -1,20 +1,11 @@
-import {range} from 'lodash';
 import React, {Component} from 'react';
-import {Button, Card, Form, Input, Select} from 'semantic-ui-react';
+import {Button, Input} from 'semantic-ui-react';
 import api from '../../api/api';
 import {BubbleChart} from "../reusable/BubbleChart";
 import {normalizeEntityName} from '../reusable/Entity';
 
 const TOP_ENTITIES_PER_CLUSTER = 6,
     MIN_NUM_ENTITIES_PER_CLUSTER = 1;
-
-const kSteps = range(1, 20).map((value) => {
-    return {
-        key: value,
-        value: value,
-        text: value.toString()
-    }
-});
 
 class AuthorAreas extends Component {
     constructor(props) {
@@ -54,18 +45,14 @@ class AuthorAreas extends Component {
     }
 
     changeThreshold = (_, {value}) => {
-        this.setState({
-            scoreThreshold: parseFloat(value)
-        })
+        this.setState({scoreThreshold: parseFloat(value)})
     }
 
     refreshChart = () => {
         const {scoreThreshold} = this.state;
         const {authorId} = this.props.authorInformation;
 
-        this.setState({
-            authorAreas: []  
-        });
+        this.setState({authorAreas: []});
 
         api
             .getAuthorAreas(authorId, scoreThreshold)
@@ -83,11 +70,17 @@ class AuthorAreas extends Component {
                     groupImportance: area.importanceScore
                 };
             }));
-        
-            return (
+
+        return (
             <div>
                 <div>
-                    <Input onChange={this.changeThreshold} value={scoreThreshold} min="0.01" step="0.01" max="0.99" type="number"/>
+                    <Input
+                        onChange={this.changeThreshold}
+                        value={scoreThreshold}
+                        min="0.01"
+                        step="0.01"
+                        max="0.99"
+                        type="number"/>
                     <Button onClick={this.refreshChart}>Refresh</Button>
                 </div>
                 <BubbleChart data={normalizedAuthorTopics} maxRadius={80} group={true}/>

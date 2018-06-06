@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {List} from 'semantic-ui-react'
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -101,7 +100,7 @@ class DepartmentTopics extends Component {
     renderTopicYears = (topicYears) => {
         const {departmentYears} = this.state;
 
-        const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
+        // const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
 
         return (
             <div
@@ -164,7 +163,8 @@ class DepartmentTopics extends Component {
                 accessor: "entity_name",
                 filterable: true,
                 filterMethod: (filter, row) => normalizeEntityName(row[filter.id].toLowerCase()).indexOf(filter.value.toLowerCase()) !== -1,
-                width: 200
+                width: 200,
+                Cell: ({original}) => <EntityLink entityId={original.entity_id} entityName={original.entity_name}/>
             }, {
                 Header: "Authors",
                 accessor: "n_authors",
