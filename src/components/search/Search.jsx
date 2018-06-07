@@ -41,26 +41,22 @@ class Search extends Component {
       .searchInput
       .focus();
 
-    switch (searchBy) {
-      case "e":
-        return this._searchByExpertise(query);
-      case "n":
-        return this._searchByName(query);
-      case "d":
-        return this._searchByDepartment(query);
-      default:
-        return this._resetSearch();
-    }
+    return this.handleSearch(searchBy, query)
   }
 
   componentWillReceiveProps = ({match}) => {
     const {searchBy, query} = match.params;
 
     this.setState({searchValue: query});
+    return this.handleSearch(searchBy, query)
+  }
 
+  handleSearch = (searchBy, query) => {
     switch (searchBy) {
       case "e":
         return this._searchByExpertise(query);
+      case "es":
+        return this._searchByExpertise(query, true);
       case "n":
         return this._searchByName(query);
       case "d":
@@ -68,6 +64,7 @@ class Search extends Component {
       default:
         return this._resetSearch();
     }
+
   }
 
   handleSearchChange = (e, {value}) => {
@@ -78,7 +75,7 @@ class Search extends Component {
     this.setState({searchValue: "", isSearching: false, showErrorMessage: false, showResults: false, results: null});
   }
 
-  _searchByExpertise = (searchValue) => {
+  _searchByExpertise = (searchValue, softSearch = false) => {
     searchValue = searchValue.trim();
     this.setState({searchValue: searchValue})
 
@@ -93,7 +90,7 @@ class Search extends Component {
         lastSearchValue: searchValue
       });
       api
-        .findExpertsByExpertise(searchValue)
+        .findExpertsByExpertise(searchValue, softSearch)
         .then(this.showResults)
         .catch(this.fail)
     }
@@ -149,6 +146,14 @@ class Search extends Component {
       .push(`/search/e/${searchValue}`);
   }
 
+  searchByExpertiseSoft = (history) => {
+    const {searchValue} = this.state;
+    this
+      .props
+      .history
+      .push(`/search/es/${searchValue}`);
+  }
+
   searchByName = (history) => {
     const {searchValue} = this.state;
     this
@@ -192,7 +197,7 @@ class Search extends Component {
 
   handleKeyPress = (evt) => {
     if (evt.key === "Enter") {
-      this.searchByExpertise();
+      this.searchByExpertiseSoft();
     }
   }
 
@@ -200,6 +205,9 @@ class Search extends Component {
     const {queryEntities} = this.state;
     if (queryEntities) {
       const queryEntitiesLinks = queryEntities.map((queryEntity, index) => <span className="margin-lr-10" key={index}>{< EntityLink
+        entityId = {
+          queryEntity.entity_id
+        }
         entityName = {
           queryEntity.entity_name
         }

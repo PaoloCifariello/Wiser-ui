@@ -10,8 +10,13 @@ const api = (httpPromise) => httpPromise.then((res) => res.data.status === API_S
     Promise.resolve(res.data.content) :
     Promise.reject(res.data.content));
 
-async function findExpertsByExpertise(expertiseArea) {
-    return api(axios.request(`${config.serverAddress}/find_experts_by_field?q=${expertiseArea}`));
+async function findExpertsByExpertise(expertiseArea, softSearch=false) {
+    return api(axios.request(`${config.serverAddress}/find_experts_by_field`, {
+        params: {
+            q: expertiseArea,
+            softSearch: softSearch
+        }
+    }));
 }
 
 async function findExpertsByName(expertName) {

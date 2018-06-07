@@ -53,11 +53,12 @@ class EntityLink extends Component {
             return true;
         }
 
-        // we need to update the component if the actual popupSummary 
-        // is not for the actual entity
-        if (this.summaryNeedsReload(popupSummary)) 
+        // we need to update the component if the actual popupSummary is not for the
+        // actual entity
+        if (this.summaryNeedsReload(popupSummary)) {
             return true;
-        
+        }
+
         return false;
     }
 
