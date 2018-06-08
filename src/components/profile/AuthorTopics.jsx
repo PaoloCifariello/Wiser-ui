@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
+import {Divider, Header, Icon, Segment} from 'semantic-ui-react';
 
 import ReactTable from "react-table";
+import {Range} from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
 import "react-table/react-table.css";
 
 import EntityLink from "../reusable/EntityLink"
@@ -21,14 +25,20 @@ class AuthorTopics extends Component {
             .map((val) => parseInt(val, 10))
             .sort();
 
+        let allAuthorYears = range(authorYears[0], authorYears[authorYears.length - 1] + 1);
+
         this.state = {
             authorTopics: [],
-            authorYears: this.generateAuthorYears(authorYears)
+            authorYears: this.generateAuthorYears(allAuthorYears),
+            allAuthorYears: allAuthorYears,
+            yearsRange: [
+                allAuthorYears[0],
+                allAuthorYears[allAuthorYears.length - 1]
+            ]
         }
     }
 
     generateAuthorYears = (authorYears) => {
-        authorYears = range(authorYears[0], authorYears[authorYears.length - 1] + 1);
         if (authorYears.length > 12) {
             let oldYearsGranularity = Math.floor((authorYears.length - 6) / 6);
             let recentYears = authorYears
@@ -61,7 +71,7 @@ class AuthorTopics extends Component {
             })
         }
     }
-    
+
     componentDidMount = () => {
         const {authorId} = this.props.authorInformation;
 
@@ -70,18 +80,63 @@ class AuthorTopics extends Component {
             .then(this.setAuthorTopicsImportance);
     }
 
+    filterTopicsByActualYearsRange = (authorTopics, fromYear, toYear) => {
+        let filteredAuthorTopics = authorTopics.filter(({years}) => years.some((year) => inRange(year, fromYear, toYear))).map((ent) => {
+            const {count, document_count} = Object
+                .keys(ent.distribution)
+                .reduce((acc, year) => inRange(year, fromYear, toYear)
+                    ? ({
+                        count: acc.count + ent.distribution[year].count,
+                        document_count: acc.document_count + ent.distribution[year].count
+                    })
+                    : acc, {
+                    count: 0,
+                    document_count: 0
+                });
+
+            return {
+                entity_name: ent.entity_name,
+                entity_id: ent.entity_id,
+                years: ent.years,
+                count: count,
+                document_count: document_count,
+                importance_score: ent.importance_score
+            }
+        });
+
+        return filteredAuthorTopics;
+    }
+
     setAuthorTopicsImportance = (data) => {
+        const {yearsRange} = this.state;
+
         const authorTopics = data
             .topics
             .map((topic) => Object.defineProperty(topic, "importance_score", {
-                // value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"]) * topic["iaf"])
+                // value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"])
+                // * topic["iaf"])
                 value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"]) * topic["iaf"])
             }))
-            .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"])
-            .map((topic, index) => Object.defineProperty(topic, 'importance_rank', {
-                value: index + 1
-            }));
-        this.setState({authorTopics: authorTopics});
+            .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"]);
+
+        this.setState({
+            authorTopics: authorTopics,
+            filteredAuthorTopics: this.filterTopicsByActualYearsRange(authorTopics, yearsRange[0], yearsRange[1])
+        });
+    }
+
+    changeYearsRange = (newRange) => {
+        const {allAuthorYears, authorTopics} = this.state,
+            fromYear = allAuthorYears[newRange[0]],
+            toYear = allAuthorYears[newRange[1]];
+
+        this.setState({
+            authorYears: this.generateAuthorYears(range(fromYear, toYear + 1)),
+            yearsRange: [
+                fromYear, toYear
+            ],
+            filteredAuthorTopics: this.filterTopicsByActualYearsRange(authorTopics, fromYear, toYear)
+        });
     }
 
     renderTopicYears = (topicYears) => {
@@ -150,18 +205,18 @@ class AuthorTopics extends Component {
     }
 
     renderTopicsTable = () => {
-        const {authorTopics} = this.state;
+        const {authorTopics, filteredAuthorTopics} = this.state;
         const {authorId} = this.props.authorInformation;
         const maxImportanceScore = authorTopics.length > 0
             ? authorTopics[0].importance_score
             : 1
 
         return <ReactTable
-            data={authorTopics}
+            data={filteredAuthorTopics}
             columns={[
             {
                 Header: "Rank",
-                accessor: "importance_rank",
+                Cell: ({index}) => index + 1,
                 width: 40
             }, {
                 id: "entity_name",
@@ -208,9 +263,83 @@ class AuthorTopics extends Component {
             className="-striped -highlight"/>
     }
 
+    renderRange = () => {
+        const {allAuthorYears} = this.state;
+        const biggerMarkStyle = {
+                'fontSize': '12px'
+            },
+            standardMarkStyle = {
+                'fontSize': '10px'
+            };
+
+        const authorYearsMap = allAuthorYears.reduce((acc, val, index) => {
+            if (index === 0 || index === allAuthorYears.length - 1) {
+                acc[allAuthorYears.indexOf(val)] = {
+                    style: biggerMarkStyle,
+                    label: val
+                };
+            } else if (index % 2 === 0) {
+                acc[allAuthorYears.indexOf(val)] = {
+                    style: standardMarkStyle,
+                    label: val
+                };
+            } else {
+                acc[allAuthorYears.indexOf(val)] = {
+                    style: standardMarkStyle,
+                    label: ""
+                };
+            }
+            return acc;
+        }, {});
+
+        return (
+            <Segment size="huge" padded={true} color='teal'>
+                <Header as='h5'>
+                    <Icon name='calendar alternate outline'/>
+                    <Header.Content>Select the range of years to analyze.</Header.Content>
+                </Header>
+                <Divider hidden/>
+
+                <Range
+                    activeDotStyle={{
+                    borderColor: 'rgb(0, 150, 136)'
+                }}
+                    handleStyle={[
+                    {
+                        borderColor: 'rgb(0, 150, 136)'
+                    }, {
+                        borderColor: 'rgb(0, 150, 136)'
+                    }
+                ]}
+                    trackStyle={[
+                    {
+                        backgroundColor: 'rgb(0, 150, 136)'
+                    }, {
+                        backgroundColor: 'rgb(0, 150, 136)'
+                    }
+                ]}
+                    onAfterChange={this.changeYearsRange}
+                    step={1}
+                    min={0}
+                    marks={authorYearsMap}
+                    max={allAuthorYears.length - 1}
+                    defaultValue={[
+                    0, allAuthorYears.length - 1
+                ]}/>
+                <Divider hidden/>
+            </Segment>
+        )
+    }
+
     render = () => {
         return <div>
-            {this.renderTopicsTable()}
+            <div>
+                {this.renderRange()}
+            </div>
+            <Segment padded={true} vertical/>
+            <div>
+                {this.renderTopicsTable()}
+            </div>
         </div>
     }
 }

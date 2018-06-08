@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 
+import {Divider, Header, Icon, Segment} from 'semantic-ui-react';
+
 import ReactTable from "react-table";
+import {Range} from 'rc-slider';
 import "react-table/react-table.css";
 
 import EntityLink from "../reusable/EntityLink"
@@ -16,10 +19,17 @@ class DepartmentTopics extends Component {
     constructor(props) {
         super(props);
         const {departmentInformation} = this.props;
+        const allDepartmentYears = departmentInformation.departmentYears;
 
         this.state = {
             departmentTopics: [],
-            departmentYears: this.generateDepartmentYears(departmentInformation.departmentYears)
+            filteredDepartmentTopics: [],
+            departmentYears: this.generateDepartmentYears(departmentInformation.departmentYears),
+            allDepartmentYears: allDepartmentYears,
+            yearsRange: [
+                allDepartmentYears[0],
+                allDepartmentYears[allDepartmentYears.length - 1]
+            ]
         }
     }
 
@@ -31,7 +41,37 @@ class DepartmentTopics extends Component {
             .then(this.setDepartmentTopics);
     }
 
+    filterTopicsByActualYearsRange = (departmentTopics, fromYear, toYear) => {
+        let filteredDepartmentTopics = departmentTopics.filter(({years}) => years.some((year) => inRange(year, fromYear, toYear))).map((ent) => {
+            const {count, document_count} = Object
+                .keys(ent.distribution)
+                .reduce((acc, year) => inRange(year, fromYear, toYear)
+                    ? ({
+                        count: acc.count + ent.distribution[year].count,
+                        document_count: acc.document_count + ent.distribution[year].count
+                    })
+                    : acc, {
+                    count: 0,
+                    document_count: 0
+                });
+
+            return {
+                entity_name: ent.entity_name,
+                entity_id: ent.entity_id,
+                n_authors: ent.n_authors,
+                years: ent.years,
+                count: count,
+                document_count: document_count,
+                reciaf: ent.reciaf
+            }
+        });
+
+        return filteredDepartmentTopics;
+    }
+
     setDepartmentTopics = (data) => {
+        const {yearsRange} = this.state;
+
         const departmentName = data.department_name,
             departmentTopics = data
                 .department_topics
@@ -40,7 +80,11 @@ class DepartmentTopics extends Component {
                     value: index + 1
                 }));
 
-        this.setState({departmentName: departmentName, departmentTopics: departmentTopics});
+        this.setState({
+            departmentName: departmentName,
+            departmentTopics: departmentTopics,
+            filteredDepartmentTopics: this.filterTopicsByActualYearsRange(departmentTopics, yearsRange[0], yearsRange[1])
+        });
     }
 
     generateDepartmentYears = (departmentYears) => {
@@ -78,6 +122,20 @@ class DepartmentTopics extends Component {
         }
     }
 
+    changeYearsRange = (newRange) => {
+        const {allDepartmentYears, departmentTopics} = this.state,
+            fromYear = allDepartmentYears[newRange[0]],
+            toYear = allDepartmentYears[newRange[1]];
+
+        this.setState({
+            departmentYears: this.generateDepartmentYears(range(fromYear, toYear + 1)),
+            yearsRange: [
+                fromYear, toYear
+            ],
+            filteredDepartmentTopics: this.filterTopicsByActualYearsRange(departmentTopics, fromYear, toYear)
+        });
+    }
+
     renderTopicYearsHeader = () => {
         const {departmentYears} = this.state;
 
@@ -100,7 +158,8 @@ class DepartmentTopics extends Component {
     renderTopicYears = (topicYears) => {
         const {departmentYears} = this.state;
 
-        // const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
+        // const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 *
+        // Math.cos(40.0 * (Math.PI / 180));
 
         return (
             <div
@@ -145,13 +204,13 @@ class DepartmentTopics extends Component {
     }
 
     renderTopicsTable = () => {
-        const {departmentTopics} = this.state;
+        const {departmentTopics, filteredDepartmentTopics} = this.state;
         const maxImportanceScore = departmentTopics.length > 0
             ? departmentTopics[0].reciaf
             : 1.0;
 
         return <ReactTable
-            data={departmentTopics}
+            data={filteredDepartmentTopics}
             columns={[
             {
                 Header: "Rank",
@@ -172,6 +231,10 @@ class DepartmentTopics extends Component {
             }, {
                 Header: "Doc. count",
                 accessor: "document_count",
+                width: 80
+            }, {
+                Header: "Count",
+                accessor: "count",
                 width: 80
             }, {
                 Header: "Years",
@@ -199,9 +262,83 @@ class DepartmentTopics extends Component {
             className="-striped -highlight"/>
     }
 
+    renderRange = () => {
+        const {allDepartmentYears} = this.state;
+        const biggerMarkStyle = {
+                'fontSize': '12px'
+            },
+            standardMarkStyle = {
+                'fontSize': '10px'
+            };
+
+        const departmentYearsMap = allDepartmentYears.reduce((acc, val, index) => {
+            if (index === 0 || index === allDepartmentYears.length - 1) {
+                acc[allDepartmentYears.indexOf(val)] = {
+                    style: biggerMarkStyle,
+                    label: val
+                };
+            } else if (index % 2 === 0) {
+                acc[allDepartmentYears.indexOf(val)] = {
+                    style: standardMarkStyle,
+                    label: val
+                };
+            } else {
+                acc[allDepartmentYears.indexOf(val)] = {
+                    style: standardMarkStyle,
+                    label: ""
+                };
+            }
+            return acc;
+        }, {});
+
+        return (
+            <Segment size="huge" padded={true} color='teal'>
+                <Header as='h5'>
+                    <Icon name='calendar alternate outline'/>
+                    <Header.Content>Select the range of years to analyze.</Header.Content>
+                </Header>
+                <Divider hidden/>
+
+                <Range
+                    activeDotStyle={{
+                    borderColor: 'rgb(0, 150, 136)'
+                }}
+                    handleStyle={[
+                    {
+                        borderColor: 'rgb(0, 150, 136)'
+                    }, {
+                        borderColor: 'rgb(0, 150, 136)'
+                    }
+                ]}
+                    trackStyle={[
+                    {
+                        backgroundColor: 'rgb(0, 150, 136)'
+                    }, {
+                        backgroundColor: 'rgb(0, 150, 136)'
+                    }
+                ]}
+                    onAfterChange={this.changeYearsRange}
+                    step={1}
+                    min={0}
+                    marks={departmentYearsMap}
+                    max={allDepartmentYears.length - 1}
+                    defaultValue={[
+                    0, allDepartmentYears.length - 1
+                ]}/>
+                <Divider hidden/>
+            </Segment>
+        )
+    }
+
     render = () => {
         return <div>
-            {this.renderTopicsTable()}
+            <div>
+                {this.renderRange()}
+            </div>
+            <Segment padded={true} vertical/>
+            <div>
+                {this.renderTopicsTable()}
+            </div>
         </div>
     }
 }
