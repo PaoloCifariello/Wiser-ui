@@ -3,7 +3,7 @@ import {Popup} from 'semantic-ui-react';
 
 import {normalizeEntityName} from "../reusable/Entity"
 import wiki_api from '../../api/wiki_api';
-
+import PropTypes from 'prop-types';
 class EntityLink extends Component {
 
     constructor(props) {
@@ -104,6 +104,12 @@ class EntityLink extends Component {
             : this.renderWikipediaPopup();
 
     }
+}
+
+EntityLink.propTypes = {
+    entityId: PropTypes.number.isRequired,
+    entityName: PropTypes.string.isRequired,
+    authorId: PropTypes.string
 }
 
 export default EntityLink;
