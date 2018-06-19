@@ -43,16 +43,20 @@ class DepartmentTopics extends Component {
 
     filterTopicsByActualYearsRange = (departmentTopics, fromYear, toYear) => {
         let filteredDepartmentTopics = departmentTopics.filter(({years}) => years.some((year) => inRange(year, fromYear, toYear))).map((ent) => {
-            const {count, document_count} = Object
+            const {count, document_count, authors} = Object
                 .keys(ent.distribution)
                 .reduce((acc, year) => inRange(year, fromYear, toYear)
                     ? ({
                         count: acc.count + ent.distribution[year].count,
-                        document_count: acc.document_count + ent.distribution[year].count
+                        document_count: acc.document_count + ent.distribution[year].count,
+                        // num. of authors in a specific years range is the max between the num. of authors
+                        // in each single year in that range
+                        authors: acc.authors.concat(ent.distribution[year].authors)
                     })
                     : acc, {
                     count: 0,
-                    document_count: 0
+                    document_count: 0,
+                    authors: []
                 });
 
             return {
@@ -62,7 +66,9 @@ class DepartmentTopics extends Component {
                 years: ent.years,
                 count: count,
                 document_count: document_count,
-                reciaf: ent.reciaf
+                author_count: Array.from(new Set(authors)).length,
+                reciaf: ent.reciaf,
+                importance_score: ent.importance_score
             }
         });
 
@@ -72,13 +78,16 @@ class DepartmentTopics extends Component {
     setDepartmentTopics = (data) => {
         const {yearsRange} = this.state;
 
+        // importance_score computed starting from REC-IAF to reduce differences
         const departmentName = data.department_name,
             departmentTopics = data
                 .department_topics
-                .sort((topic1, topic2) => topic2["reciaf"] - topic1["reciaf"])
-                .map((topic, index) => Object.defineProperty(topic, 'importance_rank', {
-                    value: index + 1
-                }));
+                .map((topic) => ({
+                    importance_score: Math.log(1.0 + topic.reciaf),
+                    ...topic
+                }))
+                .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"]);
+
 
         this.setState({
             departmentName: departmentName,
@@ -206,7 +215,7 @@ class DepartmentTopics extends Component {
     renderTopicsTable = () => {
         const {departmentTopics, filteredDepartmentTopics} = this.state;
         const maxImportanceScore = departmentTopics.length > 0
-            ? departmentTopics[0].reciaf
+            ? departmentTopics[0].importance_score
             : 1.0;
 
         return <ReactTable
@@ -214,7 +223,7 @@ class DepartmentTopics extends Component {
             columns={[
             {
                 Header: "Rank",
-                accessor: "importance_rank",
+                Cell: ({index}) => index + 1,
                 width: 40
             }, {
                 id: "entity_name",
@@ -226,7 +235,7 @@ class DepartmentTopics extends Component {
                 Cell: ({original}) => <EntityLink entityId={original.entity_id} entityName={original.entity_name}/>
             }, {
                 Header: "Authors",
-                accessor: "n_authors",
+                accessor: "author_count",
                 width: 65
             }, {
                 Header: "Doc. count",
@@ -246,14 +255,14 @@ class DepartmentTopics extends Component {
                 minWidth: 400
             }, {
                 Header: "Importance",
-                accessor: "reciaf",
+                accessor: "importance_score",
                 Cell: ({value}) => this.renderImportanceScoreCell(value, maxImportanceScore),
                 minWidth: 150,
                 maxWidth: 300
             }
         ]}
             defaultSorted={[{
-                id: "reciaf",
+                id: "importance_score",
                 desc: true
             }
         ]}
