@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {Button, Input} from 'semantic-ui-react';
+import {Divider, Header, Segment} from 'semantic-ui-react';
 import api from '../../api/api';
 import {BubbleChart} from "../reusable/BubbleChart";
 import {normalizeEntityName} from '../reusable/Entity';
 
+import Slider from 'rc-slider';
+
 const TOP_ENTITIES_PER_CLUSTER = 6,
-    MIN_NUM_ENTITIES_PER_CLUSTER = 1;
+    MIN_NUM_ENTITIES_PER_CLUSTER = 3;
 
 class AuthorAreas extends Component {
     constructor(props) {
@@ -44,7 +46,9 @@ class AuthorAreas extends Component {
         });
     }
 
-    changeThreshold = (_, {value}) => {
+    // changeThreshold = (_, {value}) => {
+    changeThreshold = (value) => {
+        // debugger;
         this.setState({scoreThreshold: parseFloat(value)})
     }
 
@@ -60,6 +64,10 @@ class AuthorAreas extends Component {
     }
 
     render = () => {
+        const maxValue = 0.7,
+            minValue = 0.05;
+
+
         const {authorAreas, scoreThreshold} = this.state,
             normalizedAuthorTopics = authorAreas.map((area, i) => area.topics.slice(0, TOP_ENTITIES_PER_CLUSTER).map((topic, _) => {
                 return {
@@ -74,14 +82,24 @@ class AuthorAreas extends Component {
         return (
             <div>
                 <div>
-                    <Input
-                        onChange={this.changeThreshold}
-                        value={scoreThreshold}
-                        min="0.01"
-                        step="0.01"
-                        max="0.99"
-                        type="number"/>
-                    <Button onClick={this.refreshChart}>Refresh</Button>
+                    <Segment size="huge" padded={true} color='teal'>
+                        <Header as='h5'>
+                            <Header.Content>Select the granularity.</Header.Content>
+                        </Header>
+                        <Divider hidden/>
+
+                        <Slider
+                            marks={{
+                            [minValue.toString()]: "More topics",
+                            [maxValue.toString()]: "Less topics"
+                        }}
+                            min={minValue}
+                            max={maxValue}
+                            step={0.01}
+                            onChange={this.changeThreshold}
+                            onAfterChange={this.refreshChart}
+                            value={scoreThreshold}/>
+                    </Segment>
                 </div>
                 <BubbleChart data={normalizedAuthorTopics} maxRadius={80} group={true}/>
             </div>
