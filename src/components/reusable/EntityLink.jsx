@@ -34,11 +34,11 @@ class EntityLink extends Component {
         return entityId !== nextEntityId;
     }
 
-    summaryNeedsReload = (nextPopupSummary) => {
-        const {entityId} = this.props;
+    summaryNeedsReload = () => {
+        const {entityName} = this.props;
         const {popupSummary} = this.state;
 
-        if (popupSummary && popupSummary.pageid === entityId) {
+        if (popupSummary && popupSummary.titles.canonical === entityName) {
             return false;
         } else {
             return true;
