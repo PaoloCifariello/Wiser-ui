@@ -2,33 +2,35 @@ import React, {PureComponent} from 'react';
 
 import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
+
 import StreamGraph from '../reusable/StreamGraph'
 
-class DepartmentStreamGraph extends PureComponent {
+class AuthorStreamGraph extends PureComponent {
     constructor(props) {
         super(props);
-        const {departmentInformation} = this.props;
+        const {authorInformation} = this.props;
 
         this.state = {
-            departmentYears: departmentInformation
-                .departmentYears
+            authorYears: Object
+                .keys(authorInformation.authorYears)
+                .map((val) => parseInt(val, 10))
                 .sort(),
-            departmentTopics: []
+            authorTopics: []
         }
     }
 
     componentDidMount = () => {
-        const {departmentName} = this.props.match.params;
+        const {authorId} = this.props.authorInformation;
 
         api
-            .getDepartmentTopics(departmentName)
-            .then(this.setDepartmentTopicsState)
+            .getAuthorTopics(authorId)
+            .then(this.setAuthorTopicsState)
     }
 
-    setDepartmentTopicsState = (data) => {
+    setAuthorTopicsState = (data) => {
         this.setState({
-            departmentTopics: data
-                .department_topics
+            authorTopics: data
+                .topics
                 .map((entity) => ({
                     entity_name: normalizeEntityName(entity.entity_name),
                     entity_id: entity.entity_id,
@@ -41,10 +43,10 @@ class DepartmentStreamGraph extends PureComponent {
     }
 
     render = () => {
-        const {departmentTopics, departmentYears} = this.state;
+        const {authorTopics, authorYears} = this.state;
 
-        return (<StreamGraph topics={departmentTopics} years={departmentYears}/>);
+        return (<StreamGraph topics={authorTopics} years={authorYears}/>);
     }
 }
 
-export default DepartmentStreamGraph;
+export default AuthorStreamGraph;

@@ -17,7 +17,7 @@ import AuthorPublications from './AuthorPublications'
 import AuthorTagcloud from './AuthorTagcloud'
 import AuthorSurvey from './AuthorSurvey'
 import AuthorPublication from './AuthorPublication'
-import AuthorTagStreamGraph from './AuthorTagStreamGraph'
+import AuthorStreamGraph from './AuthorStreamGraph'
 import AuthorTagChordDiagram from './AuthorTagChordDiagram'
 
 const menuItems = [
@@ -35,7 +35,7 @@ const menuItems = [
         selector: "streamgraph",
         link: "streamgraph",
         name: "StreamGraph",
-        render: (props) => <AuthorTagStreamGraph {...props}/>
+        render: (props) => <AuthorStreamGraph {...props}/>
     }, {
         selector: "tagcloud",
         link: "tagcloud",
