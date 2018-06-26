@@ -11,6 +11,8 @@ import EntityLink from "../reusable/EntityLink"
 
 import {range} from 'lodash';
 
+import StopEntitiesList from "../reusable/StopEntitiesList"
+
 import "./AuthorTopics.css"
 import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
@@ -112,6 +114,7 @@ class AuthorTopics extends Component {
 
         const authorTopics = data
             .topics
+            .filter((topic) => !StopEntitiesList.contains(topic.entity_id))
             .map((topic) => Object.defineProperty(topic, "importance_score", {
                 // value: Math.log(1 + (topic["document_count"]) * Math.sqrt(topic["pr_score"])
                 // * topic["iaf"])

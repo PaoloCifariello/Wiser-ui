@@ -6,6 +6,8 @@ import ReactTable from "react-table";
 import {Range} from 'rc-slider';
 import "react-table/react-table.css";
 
+import StopEntitiesList from "../reusable/StopEntitiesList"
+
 import EntityLink from "../reusable/EntityLink"
 
 import {range} from 'lodash';
@@ -49,9 +51,11 @@ class DepartmentTopics extends Component {
                     ? ({
                         count: acc.count + ent.distribution[year].count,
                         document_count: acc.document_count + ent.distribution[year].count,
-                        // num. of authors in a specific years range is the max between the num. of authors
-                        // in each single year in that range
-                        authors: acc.authors.concat(ent.distribution[year].authors)
+                        // num. of authors in a specific years range is the max between the num. of
+                        // authors in each single year in that range
+                        authors: acc
+                            .authors
+                            .concat(ent.distribution[year].authors)
                     })
                     : acc, {
                     count: 0,
@@ -66,7 +70,9 @@ class DepartmentTopics extends Component {
                 years: ent.years,
                 count: count,
                 document_count: document_count,
-                author_count: Array.from(new Set(authors)).length,
+                author_count: Array
+                    .from(new Set(authors))
+                    .length,
                 reciaf: ent.reciaf,
                 importance_score: ent.importance_score
             }
@@ -82,12 +88,12 @@ class DepartmentTopics extends Component {
         const departmentName = data.department_name,
             departmentTopics = data
                 .department_topics
+                .filter((topic) => !StopEntitiesList.contains(topic.entity_id))
                 .map((topic) => ({
                     importance_score: Math.log(1.0 + topic.reciaf),
                     ...topic
                 }))
                 .sort((topic1, topic2) => topic2["importance_score"] - topic1["importance_score"]);
-
 
         this.setState({
             departmentName: departmentName,
