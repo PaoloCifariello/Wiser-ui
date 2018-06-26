@@ -10,6 +10,7 @@ import {
 
 import {NavLink, Switch, Redirect, Route} from 'react-router-dom'
 import api from '../../api/api'
+import AUTHOR_ROLE from '../reusable/AuthorRole'
 
 import AuthorTopics from './AuthorTopics'
 import AuthorAreas from './AuthorAreas'
@@ -82,7 +83,13 @@ class AuthorProfile extends Component {
         this.setState({showErrorMessage: true});
     }
     updateAuthorInformation = (authorInformation) => {
-        this.setState({authorName: authorInformation["name"], authorInstitution: authorInformation["institution"], authorYears: authorInformation["years"], isLoaded: true})
+        this.setState({
+            authorName: authorInformation["name"],
+            authorRole: AUTHOR_ROLE[authorInformation["role"]],
+            authorInstitution: authorInformation["institution"],
+            authorYears: authorInformation["years"],
+            isLoaded: true
+        })
     }
 
     renderErrorMessage = () => {
@@ -98,7 +105,7 @@ class AuthorProfile extends Component {
     }
 
     renderAuthorInfo = () => {
-        const {authorName, authorInstitution, authorYears} = this.state;
+        const {authorName, authorRole, authorInstitution, authorYears} = this.state;
 
         const sortedAuthorYears = Object
             .keys(authorYears)
@@ -109,6 +116,9 @@ class AuthorProfile extends Component {
         return (
             <div>
                 <Header as='h1' textAlign="left">{authorName}
+                    <Header.Subheader>
+                        {authorRole}
+                    </Header.Subheader>
                     <Header.Subheader>
                         {authorInstitution}
                     </Header.Subheader>

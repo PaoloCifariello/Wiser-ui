@@ -10,6 +10,8 @@ import {
 } from 'semantic-ui-react'
 import EntityLink from "../reusable/EntityLink"
 
+import {Link} from 'react-router-dom'
+
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import api from '../../api/api'
@@ -46,6 +48,16 @@ class AuthorPublication extends Component {
         })
     }
 
+    renderPublicationAuthor = (author) => {
+        const profileLink = `/profile/${author.author_id}`;
+
+        return (
+            <Link to={profileLink}>
+                {author.author_name}
+            </Link>
+        )
+    }
+
     renderPublicationText = () => {
         const {publication} = this.state;
 
@@ -62,13 +74,27 @@ class AuthorPublication extends Component {
                         {publicationTitle}
                     </Card.Header>
                     <Card.Meta>
-                        <span>{publication.year}</span>
+                        <span>{publication
+                                .authors
+                                .map((author, index) => <span key={index}>
+                                    {this.renderPublicationAuthor(author)}
+                                </span>)
+}
+                        </span>-&nbsp;
+                        <span>
+                            {publication.year}
+                        </span>
                     </Card.Meta>
                 </Card.Content>
                 <Card.Content description={publicationText}/>
                 <Card.Content extra>
                     <div>
                         <Icon className="padding0" name='unordered list'/> {` ${publication.clean_entities.length} Topics (${publication.filtered_entities.length} filtered)`}
+                    </div>
+                    <div>
+                        {publication.translated
+                            ? <div><Icon name="language"/>Translated</div>
+                            : null}
                     </div>
                 </Card.Content>
             </Card>

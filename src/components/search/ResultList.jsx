@@ -1,9 +1,10 @@
-import React, {Component} from 'react'
+import React, {PureComponent, Component} from 'react'
 import {LinkContainer} from 'react-router-bootstrap'
 
 import {Card, List} from 'semantic-ui-react'
 
 import './ResultList.css'
+import AUTHOR_ROLE from '../reusable/AuthorRole'
 
 class ResultList extends Component {
     constructor(props) {
@@ -13,10 +14,51 @@ class ResultList extends Component {
         };
     }
 
-    renderResult = (result, index) => {
-        const profileLink = result.author_id ? `/profile/${result.author_id}` : `/department/${result.id}`
+    render = () => {
+        const {results} = this.state
         return (
-            <List.Item key={index} className="align-center">
+            <List size="big">
+                {results.map((result, index) => <Result key={index} result={result}/>)}
+            </List>
+        );
+    }
+}
+
+class Result extends PureComponent {
+
+    renderMeta = () => {
+        const {result} = this.props;
+
+        return (
+            <Card.Meta>
+                <span>
+                    {AUTHOR_ROLE[result.role]}
+                </span>
+            </Card.Meta>
+        );
+    }
+
+    renderExtraContent = () => {
+        const {result} = this.props;
+
+        if (result.role) {
+            return (
+                <Card.Content extra>
+                    <span>
+                        {result.institution}
+                    </span>
+                </ Card.Content>
+            );
+        }
+    }
+
+    render = () => {
+        const {result} = this.props;
+        const profileLink = result.author_id
+            ? `/profile/${result.author_id}`
+            : `/department/${result.id}`
+        return (
+            <List.Item className="align-center">
                 <LinkContainer to={profileLink}>
                     <List.Content verticalAlign='middle'>
                         <Card className="result-card">
@@ -24,26 +66,14 @@ class ResultList extends Component {
                                 <Card.Header>
                                     {result.name}
                                 </Card.Header>
-                                <Card.Meta>
-                                    <span>
-                                        Università di Pisa
-                                    </span>
-                                </Card.Meta>
+                                {this.renderMeta()}
                                 <Card.Description></Card.Description>
                             </Card.Content>
+                            {this.renderExtraContent()}
                         </Card>
                     </List.Content>
                 </LinkContainer>
             </List.Item>
-        );
-    }
-
-    render = () => {
-        const {results} = this.state
-        return (
-            <List size="big">
-                {results.map(this.renderResult)}
-            </List>
         );
     }
 }
