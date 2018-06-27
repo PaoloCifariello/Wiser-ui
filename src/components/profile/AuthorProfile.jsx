@@ -70,13 +70,26 @@ class AuthorProfile extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         const {authorId} = this.state;
 
         api
             .getAuthorProfile(authorId)
             .then(this.updateAuthorInformation)
             .catch(this.fail)
+    }
+
+    componentDidUpdate = (prevProps) => {
+        const newAuthorId = this.props.match.params.authorId,
+            prevAuthorId = prevProps.match.params.authorId;
+
+        if (newAuthorId !== prevAuthorId) {
+            this.setState({authorId: newAuthorId, isLoaded: false, showErrorMessage: false});
+            api
+                .getAuthorProfile(newAuthorId)
+                .then(this.updateAuthorInformation)
+                .catch(this.fail)
+        }
     }
 
     fail = () => {
