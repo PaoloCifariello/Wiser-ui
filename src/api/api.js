@@ -10,7 +10,7 @@ const api = (httpPromise) => httpPromise.then((res) => res.data.status === API_S
     Promise.resolve(res.data.content) :
     Promise.reject(res.data.content));
 
-async function findExpertsByExpertise(expertiseArea, softSearch=false) {
+async function findExpertsByExpertise(expertiseArea, softSearch = false) {
     return api(axios.request(`${config.serverAddress}/find_experts_by_field`, {
         params: {
             q: expertiseArea,
@@ -82,7 +82,7 @@ async function getStatistics() {
 }
 
 async function getAuthorAreas(authorId, scoreThreshold) {
-    return api(axios.request(`${config.serverAddress}/get_clusters`, {
+    return api(axios.request(`${config.serverAddress}/get_author_clusters`, {
         params: {
             aid: authorId,
             scoreThreshold: scoreThreshold
@@ -106,7 +106,14 @@ async function getDepartmentTopics(department) {
     }));
 }
 
-
+async function getDepartmentAreas(department_name, scoreThreshold) {
+    return api(axios.request(`${config.serverAddress}/get_department_clusters`, {
+        params: {
+            department: department_name,
+            scoreThreshold: scoreThreshold
+        }
+    }));
+}
 
 async function submitSurvey(authorId, surveyRates) {
     // return api(axios.post(`${config.serverAddress}/submit_survey`, surveyRates));
@@ -136,6 +143,7 @@ export default {
 
     getDepartmentProfile: getDepartmentProfile,
     getDepartmentTopics: getDepartmentTopics,
+    getDepartmentAreas: getDepartmentAreas,
 
     getStatistics: getStatistics
 };

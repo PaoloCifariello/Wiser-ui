@@ -13,6 +13,7 @@ import api from '../../api/api'
 
 import {range} from 'lodash';
 
+import DepartmentAreas from './DepartmentAreas';
 import DepartmentTopics from './DepartmentTopics';
 import DepartmentStreamGraph from './DepartmentStreamGraph';
 
@@ -22,6 +23,11 @@ const menuItems = [
         link: "topics",
         name: "Main topics",
         render: (props) => <DepartmentTopics {...props}/>
+    }, {
+        selector: "areas",
+        link: "areas",
+        name: "Main areas",
+        render: (props) => <DepartmentAreas {...props}/>
     }, {
         selector: "streamgraph",
         link: "streamgraph",
@@ -157,6 +163,7 @@ class DepartmentProfile extends Component {
                 render={(props) => render({
                 ...props,
                 departmentInformation: {
+                    departmentName: departmentName,
                     departmentYears: range(firstYear, lastYear)
                 }
             })}/>)
