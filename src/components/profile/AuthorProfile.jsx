@@ -26,36 +26,43 @@ const menuItems = [
         selector: "topics",
         link: "topics",
         name: "Main topics",
+        disabled: false,
         render: (props) => <AuthorTopics {...props}/>
     }, {
         selector: "areas",
         link: "areas",
         name: "Main areas",
+        disabled: false,
         render: (props) => <AuthorAreas {...props}/>
     }, {
         selector: "streamgraph",
         link: "streamgraph",
         name: "StreamGraph",
+        disabled: false,
         render: (props) => <AuthorStreamGraph {...props}/>
     }, {
         selector: "tagcloud",
         link: "tagcloud",
         name: "TagCloud",
+        disabled: false,
         render: (props) => <AuthorTagcloud {...props}/>
     }, {
         selector: "chorddiagram",
         link: "chorddiagram",
         name: "Chord Diagram",
+        disabled: false,
         render: (props) => <AuthorTagChordDiagram {...props}/>
     }, {
         selector: "publications/:entity_id_filter?",
         link: "publications",
         name: "Publications",
+        disabled: false,
         render: (props) => <AuthorPublications {...props}/>
     }, {
         selector: "survey",
         link: "survey",
         name: "Survey",
+        disabled: true,
         render: (props) => <AuthorSurvey {...props}/>
     }
 ];
@@ -174,14 +181,18 @@ class AuthorProfile extends Component {
                 <Menu pointing secondary>
                     {menuItems.map(({
                         link,
-                        name
+                        name,
+                        disabled
                     }, index) => {
-                        return <Menu.Item
-                            key={index}
-                            as={NavLink}
-                            to={`/profile/${authorId}/${link}`}
-                            name={name}
-                            active={section === link}/>
+                        return (disabled)
+                            ? <Menu.Item key={index} disabled={disabled} name={name}/>
+                            : <Menu.Item
+                                key={index}
+                                as={NavLink}
+                                to={`/profile/${authorId}/${link}`}
+                                name={name}
+                                active={section === link}/>
+
                     })}
                 </Menu>
             </div>
