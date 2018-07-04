@@ -69,6 +69,7 @@ export class BubbleChart extends Component {
             <svg className="bubbleChart" width={width} height={height}>
                 <Bubbles
                     data={createNodes([].concat.apply([], data), maxRadius)}
+                    onGroupClick={this.props.onGroupClick}
                     forceStrength={forceStrength}
                     center={{
                     x: width / 2,

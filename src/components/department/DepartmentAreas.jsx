@@ -4,6 +4,8 @@ import api from '../../api/api';
 import {BubbleChart} from "../reusable/BubbleChart";
 import {normalizeEntityName} from '../reusable/Entity';
 
+import ModalAuthorList from '../reusable/ModalAuthorList';
+
 import Slider from 'rc-slider';
 
 const TOP_ENTITIES_PER_CLUSTER = 6,
@@ -15,7 +17,8 @@ class DepartmentAreas extends Component {
 
         this.state = {
             scoreThreshold: 0.20,
-            departmentAreas: []
+            departmentAreas: [],
+            showAuthorAreaList: false
         }
     }
 
@@ -34,11 +37,16 @@ class DepartmentAreas extends Component {
                 .clusters
                 .filter((area) => area.length >= MIN_NUM_ENTITIES_PER_CLUSTER)
                 .map((area) => {
-                    var importanceSum = area.reduce((acc, currentEntity) => (acc["reciaf"]
-                        ? acc["reciaf"]
-                        : acc) + currentEntity["reciaf"]);
+                    const importanceSum = area.reduce((acc, currentEntity) => (acc["reciaf"]
+                            ? acc["reciaf"]
+                            : acc) + currentEntity["reciaf"]),
+                        authors = area.reduce((acc, currentEntity) => {
+                            // debugger;
+                            return acc.concat(currentEntity["authors"])
+                        }, []);
                     return {
                         importanceScore: importanceSum / area.length,
+                        authors: [...new Set(authors)],
                         topics: area.sort((a, b) => b.reciaf - a.reciaf)
                     };
                 })
@@ -61,21 +69,29 @@ class DepartmentAreas extends Component {
             .then(this.setDepartmentAreas);
     }
 
+    closeAuthorAreaList = () => {
+        this.setState({showAuthorAreaList: false, selectedAreaId: -1})
+    }
+
+    onGroupClick = ({group}) => {
+        this.setState({showAuthorAreaList: true, selectedAreaId: group})
+    }
+
     render = () => {
         const maxValue = 0.7,
             minValue = 0.05;
 
+        const {departmentAreas, scoreThreshold, showAuthorAreaList, selectedAreaId} = this.state;
 
-        const {departmentAreas, scoreThreshold} = this.state,
-            normalizedDepartmentTopics = departmentAreas.map((area, i) => area.topics.slice(0, TOP_ENTITIES_PER_CLUSTER).map((topic, _) => {
-                return {
-                    id: topic.entity_id,
-                    title: normalizeEntityName(topic.entity_name),
-                    value: topic.reciaf,
-                    group: i,
-                    groupImportance: area.importanceScore
-                };
-            }));
+        const normalizedDepartmentTopics = departmentAreas.map((area, i) => area.topics.slice(0, TOP_ENTITIES_PER_CLUSTER).map((topic, _) => {
+            return {
+                id: topic.entity_id,
+                title: normalizeEntityName(topic.entity_name),
+                value: topic.reciaf,
+                group: i,
+                groupImportance: area.importanceScore
+            };
+        }));
 
         return (
             <div>
@@ -99,7 +115,19 @@ class DepartmentAreas extends Component {
                             value={scoreThreshold}/>
                     </Segment>
                 </div>
-                <BubbleChart data={normalizedDepartmentTopics} maxRadius={80} group={true}/>
+                <BubbleChart
+                    data={normalizedDepartmentTopics}
+                    maxRadius={80}
+                    group={true}
+                    onGroupClick={this.onGroupClick}/>
+                <div>
+                    <ModalAuthorList
+                        closeAuthorAreaList={this.closeAuthorAreaList}
+                        open={showAuthorAreaList}
+                        authors={departmentAreas[selectedAreaId]
+                        ? departmentAreas[selectedAreaId].authors
+                        : []}/>
+                </div>
             </div>
         )
     }

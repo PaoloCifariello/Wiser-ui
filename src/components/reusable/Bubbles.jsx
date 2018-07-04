@@ -94,7 +94,8 @@ export class Bubbles extends Component {
             .g
             .selectAll('.bubble')
             .data(data, d => d.id);
-            const labels = this
+
+        const labels = this
             .state
             .g
             .selectAll('.cluster-topic-label')
@@ -122,6 +123,7 @@ export class Bubbles extends Component {
             .attr('stroke-width', 2)
             .on('mouseover', showDetail) // eslint-disable-line
             .on('mouseout', hideDetail) // eslint-disable-line
+            .on('click', this.props.onGroupClick)
 
         const labelsE = labels
             .enter()
@@ -137,6 +139,7 @@ export class Bubbles extends Component {
                 : "")
             .on('mouseover', showDetail) // eslint-disable-line
             .on('mouseout', hideDetail) // eslint-disable-line
+            .on('click', this.props.onGroupClick)
 
         bubblesE
             .transition()
@@ -175,6 +178,7 @@ Bubbles.propTypes = {
     center: PropTypes.shape({x: PropTypes.number.isRequired, y: PropTypes.number.isRequired}),
     forceStrength: PropTypes.number.isRequired,
     group: PropTypes.bool.isRequired,
+    onGroupClick: PropTypes.func,
     data: PropTypes.arrayOf(PropTypes.shape({x: PropTypes.number.isRequired, id: PropTypes.number.isRequired, radius: PropTypes.number.isRequired, value: PropTypes.number.isRequired, name: PropTypes.string.isRequired}))
 }
 
