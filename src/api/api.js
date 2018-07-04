@@ -115,6 +115,13 @@ async function getDepartmentAreas(department_name, scoreThreshold) {
     }));
 }
 
+async function getAuthorProfiles(authorIds) {
+    return api(axios.request(`${config.serverAddress}/get_author_profiles`, {
+        method: "post",
+        data: authorIds
+    }));
+}
+
 async function submitSurvey(authorId, surveyRates) {
     // return api(axios.post(`${config.serverAddress}/submit_survey`, surveyRates));
     return api(axios.request(`${config.serverAddress}/submit_survey`, {
@@ -144,6 +151,8 @@ export default {
     getDepartmentProfile: getDepartmentProfile,
     getDepartmentTopics: getDepartmentTopics,
     getDepartmentAreas: getDepartmentAreas,
+
+    getAuthorProfiles: getAuthorProfiles,
 
     getStatistics: getStatistics
 };
