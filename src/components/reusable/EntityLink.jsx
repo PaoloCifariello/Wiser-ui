@@ -5,6 +5,10 @@ import {normalizeEntityName} from "../reusable/Entity"
 import wiki_api from '../../api/wiki_api';
 import PropTypes from 'prop-types';
 class EntityLink extends Component {
+    static defaultProps = {
+        popup: true,
+        link: false
+    }
 
     constructor(props) {
         super(props);
@@ -73,11 +77,16 @@ class EntityLink extends Component {
     }
 
     renderEntityLink = () => {
-        const {authorId, entityId, entityName} = this.props;
+        const {authorId, entityId, entityName, link} = this.props;
 
-        return (authorId !== undefined)
-            ? <a href={`/profile/${authorId}/publications/${entityId}`}>{normalizeEntityName(entityName)}</a>
-            : <a target="_blank" href={`https://en.wikipedia.org/wiki/${entityName}`}>{normalizeEntityName(entityName)}</a>
+        if (!link) 
+            return (
+                <span>{normalizeEntityName(entityName)}</span>
+            );
+        else if (authorId !== undefined) {
+            return <a href={`/profile/${authorId}/publications/${entityId}`}>{normalizeEntityName(entityName)}</a>
+        } else 
+            return <a target="_blank" href={`https://en.wikipedia.org/wiki/${entityName}`}>{normalizeEntityName(entityName)}</a>
     }
 
     renderWikipediaPopup = () => {
@@ -97,9 +106,10 @@ class EntityLink extends Component {
     }
 
     render = () => {
+        const {popup} = this.props;
         const {popupSummary} = this.state
 
-        return (popupSummary === null)
+        return (popupSummary === null || popup === false)
             ? this.renderEntityLink()
             : this.renderWikipediaPopup();
 
@@ -109,7 +119,9 @@ class EntityLink extends Component {
 EntityLink.propTypes = {
     entityId: PropTypes.number.isRequired,
     entityName: PropTypes.string.isRequired,
-    authorId: PropTypes.string
+    authorId: PropTypes.string,
+    showPopup: PropTypes.bool,
+    link: PropTypes.bool
 }
 
 export default EntityLink;
