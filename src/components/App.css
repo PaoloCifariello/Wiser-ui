@@ -2,6 +2,17 @@
     text-align: center;
 }
 
+/* margin */
+.margin-left-50 {
+    margin-left: 50px;
+}
+
 .margin-bottom-50 {
     margin-bottom: 50px;
+}
+
+
+/* flex */
+.flex-column-reverse {
+    flex-direction: column-reverse;
 }
