@@ -27,6 +27,7 @@ class WiserStatistics extends Component {
             authorCount: data.author_count,
             topicCount: data.topic_count,
             queryCount: data.query_count,
+            avgAuthorPerDocument: data.avg_author_per_document,
             profileViewCount: data.profile_view_count,
             mostFrequentQueries: data.most_frequent_queries,
             mostFrequentTopics: data.most_frequent_topics,
@@ -45,6 +46,7 @@ class WiserStatistics extends Component {
             authorCount,
             topicCount,
             queryCount,
+            avgAuthorPerDocument,
             profileViewCount,
             mostFrequentQueries,
             mostFrequentTopics,
@@ -76,6 +78,10 @@ class WiserStatistics extends Component {
                 <Grid.Row>
                     <Statistic.Group size="small">
 
+                        <Statistic>
+                            <Statistic.Value>{avgAuthorPerDocument.toFixed(2)}</Statistic.Value>
+                            <Statistic.Label>AVG. Authors per document</Statistic.Label>
+                        </Statistic>
                         <Statistic>
                             <Statistic.Value>{parseInt(documentCount / authorCount, 10)}</Statistic.Value>
                             <Statistic.Label>AVG. Documents per author</Statistic.Label>
