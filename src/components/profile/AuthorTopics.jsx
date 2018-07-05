@@ -89,7 +89,7 @@ class AuthorTopics extends Component {
                 .reduce((acc, year) => inRange(year, fromYear, toYear)
                     ? ({
                         count: acc.count + ent.distribution[year].count,
-                        document_count: acc.document_count + ent.distribution[year].count
+                        document_count: acc.document_count + ent.distribution[year].document_count
                     })
                     : acc, {
                     count: 0,

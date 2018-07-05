@@ -50,7 +50,7 @@ class DepartmentTopics extends Component {
                 .reduce((acc, year) => inRange(year, fromYear, toYear)
                     ? ({
                         count: acc.count + ent.distribution[year].count,
-                        document_count: acc.document_count + ent.distribution[year].count,
+                        document_count: acc.document_count + ent.distribution[year].document_count,
                         // num. of authors in a specific years range is the max between the num. of
                         // authors in each single year in that range
                         authors: acc
