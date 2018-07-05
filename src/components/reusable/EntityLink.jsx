@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 class EntityLink extends Component {
     static defaultProps = {
         popup: true,
-        link: false
+        link: true
     }
 
     constructor(props) {

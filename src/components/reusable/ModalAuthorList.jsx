@@ -70,6 +70,7 @@ class ModalAuthorList extends Component {
                                     .slice(0, 3)
                                     .map((entity, i) => <List.Item key={i}>
                                         <EntityLink
+                                            link={false}
                                             authorId={authorId}
                                             entityId={entity.entity_id}
                                             entityName={entity.entity_name}/>
