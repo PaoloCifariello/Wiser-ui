@@ -164,7 +164,7 @@ class DepartmentProfile extends Component {
                 ...props,
                 departmentInformation: {
                     departmentName: departmentName,
-                    departmentYears: range(firstYear, lastYear)
+                    departmentYears: range(firstYear, lastYear + 1)
                 }
             })}/>)
 }
