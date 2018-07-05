@@ -21,6 +21,10 @@ import AuthorPublication from './AuthorPublication'
 import AuthorStreamGraph from './AuthorStreamGraph'
 import AuthorTagChordDiagram from './AuthorTagChordDiagram'
 
+import {range} from 'lodash';
+
+import {BarChart, Bar, XAxis, Tooltip} from 'recharts';
+
 const menuItems = [
     {
         selector: "topics",
@@ -149,6 +153,29 @@ class AuthorProfile extends Component {
             </div>
         );
     }
+
+    renderAuthorPublicationsChart = () => {
+        const {authorYears} = this.state,
+            allAuthorYears = Object
+                .keys(authorYears)
+                .sort();
+
+        const data = range(allAuthorYears[0], parseInt(allAuthorYears[allAuthorYears.length - 1]) + 1).map((authorYear) => ({
+            year: authorYear,
+            publications: authorYears[authorYear]
+                ? authorYears[authorYear]
+                : 0
+        }))
+
+        return <div className="flex margin-left-50">
+            <BarChart width={250} height={120} data={data}>
+                <XAxis dataKey="year"/>
+                <Tooltip/>
+                <Bar dataKey='publications' fill='#8884d8'/>
+            </BarChart>
+        </div>
+    }
+
     renderAuthorProfile = () => {
         return (
             <Grid centered stackable>
@@ -160,7 +187,10 @@ class AuthorProfile extends Component {
                     largeScreen={11}
                     widescreen={10}>
                     <Segment basic>
-                        {this.renderAuthorInfo()}
+                        <div className="flex">
+                            {this.renderAuthorInfo()}
+                            {this.renderAuthorPublicationsChart()}
+                        </div>
                         <Divider/> {this.renderAuthorMenu()}
                         <Divider/> {this.renderAuthorSection()}
                     </Segment>
