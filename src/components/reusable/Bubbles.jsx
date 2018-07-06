@@ -7,7 +7,6 @@ import * as chroma from 'chroma-js';
 import {shuffle, uniq} from 'lodash';
 
 const colorScale = shuffle(uniq(chroma.brewer.set3.concat(chroma.brewer.paired)));
-console.log(colorScale)
 
 export class Bubbles extends Component {
     constructor(props) {
