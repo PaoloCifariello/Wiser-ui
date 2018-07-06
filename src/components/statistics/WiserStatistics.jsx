@@ -1,10 +1,21 @@
 import React, {Component} from 'react'
 
-import {Divider, Grid, Icon, Loader, Statistic} from 'semantic-ui-react'
+import {
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Loader,
+    Statistic
+} from 'semantic-ui-react'
 import WiserLogo from '../reusable/WiserLogo';
 
+import {range} from 'lodash';
 import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
+
+import * as moment from 'moment';
+import {BarChart, Bar, XAxis, YAxis, Tooltip} from 'recharts';
 
 class WiserStatistics extends Component {
     constructor(props) {
@@ -21,7 +32,27 @@ class WiserStatistics extends Component {
             .then(this.setStatisticInformation)
     }
 
+    formatTimeUsageData = (fromTimestamp, data) => {
+        let usageData = range(0, 7).map((dayFromStarting) => ({
+            day: moment()
+                .subtract(6 - dayFromStarting, 'd')
+                .format("D/M"),
+            usage: 0
+        }));
+
+        fromTimestamp = moment.unix(fromTimestamp);
+        data.forEach((usage) => {
+            const daysFromStarting = moment
+                .unix(usage)
+                .diff(fromTimestamp, 'days', false);
+            usageData[daysFromStarting].usage += 1;
+        })
+
+        return usageData;
+    }
+
     setStatisticInformation = (data) => {
+
         this.setState({
             documentCount: data.document_count,
             authorCount: data.author_count,
@@ -32,12 +63,43 @@ class WiserStatistics extends Component {
             mostFrequentQueries: data.most_frequent_queries,
             mostFrequentTopics: data.most_frequent_topics,
             mostFrequentProfiles: data.most_frequent_profiles,
+            query_usage: this.formatTimeUsageData(data.usage.from, data.usage.query_usage),
+            profile_usage: this.formatTimeUsageData(data.usage.from, data.usage.profile_usage),
             loading: false
         });
     }
 
     renderLoader = () => {
         return <Loader active inline='centered'/>
+    }
+
+    rendereUsageGraph = () => {
+        const {query_usage, profile_usage} = this.state;
+
+        return (
+            <Grid.Row>
+                <div>
+                    <Header size='medium'>Queries during last week</Header>
+                    <BarChart width={400} height={160} data={query_usage}>
+                        <XAxis dataKey="day"/> {/* <Tooltip/> */}
+                        <YAxis dataKey="usage"/>
+                        <Bar dataKey='usage' fill='#8884d8'/>
+                    </BarChart>
+                </div>
+                <div>
+                    <Divider hidden vertical/>
+                    <Divider hidden vertical/>
+                </div>
+                <div>
+                    <Header size='medium'>Profile views during last week</Header>
+                    <BarChart width={400} height={160} data={profile_usage}>
+                        <XAxis dataKey="day"/> {/* <Tooltip/> */}
+                        <YAxis dataKey="usage"/>
+                        <Bar dataKey='usage' fill='#8884d8'/>
+                    </BarChart>
+                </div>
+            </Grid.Row>
+        );
     }
 
     renderStats = () => {
@@ -128,6 +190,7 @@ class WiserStatistics extends Component {
                 <Grid.Row>
                     <Statistic.Group size="tiny"></Statistic.Group>
                 </Grid.Row>
+                {this.rendereUsageGraph()}
             </Grid>
         );
     }
