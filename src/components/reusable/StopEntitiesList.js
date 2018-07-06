@@ -14,7 +14,7 @@ Axios.get(stopEntitiesLink).then((result) => {
 class StopEntitiesList {
 
     static contains = (entity_id) => {
-        return STOP_ENTITIES.find((entity) => parseInt(entity.entity_id) === entity_id)
+        return STOP_ENTITIES.find((entity) => parseInt(entity.entity_id, 10) === entity_id)
     }
 }
 
