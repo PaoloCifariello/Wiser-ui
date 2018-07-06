@@ -8,7 +8,9 @@ import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
 import {range} from 'lodash'
 
-import {schemeCategory10} from 'd3-scale-chromatic'
+import * as chroma from 'chroma-js';
+
+const colorScale = chroma.brewer.set3.map((c) => chroma(c).saturate(1.5).darken(0.5).hex());
 
 const topEntitiesOptions = range(5, 11).map((value, _) => {
     return {
@@ -70,7 +72,7 @@ class AuthorTagChordDiagram extends PureComponent {
             matrix={restrictedEntitiesMatrix}
             componentId={1}
             groupLabels={restrictedEntities}
-            groupColors={schemeCategory10}/>);
+            groupColors={colorScale}/>);
     }
 
     renderLegend = () => {
@@ -90,12 +92,12 @@ class AuthorTagChordDiagram extends PureComponent {
                                 <List.Icon
                                     name='circle'
                                     style={{
-                                    color: schemeCategory10[index]
+                                    color: colorScale[index]
                                 }}/>
                                 <List.Content>{normalizeEntityName(entityName)}</List.Content>
                             </List.Item>
                         ))
-                    }
+}
                 </List>
             </div>
         )

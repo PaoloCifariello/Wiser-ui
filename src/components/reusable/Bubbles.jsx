@@ -2,7 +2,12 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types';
 import * as d3 from 'd3'
 import tooltip from './BubbleChartTooltip'
-import {schemeCategory10} from 'd3-scale-chromatic'
+import * as chroma from 'chroma-js';
+
+import {shuffle, uniq} from 'lodash';
+
+const colorScale = shuffle(uniq(chroma.brewer.set3.concat(chroma.brewer.paired)));
+console.log(colorScale)
 
 export class Bubbles extends Component {
     constructor(props) {
@@ -118,8 +123,8 @@ export class Bubbles extends Component {
             .attr('r', 0)
             .attr('cx', d => d.x)
             .attr('cy', d => d.y)
-            .attr('fill', d => d3.rgb(schemeCategory10[d.group]).brighter())
-            .attr('stroke', d => d3.rgb(schemeCategory10[d.group]).darker())
+            .attr('fill', d => chroma(colorScale[d.group]).saturate())
+            .attr('stroke', d => chroma(colorScale[d.group]).saturate().darken(2))
             .attr('stroke-width', 2)
             .on('mouseover', showDetail) // eslint-disable-line
             .on('mouseout', hideDetail) // eslint-disable-line
@@ -131,7 +136,7 @@ export class Bubbles extends Component {
             .classed('cluster-topic-label', true)
             .attr('x', d => d.x)
             .attr('y', d => d.y)
-            .attr('fill', d => d3.rgb(schemeCategory10[d.group]).darker())
+            .attr('fill', d => chroma(colorScale[d.group]).saturate().darken(2))
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'central')
             .text(d => d.radius > 20
@@ -200,9 +205,8 @@ export function showDetail(d) {
     </div>
     <div class="flex">
         <span class="bubble-chart-name">Group:&nbsp;</span>
-        <div class="bubble-chart-group" style="background-color: ${d3
-        .rgb(schemeCategory10[d.group])
-        .brighter()}"></div>
+        <div class="bubble-chart-group" style="background-color: ${chroma(colorScale[d.group])
+        .saturate()}"></div>
     </div>
     <div class="flex">
         <span class="bubble-chart-name">Importance:</span>&nbsp;
