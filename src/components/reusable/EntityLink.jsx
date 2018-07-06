@@ -28,8 +28,10 @@ class EntityLink extends Component {
             })
     }
 
-    componentWillReceiveProps = () => {
-        this.setState({popupSummary: null});
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.entityId !== this.props.entityId) {
+            this.setState({popupSummary: null});
+        }
     }
 
     entityIsChanged = (nextEntityId) => {
