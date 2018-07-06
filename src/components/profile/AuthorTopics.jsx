@@ -144,7 +144,7 @@ class AuthorTopics extends Component {
 
     renderTopicYears = (topicYears) => {
         const {authorYears} = this.state;
-        const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
+        // const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
 
         return (
             <div

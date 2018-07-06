@@ -13,9 +13,7 @@ class ModalAuthorList extends Component {
 
     constructor(props) {
         super(props);
-
-        const {authors} = this.props;
-
+        
         this.state = {
             authorProfiles: null
         };

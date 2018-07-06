@@ -7,7 +7,6 @@ import {
     ResponsiveContainer,
     Area,
     XAxis,
-    YAxis,
     CartesianGrid,
     Tooltip,
     Legend

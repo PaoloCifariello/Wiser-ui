@@ -15,7 +15,7 @@ import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
 
 import * as moment from 'moment';
-import {BarChart, Bar, XAxis, YAxis, Tooltip} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis} from 'recharts';
 
 class WiserStatistics extends Component {
     constructor(props) {

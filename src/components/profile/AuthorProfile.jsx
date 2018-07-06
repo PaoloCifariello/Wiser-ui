@@ -160,7 +160,7 @@ class AuthorProfile extends Component {
                 .keys(authorYears)
                 .sort();
 
-        const data = range(allAuthorYears[0], parseInt(allAuthorYears[allAuthorYears.length - 1]) + 1).map((authorYear) => ({
+        const data = range(allAuthorYears[0], parseInt(allAuthorYears[allAuthorYears.length - 1], 10) + 1).map((authorYear) => ({
             year: authorYear,
             publications: authorYears[authorYear]
                 ? authorYears[authorYear]
