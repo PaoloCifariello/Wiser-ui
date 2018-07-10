@@ -1,0 +1,16 @@
+
+.wiser-logo-div {
+    font-family: Roboto;
+    display: flex;
+    align-items: center;
+}
+
+
+.wiser-logo-middle-div {
+    margin-left: 22px;
+    margin-right: 18px;
+}
+
+.wiser-logo-unipi-div {
+    flex-direction: column !important;
+}
