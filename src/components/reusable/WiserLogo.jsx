@@ -21,9 +21,9 @@ class WiserLogo extends Component {
                 <div>
                     <Header
                         as="h1"
+                        className="wiser-name"
                         style={{
                         fontWeight: 300,
-                        fontVariant: "small-caps",
                         fontSize: "5rem",
                         marginBottom: -5,
                         marginTop: -22

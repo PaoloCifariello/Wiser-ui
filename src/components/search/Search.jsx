@@ -6,7 +6,8 @@ import {
   Icon,
   Input,
   Label,
-  Message
+  Message,
+  Popup
 } from 'semantic-ui-react'
 
 import ResultList from './ResultList'
@@ -15,6 +16,14 @@ import EntityLink from "../reusable/EntityLink"
 import './Search.css'
 
 import api from '../../api/api'
+
+const wiserHelpMessage = (
+  <span id="wiser-usage-help">
+    <span className="wiser-name">Wiser</span> is a <i>fast</i> and <i>accurate</i> <b>semantic Search Engine</b> for <i>expert finding</i>.<br /> 
+    You can issue an <i>expert finding</i> query by inserting some <i>expertise area</i> in the <i>search bar</i> and pressing <i>"Search by Expertise"</i>.<br /> 
+    You can also issue an <i>expert profiling</i> query by inserting the name of a researcher/department and then pressing <i>"Search by Name"</i> or <i>"Search by Department"</i>.
+  </span>
+);
 
 class Search extends Component {
 
@@ -146,7 +155,7 @@ class Search extends Component {
       .push(`/search/e/${searchValue}`);
   }
 
-  searchByExpertiseSoft = (history) => {
+  searchByExpertiseSoft = () => {
     const {searchValue} = this.state;
     this
       .props
@@ -154,7 +163,7 @@ class Search extends Component {
       .push(`/search/es/${searchValue}`);
   }
 
-  searchByName = (history) => {
+  searchByName = () => {
     const {searchValue} = this.state;
     this
       .props
@@ -162,7 +171,7 @@ class Search extends Component {
       .push(`/search/n/${searchValue}`);
   }
 
-  searchByDepartment = (history) => {
+  searchByDepartment = () => {
     const {searchValue} = this.state;
     this
       .props
@@ -243,6 +252,10 @@ class Search extends Component {
     return (
       <Grid.Row>
         <div>
+          <Popup
+            trigger={< Icon circular name = 'question' />}
+            content={wiserHelpMessage}
+            size='tiny'/>
           <Input
             id="expertise-search-bar"
             ref={(input) => this.searchInput = input}
@@ -302,14 +315,7 @@ class Search extends Component {
           <Grid.Row >
             <WiserLogo/>
           </Grid.Row>
-          <Grid.Row>
-            <div>
-              <span>
-                Wiser is a new semantic search engine for expert finding in academia.
-              </span>
-            </div>
-          </Grid.Row>
-          {this.renderSearchBar()}
+          <Grid.Row/> {this.renderSearchBar()}
           {this.renderSearchButton()}
           <Grid.Row>
             <Grid.Column>
