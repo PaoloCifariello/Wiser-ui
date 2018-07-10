@@ -10,8 +10,9 @@ class DepartmentStreamGraph extends PureComponent {
         const {departmentInformation} = this.props;
 
         this.state = {
-            departmentYears: departmentInformation
-                .departmentYears
+            departmentYears: Object
+                .keys(departmentInformation.departmentYears)
+                .map((val) => parseInt(val, 10))
                 .sort(),
             departmentTopics: []
         }
@@ -28,7 +29,7 @@ class DepartmentStreamGraph extends PureComponent {
     setDepartmentTopicsState = (data) => {
         this.setState({
             departmentTopics: data
-                .department_topics
+                .topics
                 .map((entity) => ({
                     entity_name: normalizeEntityName(entity.entity_name),
                     entity_id: entity.entity_id,

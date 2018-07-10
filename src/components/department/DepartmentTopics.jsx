@@ -21,12 +21,18 @@ class DepartmentTopics extends Component {
     constructor(props) {
         super(props);
         const {departmentInformation} = this.props;
-        const allDepartmentYears = departmentInformation.departmentYears;
+        
+        let departmentYears = Object
+            .keys(departmentInformation.departmentYears)
+            .map((val) => parseInt(val, 10))
+            .sort();
+
+        let allDepartmentYears = range(departmentYears[0], departmentYears[departmentYears.length - 1] + 1);
 
         this.state = {
             departmentTopics: [],
             filteredDepartmentTopics: [],
-            departmentYears: this.generateDepartmentYears(departmentInformation.departmentYears),
+            departmentYears: this.generateDepartmentYears(allDepartmentYears),
             allDepartmentYears: allDepartmentYears,
             yearsRange: [
                 allDepartmentYears[0],
@@ -87,7 +93,7 @@ class DepartmentTopics extends Component {
         // importance_score computed starting from REC-IAF to reduce differences
         const departmentName = data.department_name,
             departmentTopics = data
-                .department_topics
+                .topics
                 .filter((topic) => !StopEntitiesList.contains(topic.entity_id))
                 .map((topic) => ({
                     importance_score: Math.log(1.0 + topic.reciaf),

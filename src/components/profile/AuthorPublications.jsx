@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Dropdown, Label, Menu, Tab} from 'semantic-ui-react'
 
-import AuthorPublicationList from './AuthorPublicationList'
+import PublicationList from '../reusable/PublicationList'
 
 import './AuthorPublications.css'
 import {normalizeEntityName} from '../reusable/Entity'
@@ -14,7 +14,8 @@ class AuthorPublications extends Component {
         const {authorId, authorYears} = this.props.authorInformation;
         const sortedAuthorYears = Object
             .keys(authorYears)
-            .sort((a, b) => b - a);
+            .sort()
+            .reverse();
 
         const entityIdFilter = this.props.match.params.entity_id_filter;
 
@@ -22,17 +23,16 @@ class AuthorPublications extends Component {
             activeIndex: 0,
             authorId,
             authorTopics: [],
-            authorYears,
             sortedAuthorYears,
             authorPublications: [],
-            filterTopics: entityIdFilter ? [parseInt(entityIdFilter, 10)] : []
+            filterTopics: entityIdFilter
+                ? [parseInt(entityIdFilter, 10)]
+                : []
         }
     }
 
     componentDidMount = () => {
         const {authorId} = this.state;
-        
-        
 
         Promise.all([
             api.getAuthorTopics(authorId),
@@ -42,7 +42,6 @@ class AuthorPublications extends Component {
         });
     }
 
-    handleItemClick = (e, {year}) => this.setState({selectedYear: year})
     handleTabChange = (e, {activeIndex}) => {
         this.setState({activeIndex})
     }
@@ -93,7 +92,7 @@ class AuthorPublications extends Component {
     }
 
     renderYearsTab = () => {
-        const {authorId, activeIndex} = this.state
+        const {activeIndex} = this.state
 
             const publicationsMap = this.filterAuthorPublications(),
                 years = Array
@@ -111,10 +110,9 @@ class AuthorPublications extends Component {
                             : "grey"}>{publicationsMap
                                 .get(year)
                                 .length}</Label>{year}</Menu.Item>,
-                    render: () => <AuthorPublicationList
-                            authorId={authorId}
+                    render: () => <PublicationList
                             publicationsYear={year}
-                            authorPublications={publicationsMap.get(year)}/>
+                            publications={publicationsMap.get(year)}/>
                 }
             });
 

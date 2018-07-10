@@ -17,7 +17,8 @@ import AuthorAreas from './AuthorAreas'
 import AuthorPublications from './AuthorPublications'
 import AuthorTagcloud from './AuthorTagcloud'
 import AuthorSurvey from './AuthorSurvey'
-import AuthorPublication from './AuthorPublication'
+// import AuthorPublication from './AuthorPublication'
+import Publication from '../reusable/Publication'
 import AuthorStreamGraph from './AuthorStreamGraph'
 import AuthorTagChordDiagram from './AuthorTagChordDiagram'
 
@@ -256,7 +257,7 @@ class AuthorProfile extends Component {
                 exact
                 key="publication"
                 path={`/profile/:authorId/publication/:publicationId`}
-                component={AuthorPublication}/>
+                component={Publication}/>
         </Switch>
 
     }

@@ -1,10 +1,23 @@
 import React, {Component} from 'react';
-import {Card, Icon, List} from 'semantic-ui-react'
+import {Card, Icon, List, Pagination} from 'semantic-ui-react'
 import {NavLink} from 'react-router-dom'
 import {Link} from 'react-router-dom'
 
-import './AuthorPublicationList.css'
-class AuthorPublicationList extends Component {
+import './PublicationList.css'
+
+const PUBLICATIONS_PER_PAGE = 30;
+
+class PublicationList extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            activePage: 1
+        }
+    }
+
+    handlePaginationChange = (e, {activePage}) => this.setState({activePage})
 
     renderPublicationAuthor = (author) => {
         const profileLink = `/profile/${author.author_id}`;
@@ -27,15 +40,20 @@ class AuthorPublicationList extends Component {
     }
 
     renderPublication = (publication) => {
-        const {authorId} = this.props;
-
         const publicationTitle = publication.title || publication.doi || publication.id;
         const publicationText = <div
             dangerouslySetInnerHTML={{
             __html: publication.text
         }}/>
 
-        const publicationLink = `/profile/${authorId}/publication/${publication.id}`;
+        let currrentPath = window
+            .location
+            .pathname
+            .split('/')
+            .slice(0, -1);
+        currrentPath.push("publication", publication.id);
+        const publicationLink = currrentPath.join("/");
+
         return (
             <Card className="margin-bottom-10" fluid>
                 <Card.Content>
@@ -62,10 +80,28 @@ class AuthorPublicationList extends Component {
     }
 
     render = () => {
-        const {authorPublications} = this.props;
-        return authorPublications.map((publication, index) => <List.Item key={index}>{this.renderPublication(publication)}</ List.Item>)
+        const {activePage} = this.state;
+        const {publications} = this.props;
+
+        let startingElement = (activePage - 1) * PUBLICATIONS_PER_PAGE;
+        return (
+            <div>
+                <List>
+                    {publications
+                        .slice(startingElement, startingElement + PUBLICATIONS_PER_PAGE)
+                        .map((publication, index) => <List.Item key={index}>{this.renderPublication(publication)}</ List.Item>)}
+                </List>
+                <Pagination
+                    secondary
+                    pointing
+                    activePage={activePage}
+                    onPageChange={this.handlePaginationChange}
+                    totalPages={Math.ceil(publications.length / PUBLICATIONS_PER_PAGE)}/>
+            </div>
+        );
+
     }
 
 }
 
-export default AuthorPublicationList;
+export default PublicationList;

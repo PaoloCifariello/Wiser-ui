@@ -11,11 +11,11 @@ import {
 import {NavLink, Switch, Redirect, Route} from 'react-router-dom'
 import api from '../../api/api'
 
-import {range} from 'lodash';
-
+import Publication from '../reusable/Publication'
 import DepartmentAreas from './DepartmentAreas';
 import DepartmentTopics from './DepartmentTopics';
 import DepartmentStreamGraph from './DepartmentStreamGraph';
+import DepartmentPublications from './DepartmentPublications';
 
 const menuItems = [
     {
@@ -33,6 +33,12 @@ const menuItems = [
         link: "streamgraph",
         name: "StreamGraph",
         render: (props) => <DepartmentStreamGraph {...props}/>
+    }, {
+        selector: "publications/:entity_id_filter?",
+        link: "publications",
+        name: "Publications",
+        disabled: false,
+        render: (props) => <DepartmentPublications {...props}/>
     }
 ];
 class DepartmentProfile extends Component {
@@ -63,6 +69,7 @@ class DepartmentProfile extends Component {
             departmentName: departmentInformation["department_name"],
             numDepartmentAuthors: departmentInformation["n_authors"],
             numDepartmentPublications: departmentInformation["n_documents"],
+            departmentYears: departmentInformation["years"],
             firstYear: departmentInformation["first_year"],
             lastYear: departmentInformation["last_year"],
             isLoaded: true
@@ -147,7 +154,7 @@ class DepartmentProfile extends Component {
 
     renderDepartmentSection = () => {
         const {departmentName} = this.props.match.params;
-        const {firstYear, lastYear} = this.state;
+        const {departmentYears} = this.state;
 
         return <Switch>
             <Route
@@ -164,10 +171,16 @@ class DepartmentProfile extends Component {
                 ...props,
                 departmentInformation: {
                     departmentName: departmentName,
-                    departmentYears: range(firstYear, lastYear + 1)
+                    departmentYears: departmentYears
                 }
             })}/>)
 }
+
+            <Route
+                exact
+                key="publication"
+                path={`/department/:departmentName/publication/:publicationId`}
+                component={Publication}/>
         </Switch>
 
     }

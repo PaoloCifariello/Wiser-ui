@@ -53,7 +53,7 @@ async function getAuthorTopicsForSurvey(authorId) {
     }));
 }
 
-async function getAuthorPublications(authorId, filterTopics) {
+async function getAuthorPublications(authorId) {
     return api(axios.request(`${config.serverAddress}/get_author_publications`, {
         params: {
             id: authorId
@@ -61,8 +61,8 @@ async function getAuthorPublications(authorId, filterTopics) {
     }));
 }
 
-async function getAuthorPublication(publicationId) {
-    return api(axios.request(`${config.serverAddress}/get_author_publication`, {
+async function getPublication(publicationId) {
+    return api(axios.request(`${config.serverAddress}/get_publication`, {
         params: {
             pid: publicationId
         }
@@ -115,6 +115,15 @@ async function getDepartmentAreas(department_name, scoreThreshold) {
     }));
 }
 
+async function getDepartmentPublications(departmentName, year) {
+    return api(axios.request(`${config.serverAddress}/get_department_publications`, {
+        params: {
+            depName: departmentName,
+            year: year
+        }
+    }));
+}
+
 async function getAuthorProfiles(authorIds) {
     return api(axios.request(`${config.serverAddress}/get_author_profiles`, {
         method: "post",
@@ -136,23 +145,24 @@ async function submitSurvey(authorId, surveyRates) {
 export default {
     findExpertsByExpertise: findExpertsByExpertise,
     findExpertsByName: findExpertsByName,
+    findDepartmentsByName: findDepartmentsByName,
 
     getAuthorProfile: getAuthorProfile,
     getAuthorTopics: getAuthorTopics,
     getAuthorAreas: getAuthorAreas,
     getAuthorPublications: getAuthorPublications,
-    getAuthorPublication: getAuthorPublication,
     getAuthorTopicsMatrix: getAuthorTopicsMatrix,
     getAuthorTopicsForSurvey: getAuthorTopicsForSurvey,
-    submitSurvey: submitSurvey,
-
-    findDepartmentsByName: findDepartmentsByName,
+    getAuthorProfiles: getAuthorProfiles,
 
     getDepartmentProfile: getDepartmentProfile,
     getDepartmentTopics: getDepartmentTopics,
     getDepartmentAreas: getDepartmentAreas,
+    getDepartmentPublications: getDepartmentPublications,
 
-    getAuthorProfiles: getAuthorProfiles,
+    submitSurvey: submitSurvey,
+
+    getPublication: getPublication,
 
     getStatistics: getStatistics
 };

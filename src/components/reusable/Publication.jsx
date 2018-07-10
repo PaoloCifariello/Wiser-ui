@@ -17,9 +17,9 @@ import "react-table/react-table.css";
 import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity';
 
-import './AuthorPublication.css'
+import './Publication.css'
 
-class AuthorPublication extends Component {
+class Publication extends Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -29,7 +29,7 @@ class AuthorPublication extends Component {
         const {publicationId} = this.props.match.params;
 
         api
-            .getAuthorPublication(publicationId)
+        .getPublication(publicationId)
             .then((data) => this.setState({publication: data}))
     }
 
@@ -230,4 +230,4 @@ class AuthorPublication extends Component {
         }
     }
 
-export default AuthorPublication
+export default Publication
