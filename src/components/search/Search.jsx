@@ -302,6 +302,13 @@ class Search extends Component {
           <Grid.Row >
             <WiserLogo/>
           </Grid.Row>
+          <Grid.Row>
+            <div>
+              <span>
+                Wiser is a new semantic search engine for expert finding in academia.
+              </span>
+            </div>
+          </Grid.Row>
           {this.renderSearchBar()}
           {this.renderSearchButton()}
           <Grid.Row>
