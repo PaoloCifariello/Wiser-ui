@@ -16,6 +16,7 @@ import DepartmentAreas from './DepartmentAreas';
 import DepartmentTopics from './DepartmentTopics';
 import DepartmentStreamGraph from './DepartmentStreamGraph';
 import DepartmentPublications from './DepartmentPublications';
+import DepartmentAuthors from './DepartmentAuthors';
 
 const menuItems = [
     {
@@ -23,6 +24,11 @@ const menuItems = [
         link: "topics",
         name: "Main topics",
         render: (props) => <DepartmentTopics {...props}/>
+    }, {
+        selector: "authors",
+        link: "authors",
+        name: "Authors",
+        render: (props) => <DepartmentAuthors {...props}/>
     }, {
         selector: "areas",
         link: "areas",
@@ -37,7 +43,6 @@ const menuItems = [
         selector: "publications/:entity_id_filter?",
         link: "publications",
         name: "Publications",
-        disabled: false,
         render: (props) => <DepartmentPublications {...props}/>
     }
 ];

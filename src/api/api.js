@@ -98,6 +98,14 @@ async function getDepartmentProfile(department) {
     }));
 }
 
+async function getDepartmentAuthors(department) {
+    return api(axios.request(`${config.serverAddress}/get_department_authors`, {
+        params: {
+            department: department
+        }
+    }));
+}
+
 async function getDepartmentTopics(department) {
     return api(axios.request(`${config.serverAddress}/get_department_topics`, {
         params: {
@@ -106,19 +114,19 @@ async function getDepartmentTopics(department) {
     }));
 }
 
-async function getDepartmentAreas(department_name, scoreThreshold) {
+async function getDepartmentAreas(department, scoreThreshold) {
     return api(axios.request(`${config.serverAddress}/get_department_clusters`, {
         params: {
-            department: department_name,
+            department: department,
             scoreThreshold: scoreThreshold
         }
     }));
 }
 
-async function getDepartmentPublications(departmentName, year) {
+async function getDepartmentPublications(department, year) {
     return api(axios.request(`${config.serverAddress}/get_department_publications`, {
         params: {
-            depName: departmentName,
+            department: department,
             year: year
         }
     }));
@@ -156,6 +164,7 @@ export default {
     getAuthorProfiles: getAuthorProfiles,
 
     getDepartmentProfile: getDepartmentProfile,
+    getDepartmentAuthors: getDepartmentAuthors,
     getDepartmentTopics: getDepartmentTopics,
     getDepartmentAreas: getDepartmentAreas,
     getDepartmentPublications: getDepartmentPublications,
