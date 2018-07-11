@@ -1,4 +1,4 @@
-import stopEntitiesLink from "./stopentities.csv"
+import stopEntitiesLink from "../../static/stopentities.csv"
 import csv from 'csvtojson'
 import Axios from "axios";
 
