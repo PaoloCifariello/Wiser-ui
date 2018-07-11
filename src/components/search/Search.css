@@ -25,4 +25,7 @@
 
 .help-message {
   text-align: left;
+  max-width: 900px; 
+  margin-left: 80px !important;
+  margin-right: 80px !important;
 }

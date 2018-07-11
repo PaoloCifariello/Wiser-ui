@@ -18,12 +18,27 @@ import GLOBAL_STATE from '../../global_state';
 
 import api from '../../api/api'
 
-const wiserHelpMessage = (
-    <span id="wiser-usage-help">
-        <span className="wiser-name">Wiser</span> is a <i>fast</i> and <i>accurate</i> <b>Semantic Search Engine</b> for <i>expert finding</i>, currently working on the faculty of the University of Pisa. <br /> 
-        You can issue an <i>expert finding</i> query by inserting some <i>expertise area</i> in the <i>search bar</i> and pressing <i>"Search by Expertise"</i>.<br /> 
-        You can also issue an <i>expert profiling</i> query by inserting the name of a researcher/department and then pressing <i>"Search by Name"</i> or <i>"Search by Department"</i>.
-    </span>
+const getWiserHelpMessage = (props) => (
+    GLOBAL_STATE.SHOW_HELP_MESSAGE
+        ? <Grid.Row>
+        <Message compact className="help-message" {...props}>
+        <Message.Header>How it works</Message.Header>
+        <Divider />
+        <Message.Content>
+            <span className="wiser-name">Wiser</span> is a <i>fast</i> and <i>accurate</i> <b>Semantic Search Engine</b> for <i>expert finding</i>, currently working on the faculty of the University of Pisa. <br /> 
+            <Message.List>
+            <Message.Item>
+            You can issue an <i>expert finding</i> query by inserting some <i>expertise area</i> in the <i>search bar</i> and pressing <i>"Search by Expertise"</i>, this will return the authors from <i>Faculty of UniPI</i> that <span className="wiser-name">Wiser</span> considers experts of the queried research area.<br /> 
+            </Message.Item>
+            <Message.Item>
+            You can also issue an <i>expert profiling</i> query by inserting the name of a researcher/department and then pressing <i>"Search by Name"</i> or <i>"Search by Department"</i>, this will return the research topics in which the queried researcher/department are considered experts by <span className="wiser-name">Wiser</span>.
+            </Message.Item>
+            </Message.List>
+            <br />
+            <span className="wiser-name">Wiser</span> offers a sophisticated GUI that allows to visualize and post-process the results of a query in several ways, eventually useful to dig into the <i>expertise</i> of <i>researchers</i> and <i>departments</i> of the <i>University of Pisa</i>.
+        </Message.Content>
+        </Message>
+    </Grid.Row> : undefined
   );
 
 class Search extends Component {
@@ -56,7 +71,6 @@ class Search extends Component {
 
     componentWillReceiveProps = ({match}) => {
         const {searchBy, query} = match.params;
-
         this.setState({searchValue: query});
         return this.handleSearch(searchBy, query)
     }
@@ -194,6 +208,8 @@ class Search extends Component {
                 lastSearchTime: response["time"]
             })
         }
+        GLOBAL_STATE.SHOW_HELP_MESSAGE = false;
+        this.forceUpdate();
     }
 
     fail = (err) => {
@@ -314,42 +330,35 @@ class Search extends Component {
     }
 
     render() {
-        const {lastError, showErrorMessage, showResults} = this.state
-        const {SHOW_HELP_MESSAGE} = GLOBAL_STATE;
+        const { lastError, showErrorMessage, showResults } = this.state
+        
         return (
             <div>
                 <Grid centered stackable className="margin-top15" textAlign='center'>
                     <Grid.Row >
-                        <WiserLogo/>
+                        <WiserLogo />
                     </Grid.Row>
-                    <Grid.Row/> {SHOW_HELP_MESSAGE
-                        ? <Grid.Row>
-                                <Message
-                                    className="help-message"
-                                    onDismiss={this.onDismissHelpMessage}
-                                    header='How it works?'
-                                    content={wiserHelpMessage}/>
-                            </Grid.Row>
-                        : undefined}
+                    <Grid.Row /> 
                     {this.renderSearchBar()}
                     {this.renderSearchButton()}
                     <Grid.Row>
                         <Grid.Column>
                             {showResults
-                                ? (<Divider/>)
+                                ? (<Divider />)
                                 : null}
                         </Grid.Column>
                     </Grid.Row>
+                    {getWiserHelpMessage({ onDismiss: this.onDismissHelpMessage })}
                     <Grid.Row>
                         {showErrorMessage
                             ? <div className="margin-top15">
-                                    <Message
-                                        compact
-                                        negative
-                                        onDismiss={this.onDismissErrorMessage}
-                                        header='Search failed!'
-                                        content={lastError.message}/>
-                                </div>
+                                <Message
+                                    compact
+                                    negative
+                                    onDismiss={this.onDismissErrorMessage}
+                                    header='Search failed!'
+                                    content={lastError.message} />
+                            </div>
                             : this.renderResults()}
                     </Grid.Row>
                 </Grid>
