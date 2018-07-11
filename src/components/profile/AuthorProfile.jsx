@@ -8,7 +8,7 @@ import {
     Segment
 } from 'semantic-ui-react'
 
-import {NavLink, Switch, Redirect, Route} from 'react-router-dom'
+import {NavLink, Link, Switch, Redirect, Route} from 'react-router-dom'
 import api from '../../api/api'
 import AUTHOR_ROLE from '../reusable/AuthorRole'
 
@@ -145,7 +145,9 @@ class AuthorProfile extends Component {
                         {authorRole}
                     </Header.Subheader>
                     <Header.Subheader>
-                        {authorInstitution}
+                        {authorInstitution !== "N.D."
+                            ? <Link to={`/department/${authorInstitution}`}>{authorInstitution}</Link>
+                            : authorInstitution}
                     </Header.Subheader>
                     <Header.Subheader>
                         {`${authorPublications} publications from ${sortedAuthorYears[0]} to ${sortedAuthorYears[sortedAuthorYears.length - 1]}`}
