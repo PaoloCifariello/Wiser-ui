@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
 
-import {Header, Image} from 'semantic-ui-react';
-
-import {Navbar, Nav, NavItem, NavbarBrand} from 'react-bootstrap'
+import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 
 import {About, AuthorProfile, DepartmentProfile, Search, WiserStatistics} from '.'
