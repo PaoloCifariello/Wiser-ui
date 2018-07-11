@@ -46,9 +46,7 @@ class AuthorAreas extends Component {
         });
     }
 
-    // changeThreshold = (_, {value}) => {
     changeThreshold = (value) => {
-        // debugger;
         this.setState({scoreThreshold: parseFloat(value)})
     }
 
@@ -66,7 +64,6 @@ class AuthorAreas extends Component {
     render = () => {
         const maxValue = 0.7,
             minValue = 0.05;
-
 
         const {authorAreas, scoreThreshold} = this.state,
             normalizedAuthorTopics = authorAreas.map((area, i) => area.topics.slice(0, TOP_ENTITIES_PER_CLUSTER).map((topic, _) => {

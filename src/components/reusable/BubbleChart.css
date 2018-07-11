@@ -1,56 +1,56 @@
 .bubbleChart {
-    overflow: inherit !important;
+  overflow: inherit !important;
 }
 
 .cluster-topic-label {
-    /* font-size: x-small; */
-    font-size: small;
-    font-family: serif;
+  /* font-size: x-small; */
+  font-size: small;
+  font-family: serif;
 }
 
 .bubble-chart-tooltip {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100px;
-    left: 100px;
-    -moz-border-radius:5px;
-    border-radius: 5px;
-    border: 2px solid #000;
-    background: #fff;
-    opacity: .9;
-    color: black;
-    padding: 10px;
-    width: 200px;
-    font-size: 12px;
-    z-index: 10;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 2px solid #000;
+  background: #fff;
+  opacity: 0.9;
+  color: black;
+  padding: 10px;
+  width: 200px;
+  font-size: 12px;
+  z-index: 10;
 }
 
 .bubble-chart-tooltip .bubble-chart-title {
-	font-size: 13px;
+  font-size: 13px;
 }
 
 .bubble-chart-tooltip .bubble-chart-name {
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .bubble-chart-tooltip .bubble-chart-group {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
-    margin-right: 5px;
-    border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 10px;
 }
 
 .importance-bar-grey {
-    width: 100%;
-    height: 18px;
-    background-color: #dadada;
-    border-radius: 2px;
+  width: 100%;
+  height: 18px;
+  background-color: #dadada;
+  border-radius: 2px;
 }
 
 .importance-bar-green {
-    height: 100%;
-    border-radius: 2px;
-    transition: all .2s ease-out;
+  height: 100%;
+  border-radius: 2px;
+  transition: all 0.2s ease-out;
 }

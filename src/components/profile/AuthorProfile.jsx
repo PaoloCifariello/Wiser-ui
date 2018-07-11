@@ -243,7 +243,7 @@ class AuthorProfile extends Component {
                 render={() => (<Redirect to={`/profile/${authorId}/topics`}/>)}/> {menuItems.map(({
                 selector,
                 render
-            }, index) => <Route
+            }) => <Route
                 key={selector}
                 exact
                 path={`/profile/:authorId/${selector}`}
