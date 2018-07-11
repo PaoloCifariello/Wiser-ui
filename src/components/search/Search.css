@@ -23,7 +23,6 @@
   }
 }
 
-#wiser-usage-help {
-  font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-  font-size: 1.15em;
+.help-message {
+  text-align: left;
 }
