@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Card, List, Modal} from 'semantic-ui-react';
-// import {LinkContainer} from 'react-router-bootstrap'
 import {Link} from 'react-router-dom';
 import EntityLink from "../reusable/EntityLink"
 
