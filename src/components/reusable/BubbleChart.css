@@ -1,5 +1,6 @@
 .bubbleChart {
   overflow: inherit !important;
+  z-index: 1000;
 }
 
 .cluster-topic-label {

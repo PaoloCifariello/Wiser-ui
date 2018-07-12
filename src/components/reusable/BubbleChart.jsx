@@ -18,20 +18,28 @@ export class BubbleChart extends Component {
 
     constructor(props) {
         super(props);
+
+        this.svgRef = React.createRef();
         this.state = {
             data: []
         }
     }
 
     computeGroupCenters = (data) => {
+        if (!this.svgRef.current) {
+            return {groupCenters: [], width: window.innerWidth, height: window.innerHeight};
+        }
+        let svgWidth = this.svgRef.current.clientWidth;
+
         const WINDOWS_WIDTH = window.innerWidth,
             STACK_WIDTH_BREAKPOINT = 992,
-            WIDTH_FACTOR = 1.48,
             TOP_MARGIN = 300,
             SINGLE_CLUSTER_HEIGHT = 250,
             IS_STACKED = WINDOWS_WIDTH <= STACK_WIDTH_BREAKPOINT,
-            TOTAL_WIDTH = IS_STACKED ?  WINDOWS_WIDTH : (WINDOWS_WIDTH / WIDTH_FACTOR),
-            CLUSTER_PER_ROW = IS_STACKED ? 2 : 4,
+            TOTAL_WIDTH = svgWidth,
+            CLUSTER_PER_ROW = IS_STACKED
+                ? 2
+                : 3,
             TOTAL_HEIGHT = TOP_MARGIN + Math.ceil(data.length / CLUSTER_PER_ROW) * SINGLE_CLUSTER_HEIGHT,
             SINGLE_CLUSTER_WIDTH = TOTAL_WIDTH / CLUSTER_PER_ROW;
 
@@ -48,26 +56,19 @@ export class BubbleChart extends Component {
             return obj;
         }, {});
 
-        return {
-            groupCenters: GROUP_CENTERS,
-            width: TOTAL_WIDTH,
-            height: TOTAL_HEIGHT
-        }
+        return {groupCenters: GROUP_CENTERS, width: svgWidth, height: TOTAL_HEIGHT}
     }
 
     render = () => {
-        const {
-            forceStrength,
-            group,
-            maxRadius,
-            data
-        } = this.props;
+        const {forceStrength, group, maxRadius, data} = this.props;
 
         const {groupCenters, width, height} = this.computeGroupCenters(data);
 
         return (
-            <svg className="bubbleChart" width={width} height={height}>
+            <svg ref={this.svgRef} className="bubbleChart" width="100%" height={height}>
                 <Bubbles
+                    width={width}
+                    height={height}
                     data={createNodes([].concat.apply([], data), maxRadius)}
                     onGroupClick={this.props.onGroupClick}
                     forceStrength={forceStrength}
@@ -82,7 +83,7 @@ export class BubbleChart extends Component {
     }
 }
 
-BubbleChart.propTypes = {   
+BubbleChart.propTypes = {
     forceStrength: PropTypes.number,
     group: PropTypes.bool
 }

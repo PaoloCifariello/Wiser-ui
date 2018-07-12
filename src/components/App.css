@@ -1,23 +1,28 @@
 .align-center {
-    text-align: center;
+  text-align: center;
 }
 
 /* margin */
 
 .margin-left-50 {
-    margin-left: 50px;
+  margin-left: 50px;
 }
 
 .margin-bottom-50 {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 /* flex */
 
 .flex-column-reverse {
-    flex-direction: column-reverse;
+  flex-direction: column-reverse;
 }
 
 .wiser-name {
-    font-variant: small-caps;
+  font-variant: small-caps;
+}
+
+.column:empty {
+  z-index: -1;
+  /* this is needed to avoid empty columns to hide things behind (es. BubbleChart) */
 }

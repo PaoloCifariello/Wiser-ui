@@ -26,15 +26,16 @@ export class Bubbles extends Component {
             .on('tick', this.ticked.bind(this))
             .stop()
 
-        this.regroupBubbles(group);
+        this.regroupBubbles(this.props.groupCenters, group);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.data.length !== this.props.data.length) {
             this.renderBubbles(nextProps.data)
+            this.regroupBubbles(nextProps.groupCenters, nextProps.group)
         }
         if (nextProps.group !== this.props.group) {
-            this.regroupBubbles(nextProps.group)
+            this.regroupBubbles(nextProps.groupCenters, nextProps.group)
         }
     }
 
@@ -69,9 +70,12 @@ export class Bubbles extends Component {
         return -this.props.forceStrength * (d.radius ** 2.0)
     }
 
-    regroupBubbles = (group) => {
-        const {forceStrength, groupCenters, center} = this.props
+    regroupBubbles = (groupCenters, group) => {
+        const {forceStrength, center} = this.props
 
+        if (groupCenters.length === 0) 
+            return;
+        
         if (group) {
             this
                 .simulation
