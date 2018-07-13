@@ -138,7 +138,7 @@ class StreamGraph extends PureComponent {
             let i;
             // first cycle is only used to determine top entities for each range of study
             for (i = lastYear; i >= firstYear; i -= yearsStep) {
-                entityNames = entityNames.concat(this.getEntitiesInRange(Math.max(i - yearsStep + 1, firstYear), i));
+                entityNames = entityNames.concat(this.getEntitiesInRange(Math.max(i - yearsStep + 1, firstYear), i + 1));
             }
 
             entityNames = Array.from(new Set(entityNames));
