@@ -1,6 +1,4 @@
 import React, {PureComponent} from 'react';
-import {Card, Form, Select} from 'semantic-ui-react'
-import {TagCloud} from 'react-tagcloud'
 
 // import Slider from 'rc-slider';
 import WiserTagCloud from '../reusable/WiserTagClouds';
