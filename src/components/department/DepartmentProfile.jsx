@@ -17,6 +17,7 @@ import DepartmentTopics from './DepartmentTopics';
 import DepartmentStreamGraph from './DepartmentStreamGraph';
 import DepartmentPublications from './DepartmentPublications';
 import DepartmentAuthors from './DepartmentAuthors';
+import DepartmentTagcloud from './DepartmentTagcloud';
 
 const menuItems = [
     {
@@ -39,6 +40,11 @@ const menuItems = [
         link: "streamgraph",
         name: "StreamGraph",
         render: (props) => <DepartmentStreamGraph {...props}/>
+    }, {
+        selector: "tagcloud",
+        link: "tagcloud",
+        name: "TagCloud",
+        render: (props) => <DepartmentTagcloud {...props}/>
     }, {
         selector: "publications/:entity_id_filter?",
         link: "publications",
