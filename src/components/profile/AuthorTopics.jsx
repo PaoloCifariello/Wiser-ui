@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Divider, Header, Icon, Segment} from 'semantic-ui-react';
+import {Divider, Header, Icon, Popup, Segment} from 'semantic-ui-react';
 
 import ReactTable from "react-table";
 import {Range} from 'rc-slider';
@@ -17,6 +17,9 @@ import "./AuthorTopics.css"
 import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
 import {inRange} from '../reusable/Util'
+
+
+const importanceHelp = (<span><b>Wiser score</b> is a measure of importance that depends on the amount of publications and the commonness of a certaing topic.</span>);
 
 class AuthorTopics extends Component {
     constructor(props) {
@@ -144,7 +147,8 @@ class AuthorTopics extends Component {
 
     renderTopicYears = (topicYears) => {
         const {authorYears} = this.state;
-        // const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 * Math.cos(40.0 * (Math.PI / 180));
+        // const singleYearWidth = 18 * Math.cos(50.0 * (Math.PI / 180)) + 40 *
+        // Math.cos(40.0 * (Math.PI / 180));
 
         return (
             <div
@@ -249,7 +253,8 @@ class AuthorTopics extends Component {
                 Cell: ({value}) => this.renderTopicYears(value),
                 minWidth: 400
             }, {
-                Header: "Importance",
+                Header: () => <span>Wiser score&nbsp;
+                    <Popup trigger={< Icon name = "help circle" />} content={importanceHelp}/></span>,
                 accessor: "importance_score",
                 Cell: ({value}) => this.renderImportanceScoreCell(value, maxImportanceScore),
                 minWidth: 150,
