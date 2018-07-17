@@ -52,12 +52,12 @@ const menuItems = [
         disabled: false,
         render: (props) => <AuthorTagcloud {...props}/>
     }, {
-        selector: "chorddiagram",
-        link: "chorddiagram",
-        name: "Chord Diagram",
-        disabled: false,
-        render: (props) => <AuthorTagChordDiagram {...props}/>
-    }, {
+    //     selector: "chorddiagram",
+    //     link: "chorddiagram",
+    //     name: "Chord Diagram",
+    //     disabled: false,
+    //     render: (props) => <AuthorTagChordDiagram {...props}/>
+    // }, {
         selector: "publications/:entity_id_filter?",
         link: "publications",
         name: "Publications",
