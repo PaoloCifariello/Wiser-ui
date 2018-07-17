@@ -29,9 +29,10 @@ class AuthorTagcloud extends PureComponent {
     setAuthorTopicsState = (data) => this.setState({authorTopics: data.topics})
 
     render = () => {
+        const {authorId} = this.props.authorInformation;
         const {authorYears, authorTopics} = this.state;
 
-        return <WiserTagCloud topics={authorTopics} years={authorYears}/>
+        return <WiserTagCloud authorId={authorId} topics={authorTopics} years={authorYears}/>
     }
 
 }

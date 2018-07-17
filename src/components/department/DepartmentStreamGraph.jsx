@@ -1,8 +1,28 @@
 import React, {PureComponent} from 'react';
+import {Divider, Message} from 'semantic-ui-react';
 
 import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
 import StreamGraph from '../reusable/StreamGraph'
+
+const getHelpMessage = (props) => (
+    <Message compact {...props}>
+        <Message.Content>
+            The <b>Stream graph</b> is a chart showing the <i>main topics</i> of interest of a department among time. It is
+            particularly useful to identify changes in the fileds of study. You can interact
+            with the chart by modifying two fields:
+            <Message.List>
+                <Message.Item>
+                    <b>Range of years</b> - to rule how long is a period of time in which the department treats certain topics. Lower values increase the granularity and therefore includes more topics. Higher values tends to consider less topics.
+                </Message.Item>
+                <Message.Item>
+                    <b>Topics per year</b> - to rule how many topics to consider for each period of time. Lower values to include less topics, higher values to include more.
+                </Message.Item>
+            </Message.List>
+        </Message.Content>
+    </Message>
+);
+
 
 class DepartmentStreamGraph extends PureComponent {
     constructor(props) {
@@ -10,6 +30,7 @@ class DepartmentStreamGraph extends PureComponent {
         const {departmentInformation} = this.props;
 
         this.state = {
+            helpMessageVisible: true,            
             departmentYears: Object
                 .keys(departmentInformation.departmentYears)
                 .map((val) => parseInt(val, 10))
@@ -41,10 +62,32 @@ class DepartmentStreamGraph extends PureComponent {
 
     }
 
+    onDismissHelpMessage = () => {
+        this.setState({helpMessageVisible: false});
+    }
+
+    renderHelpMessage = () => {
+        const {helpMessageVisible} = this.state;
+
+        if (helpMessageVisible) 
+            return (
+                <div>
+                    {getHelpMessage({onDismiss: this.onDismissHelpMessage})}
+                    <Divider hidden/>
+                </div>
+            );
+        }
+    
     render = () => {
         const {departmentTopics, departmentYears} = this.state;
 
-        return (<StreamGraph topics={departmentTopics} years={departmentYears}/>);
+        return (
+        <div>
+            {this.renderHelpMessage()}
+            <div>
+                <StreamGraph topics={departmentTopics} years={departmentYears}/>
+            </div>
+        </div>);
     }
 }
 

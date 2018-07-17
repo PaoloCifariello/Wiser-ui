@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {Divider, Header, Segment} from 'semantic-ui-react';
+
+import {Divider, Header,  Message, Segment} from 'semantic-ui-react';
+
 import api from '../../api/api';
 import {BubbleChart} from "../reusable/BubbleChart";
 import {normalizeEntityName} from '../reusable/Entity';
@@ -9,11 +11,21 @@ import Slider from 'rc-slider';
 const TOP_ENTITIES_PER_CLUSTER = 6,
     MIN_NUM_ENTITIES_PER_CLUSTER = 3;
 
+const getHelpMessage = (props) => (
+    <Message compact {...props}>
+        <Message.Content>
+            <b>Areas</b> are automatically computed by <span className="wiser-name">Wiser</span> starting from the topics associated to the author. You can interact with the graph by changing the granularity level.
+            Lower values are used to include more topics in the computation. Higher values reduce the amount of topics considered by filtering out those that are considered to be less important by <span className="wiser-name">Wiser</span>.
+        </Message.Content>
+    </Message>
+);
+
 class AuthorAreas extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            helpMessageVisible: true,
             scoreThreshold: 0.20,
             authorAreas: []
         }
@@ -61,6 +73,23 @@ class AuthorAreas extends Component {
             .then(this.setAuthorAreas);
     }
 
+    onDismissHelpMessage = () => {
+        this.setState({helpMessageVisible: false});
+    }
+
+
+    renderHelpMessage = () => {
+        const {helpMessageVisible} = this.state;
+
+        if (helpMessageVisible) 
+            return (
+                <div>
+                    {getHelpMessage({onDismiss: this.onDismissHelpMessage})}
+                    <Divider hidden/>
+                </div>
+            );
+    }
+
     render = () => {
         const maxValue = 0.7,
             minValue = 0.05;
@@ -78,6 +107,9 @@ class AuthorAreas extends Component {
 
         return (
             <div>
+                <div>
+                {this.renderHelpMessage()}
+                </div>
                 <div>
                     <Segment size="huge" padded={true} color='teal'>
                         <Header as='h5'>

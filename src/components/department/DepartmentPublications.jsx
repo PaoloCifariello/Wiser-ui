@@ -115,7 +115,7 @@ class DepartmentPublications extends Component {
     render = () => {
         return (
             <div>
-                {this.renderEntityFilter()}
+                {/* {this.renderEntityFilter()} */}
                 <div style={{
                     height: 20
                 }}/> {this.renderYearsTab()}
