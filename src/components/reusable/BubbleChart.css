@@ -22,7 +22,7 @@
   opacity: 0.9;
   color: black;
   padding: 10px;
-  width: 200px;
+  width: 230px;
   font-size: 12px;
   z-index: 10;
 }
@@ -33,6 +33,7 @@
 
 .bubble-chart-tooltip .bubble-chart-name {
   font-weight: bold;
+  width: 80px;
 }
 
 .bubble-chart-tooltip .bubble-chart-group {
@@ -44,7 +45,7 @@
 }
 
 .importance-bar-grey {
-  width: 100%;
+  width: 120px;
   height: 18px;
   background-color: #dadada;
   border-radius: 2px;
@@ -54,4 +55,12 @@
   height: 100%;
   border-radius: 2px;
   transition: all 0.2s ease-out;
+}
+
+.tooltip-header {
+  width: 80px;
+}
+
+.bubblechart-tooltip-section {
+  margin: 0 0 4px 0;
 }

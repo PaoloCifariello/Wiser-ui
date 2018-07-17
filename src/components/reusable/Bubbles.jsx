@@ -201,24 +201,44 @@ export function showDetail(d) {
             ? '#ffbf00'
             : '#ff2e00';
 
-    const content = `
-    <div class="flex">
-        <span class="bubble-chart-name">Topic: </span>&nbsp;<span class="bubble-chart-value">${d
-        .name}</span>
-    </div>
-    <div class="flex">
-        <span class="bubble-chart-name">Group:&nbsp;</span>
-        <div class="bubble-chart-group" style="background-color: ${chroma(colorScale[d.group])
-        .saturate()}"></div>
-    </div>
-    <div class="flex">
-        <span class="bubble-chart-name">Importance:</span>&nbsp;
-        <div class="importance-bar-grey">
-            <div class="importance-bar-green" style="width: ${d
-        .groupImportance * 100}%; background-color: ${importanceBackgroundColor}"> </div>
+    const content = `<div class="flex-column">
+        <div class="flex bubblechart-tooltip-section">
+            <div class="tooltip-header">
+                <span class="bubble-chart-name">Topic:&nbsp;</span>
+            </div>
+            <div>
+                <span class="bubble-chart-value">${d.name}</span>
+            </div>
         </div>
-    </div>
-    `;
+        <div class="flex bubblechart-tooltip-section">
+            <div class="tooltip-header">
+                <span class="bubble-chart-name">Group:&nbsp;</span>
+            </div>
+            <div>
+                <div class="bubble-chart-group" style="background-color: ${chroma(colorScale[d.group]).saturate()}"></div>
+            </div>
+        </div>
+        <div class="flex bubblechart-tooltip-section">
+            <div class="tooltip-header">
+                <span class="bubble-chart-name">Group score:&nbsp;</span>
+            </div>
+            <div >
+                <div class="importance-bar-grey">
+                    <div class="importance-bar-green" style="width: ${d.groupImportance * 100}%; background-color: ${importanceBackgroundColor}"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex">
+            <div class="tooltip-header">
+                <span class="bubble-chart-name">Wiser score:&nbsp;</span>
+            </div>
+            <div>
+                <div class="importance-bar-grey">
+                    <div class="importance-bar-green" style="width: ${d.value * 100}%; background-color: ${importanceBackgroundColor}"> </div>
+                </div>
+            </div>
+        </div>
+    </div>`
 
     tooltip.showTooltip(content, d3.event)
 }
