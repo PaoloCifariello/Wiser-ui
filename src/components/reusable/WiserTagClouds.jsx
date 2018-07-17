@@ -2,6 +2,8 @@ import React, {PureComponent} from 'react';
 import {Card, Form, Select} from 'semantic-ui-react'
 import {TagCloud} from 'react-tagcloud'
 
+import {withRouter} from 'react-router-dom'
+
 import PropTypes from 'prop-types';
 import {range, inRange} from 'lodash';
 import {normalizeEntityName} from './Entity';
@@ -45,17 +47,41 @@ class WiserTagCloud extends PureComponent {
 
         return topics.filter((topic) => topic.years.filter((topicYear) => inRange(topicYear, minYear, maxYear + 1)).length > 0).map((topic) => {
             let topicImportance = this.getTopicImportanceInRange(minYear, maxYear, topic);
-            return {entityName: topic.entity_name, documentCount: topicImportance}
+            return {entityId: topic.entity_id, entityName: topic.entity_name, documentCount: topicImportance}
         }).sort((t1, t2) => t2.documentCount - t1.documentCount)
             .slice(0, TOP_ENTITIES_FOR_CLOUD)
             .map((t) => ({
+                entityId: t.entityId,
                 value: normalizeEntityName(t.entityName),
                 count: t.documentCount
             }));
     }
 
+    onTagClick = ({entityId}) => {
+        const {authorId} = this.props;
+
+        this
+            .props
+            .history
+            .push(`/profile/${authorId}/publications/${entityId}`)
+    }
+
+    renderCloud = (topics) => {
+        const {authorId} = this.props;
+
+        return (authorId)
+            ? <TagCloud
+                    className="author-tag-cloud"
+                    minSize={15}
+                    maxSize={30}
+                    tags={topics}
+                    onClick={(tag) => this.onTagClick(tag)}/>
+            : <TagCloud minSize={15} maxSize={30} tags={topics}/>
+    }
+
     renderWordCloud = (firstYear, lastYear) => {
         const topics = this.getTopicsInRange(firstYear, lastYear);
+        
         if (topics.length) 
             return (
                 <Card key={`${firstYear}-${lastYear}`} fluid>
@@ -64,7 +90,7 @@ class WiserTagCloud extends PureComponent {
                         ? firstYear
                         : `${firstYear} - ${lastYear}`}/>
                     <Card.Content >
-                        <TagCloud minSize={15} maxSize={30} tags={topics}/>
+                        {this.renderCloud(topics)}
                     </Card.Content >
                 </Card>
             );
@@ -117,4 +143,4 @@ WiserTagCloud.propTypes = {
     yearsStep: PropTypes.number
 }
 
-export default WiserTagCloud;
+export default withRouter(WiserTagCloud);
