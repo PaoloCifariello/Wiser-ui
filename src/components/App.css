@@ -18,6 +18,11 @@
   flex-direction: column-reverse;
 }
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .wiser-name {
   font-variant: small-caps;
 }
@@ -25,4 +30,12 @@
 .column:empty {
   z-index: -1;
   /* this is needed to avoid empty columns to hide things behind (es. BubbleChart) */
+}
+
+.author-tag-cloud {
+  cursor: pointer;
+}
+
+.width-100p {
+  width: 100%;
 }
