@@ -74,6 +74,11 @@ class PublicationList extends Component {
                             ? <div><Icon name="language"/>Translated</div>
                             : null}
                     </div>
+                    <div>
+                        {publication.external_source
+                            ? <div>External source</div>
+                            : <div>ARPI</div>}
+                    </div>
                 </Card.Content>
             </Card>
         );
