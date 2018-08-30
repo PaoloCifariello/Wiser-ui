@@ -106,7 +106,7 @@ export function createNodes(rawData, maxRadius) {
     const myNodes = rawData.map(d => ({
         id: d.id,
         radius: radiusScale(+ d.value),
-        value: + d.value,
+        value: + d.value / maxAmount,
         name: d.title,
         group: d.group,
         groupImportance: d.groupImportance / maxGroupImportance,
