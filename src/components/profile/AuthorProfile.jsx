@@ -10,7 +10,7 @@ import {
 
 import {NavLink, Link, Switch, Redirect, Route} from 'react-router-dom'
 import api from '../../api/api'
-import AUTHOR_ROLE from '../reusable/AuthorRole'
+import AuthorRole from '../reusable/AuthorRole'
 
 import AuthorTopics from './AuthorTopics'
 import AuthorAreas from './AuthorAreas'
@@ -110,7 +110,7 @@ class AuthorProfile extends Component {
     updateAuthorInformation = (authorInformation) => {
         this.setState({
             authorName: authorInformation["name"],
-            authorRole: AUTHOR_ROLE[authorInformation["role"]],
+            authorRole: authorInformation["role"],
             authorInstitution: authorInformation["institution"],
             authorYears: authorInformation["years"],
             isLoaded: true
@@ -142,7 +142,7 @@ class AuthorProfile extends Component {
             <div>
                 <Header as='h1' textAlign="left">{authorName}
                     <Header.Subheader>
-                        {authorRole}
+                        <AuthorRole role={authorRole} />
                     </Header.Subheader>
                     <Header.Subheader>
                         {authorInstitution !== "N.D."

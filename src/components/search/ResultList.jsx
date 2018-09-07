@@ -4,7 +4,7 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Card, List} from 'semantic-ui-react'
 
 import './ResultList.css'
-import AUTHOR_ROLE from '../reusable/AuthorRole'
+import AuthorRole from '../reusable/AuthorRole'
 
 class ResultList extends Component {
     constructor(props) {
@@ -31,9 +31,7 @@ class Result extends PureComponent {
 
         return (
             <Card.Meta>
-                <span>
-                    {AUTHOR_ROLE[result.role]}
-                </span>
+                <AuthorRole role={result.role}/>
             </Card.Meta>
         );
     }

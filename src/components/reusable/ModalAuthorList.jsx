@@ -3,7 +3,7 @@ import {Card, List, Modal} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import EntityLink from "../reusable/EntityLink"
 
-import AUTHOR_ROLE from '../reusable/AuthorRole'
+import AuthorRole from '../reusable/AuthorRole'
 
 import api from '../../api/api';
 import './ModalAuthorList.css';
@@ -12,7 +12,7 @@ class ModalAuthorList extends Component {
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
             authorProfiles: null
         };
@@ -76,9 +76,7 @@ class ModalAuthorList extends Component {
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>
-                        <span>
-                            {AUTHOR_ROLE[author.role]}
-                        </span>
+                        <AuthorRole role={author.role}/>
                     </ Card.Content>
                 </Card>
             </Link>

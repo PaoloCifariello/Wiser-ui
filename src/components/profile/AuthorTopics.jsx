@@ -18,7 +18,6 @@ import api from '../../api/api'
 import {normalizeEntityName} from '../reusable/Entity'
 import {inRange} from '../reusable/Util'
 
-
 const importanceHelp = (<span><b>Wiser score</b> is a measure of importance that depends on the amount of publications and the commonness of a certain topic.</span>);
 
 class AuthorTopics extends Component {
