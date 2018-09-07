@@ -3,10 +3,11 @@ import {Card, List} from 'semantic-ui-react'
 
 import {Link} from 'react-router-dom';
 import EntityLink from "../reusable/EntityLink"
-
-import AUTHOR_ROLE from '../reusable/AuthorRole'
+import AuthorRole from '../reusable/AuthorRole'
 
 import api from '../../api/api'
+
+const getAuthorSurname = (authorFullName) => authorFullName.split(" ").pop();
 
 class DepartmentAuthors extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class DepartmentAuthors extends Component {
 
     componentDidMount = () => {
         const {departmentName} = this.props.match.params;
-
+        
         api
             .getDepartmentAuthors(departmentName)
             .then(this.setDepartmentAuthors);
@@ -29,7 +30,7 @@ class DepartmentAuthors extends Component {
         this.setState({ 
             departmentAuthors: data
                 .department_authors
-                .sort((a, b) => a.name.localeCompare(b.name))
+                .sort((a, b) => getAuthorSurname(a.name).localeCompare(getAuthorSurname(b.name)))
         });
     }
 
@@ -59,9 +60,7 @@ class DepartmentAuthors extends Component {
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>
-                        <span>
-                            {AUTHOR_ROLE[author.role]}
-                        </span>
+                        <AuthorRole role={author.role} />
                     </ Card.Content>
                 </Card>
             </Link>
