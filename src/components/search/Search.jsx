@@ -18,12 +18,11 @@ import GLOBAL_STATE from '../../global_state';
 
 import api from '../../api/api'
 
-const getWiserHelpMessage = (props) => (
-    GLOBAL_STATE.SHOW_HELP_MESSAGE
+const getWiserHelpMessage = (props) => (GLOBAL_STATE.SHOW_HELP_MESSAGE
         ? <Grid.Row>
         <Message compact className="help-message" {...props}>
         <Message.Header>How it works</Message.Header>
-        <Divider />
+                <Divider/>
         <Message.Content>
             <span className="wiser-name">Wiser</span> is a <i>fast</i> and <i>accurate</i> <b>Semantic Search Engine</b> for <i>expert finding</i>, currently working on the faculty of the University of Pisa. <br /> 
             <Message.List>
@@ -38,8 +37,8 @@ const getWiserHelpMessage = (props) => (
             <span className="wiser-name">Wiser</span> offers a sophisticated GUI that allows to visualize and post-process the results of a query in several ways, eventually useful to dig into the <i>expertise</i> of <i>researchers</i> and <i>departments</i> of the <i>University of Pisa</i>.
         </Message.Content>
         </Message>
-    </Grid.Row> : undefined
-  );
+        </Grid.Row>
+    : undefined);
 
 class Search extends Component {
 
@@ -254,7 +253,9 @@ class Search extends Component {
         if (showResults) 
             return (
                 <div>
-                    {this.renderQueryEntities()}
+                    {results.length > 0
+                        ? this.renderQueryEntities()
+                        : undefined}
 
                     <div>
                         <Label>
@@ -330,25 +331,24 @@ class Search extends Component {
     }
 
     render() {
-        const { lastError, showErrorMessage, showResults } = this.state
+        const {lastError, showErrorMessage, showResults} = this.state
         
         return (
             <div>
                 <Grid centered stackable className="margin-top15" textAlign='center'>
                     <Grid.Row >
-                        <WiserLogo />
+                        <WiserLogo/>
                     </Grid.Row>
-                    <Grid.Row /> 
-                    {this.renderSearchBar()}
+                    <Grid.Row/> {this.renderSearchBar()}
                     {this.renderSearchButton()}
                     <Grid.Row>
                         <Grid.Column>
                             {showResults
-                                ? (<Divider />)
+                                ? (<Divider/>)
                                 : null}
                         </Grid.Column>
                     </Grid.Row>
-                    {getWiserHelpMessage({ onDismiss: this.onDismissHelpMessage })}
+                    {getWiserHelpMessage({onDismiss: this.onDismissHelpMessage})}
                     <Grid.Row>
                         {showErrorMessage
                             ? <div className="margin-top15">
@@ -357,7 +357,7 @@ class Search extends Component {
                                     negative
                                     onDismiss={this.onDismissErrorMessage}
                                     header='Search failed!'
-                                    content={lastError.message} />
+                                        content={lastError.message}/>
                             </div>
                             : this.renderResults()}
                     </Grid.Row>
