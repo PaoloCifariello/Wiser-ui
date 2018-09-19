@@ -46,13 +46,15 @@ class PublicationList extends Component {
             __html: publication.text
         }}/>
 
-        let currrentPath = window
+        let currentPath = window
             .location
             .pathname
             .split('/')
-            .slice(0, -1);
-        currrentPath.push("publication", publication.id);
-        const publicationLink = currrentPath.join("/");
+
+        currentPath = currentPath.slice(0, currentPath.indexOf("publications") - currentPath.length);
+        currentPath.push("publication", publication.id);
+
+        const publicationLink = currentPath.join("/");
 
         return (
             <Card className="margin-bottom-10" fluid>
